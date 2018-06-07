@@ -81,7 +81,6 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
             e.printStackTrace();
         }
 
-        Log.i("Bruh", "AYYYYYYYY LMAO");
 
 
         try {

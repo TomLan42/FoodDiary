@@ -7,9 +7,11 @@ import android.support.design.widget.FloatingActionButton
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.CompoundButton
 import android.widget.Toast
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
+import io.fotoapparat.configuration.UpdateConfiguration
 import io.fotoapparat.parameter.Flash
 import io.fotoapparat.result.transformer.scaled
 import io.fotoapparat.selector.*
@@ -59,6 +61,7 @@ class CameraActivity : AppCompatActivity() {
     private val permissionsDelegate = PermissionsDelegate(this)
     private var permissionsGranted: Boolean = false
     private lateinit var fotoapparat: Fotoapparat
+    private var isChecked: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +83,15 @@ class CameraActivity : AppCompatActivity() {
             takePicture()
         }
 
+        btn_flash.setOnClickListener{
+            isChecked = !isChecked
+            toggleFlash()
+        }
+
+        btn_switchcam.setOnClickListener{
+            changeCamera()
+        }
+
         permissionsGranted = permissionsDelegate.hasCameraPermission()
 
         if (permissionsGranted) {
@@ -97,7 +109,7 @@ class CameraActivity : AppCompatActivity() {
         )
 
         fotoapparat.start()
-
+        adjustViewsVisibility()
 
 
     }
@@ -124,6 +136,62 @@ class CameraActivity : AppCompatActivity() {
 
 
     }
+
+    private fun changeCamera(){
+        activeCamera = when (activeCamera) {
+            Camera.Front -> Camera.Back
+            Camera.Back -> Camera.Front
+        }
+
+        fotoapparat.switchTo(
+                lensPosition = activeCamera.lensPosition,
+                cameraConfiguration = activeCamera.configuration
+        )
+
+        adjustViewsVisibility()
+
+        Log.i(LOGGING_TAG, "New camera position: ${if (activeCamera is Camera.Back) "back" else "front"}")
+    }
+
+    private fun toggleFlash(){
+        fotoapparat.updateConfiguration(
+                UpdateConfiguration(
+                        flashMode = if (isChecked) {
+                            firstAvailable(
+                                    torch(),
+                                    off()
+                            )
+                        } else {
+                            off()
+                        }
+                )
+        )
+
+        if(isChecked){
+            btn_flash.setImageResource(R.drawable.ic_flash_on)
+            Toast.makeText(this, "Flash is On", Toast.LENGTH_SHORT).show()
+        }else{
+            btn_flash.setImageResource(R.drawable.ic_flash_off)
+            Toast.makeText(this, "Flash is Off", Toast.LENGTH_SHORT).show()
+        }
+
+        Log.i(LOGGING_TAG, "Flash is now ${if (isChecked) "on" else "off"}")
+    }
+
+    private fun adjustViewsVisibility() {
+        fotoapparat.getCapabilities()
+                .whenAvailable { capabilities ->
+                    capabilities
+                            ?.let {
+                                btn_flash.visibility = if (it.flashModes.contains(Flash.Torch)) View.VISIBLE else View.GONE
+                            }
+                            ?: Log.e(LOGGING_TAG, "Couldn't obtain capabilities.")
+                }
+
+        btn_switchcam.visibility = if (fotoapparat.isAvailable(front())) View.VISIBLE else View.GONE
+    }
+
+
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -178,6 +246,7 @@ class CameraActivity : AppCompatActivity() {
         super.onStart()
         if (permissionsGranted) {
             fotoapparat.start()
+            adjustViewsVisibility()
         }
     }
 
@@ -200,6 +269,7 @@ class CameraActivity : AppCompatActivity() {
                     cameraErrorCallback = {Log.e(LOGGING_TAG, "Camera error;", it)}
             )
             fotoapparat.start()
+            adjustViewsVisibility()
             fullscreen_content.visibility = View.VISIBLE
         }
     }
