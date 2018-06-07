@@ -48,40 +48,33 @@
             android:focusable="true"
             app:backgroundTint="@color/grey"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_switchcam"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btn_flash"
+            app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_camera_black_24dp" />
 
-        <ImageButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_flash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginStart="40dp"
             android:background="@null"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_capture"
-            app:layout_constraintEnd_toStartOf="@+id/btn_capture"
+            app:backgroundTint="@color/grey"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btn_capture"
-            app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ic_flash_off" />
 
-        <ImageButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_switchcam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="40dp"
             android:background="@null"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_capture"
+            app:backgroundTint="@color/grey"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btn_capture"
-            app:layout_constraintTop_toTopOf="@+id/btn_capture"
-            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_switch_camera" />
 
 

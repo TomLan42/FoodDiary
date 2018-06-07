@@ -85,7 +85,14 @@ class CameraActivity : AppCompatActivity() {
 
         btn_flash.setOnClickListener{
             isChecked = !isChecked
-            toggleFlash()
+
+            if(isChecked){
+                btn_flash.setImageResource(R.drawable.ic_flash_on)
+                Toast.makeText(this, "Flash is On", Toast.LENGTH_SHORT).show()
+            }else{
+                btn_flash.setImageResource(R.drawable.ic_flash_off)
+                Toast.makeText(this, "Flash is Off", Toast.LENGTH_SHORT).show()
+            }
         }
 
         btn_switchcam.setOnClickListener{
@@ -118,9 +125,16 @@ class CameraActivity : AppCompatActivity() {
 
     private fun takePicture(){
 
+        if(isChecked) {
+            toggleFlash(true)
+        }
+
         val photoResult = fotoapparat
                 .autoFocus()
                 .takePicture()
+        if(isChecked) {
+            toggleFlash(false)
+        }
 
         photoResult
                 .toBitmap(scaled(scaleFactor = 0.25f))
@@ -153,29 +167,19 @@ class CameraActivity : AppCompatActivity() {
         Log.i(LOGGING_TAG, "New camera position: ${if (activeCamera is Camera.Back) "back" else "front"}")
     }
 
-    private fun toggleFlash(){
+    private fun toggleFlash(turnon:Boolean){
         fotoapparat.updateConfiguration(
                 UpdateConfiguration(
-                        flashMode = if (isChecked) {
-                            firstAvailable(
-                                    torch(),
-                                    off()
-                            )
+                        flashMode = if (turnon) {
+                            torch()
                         } else {
                             off()
                         }
                 )
         )
 
-        if(isChecked){
-            btn_flash.setImageResource(R.drawable.ic_flash_on)
-            Toast.makeText(this, "Flash is On", Toast.LENGTH_SHORT).show()
-        }else{
-            btn_flash.setImageResource(R.drawable.ic_flash_off)
-            Toast.makeText(this, "Flash is Off", Toast.LENGTH_SHORT).show()
-        }
 
-        Log.i(LOGGING_TAG, "Flash is now ${if (isChecked) "on" else "off"}")
+        //Log.i(LOGGING_TAG, "Flash is now ${if (isChecked) "on" else "off"}")
     }
 
     private fun adjustViewsVisibility() {

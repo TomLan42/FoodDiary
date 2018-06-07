@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 27
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.example.internadmin.fooddiary"
         minSdkVersion 17
@@ -37,4 +38,8 @@ dependencies {
     implementation 'io.fotoapparat.fotoapparat:library:2.2.0'
     implementation 'com.android.support:design:27.1.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+    implementation('org.apache.httpcomponents:httpmime:4.3') {
+        exclude module: "httpclient"
+    }
 }

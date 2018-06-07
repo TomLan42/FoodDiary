@@ -1,6 +1,8 @@
 package com.example.internadmin.fooddiary;
 
-public class Prediction {
+import java.io.Serializable;
+
+public class Prediction implements Serializable {
     private String FoodName;
     private int ver;
 
