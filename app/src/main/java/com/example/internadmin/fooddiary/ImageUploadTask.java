@@ -22,13 +22,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
 
 public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
-    private Context context;
+    private WeakReference<Context> weakContext;
     private ProgressDialog progDialog;
 
     Bitmap bmp;
@@ -41,7 +42,8 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
         this.dstURL = addr;
         this.bmp = bmp;
         this.postTaskListener = postTaskListener;
-        this.progDialog = new ProgressDialog(ctx);
+        weakContext = new WeakReference<>(ctx);
+        this.progDialog = new ProgressDialog(weakContext.get());
     }
 
     @Override
