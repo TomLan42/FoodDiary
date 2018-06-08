@@ -68,8 +68,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 " (" + DISHID_COLUMN_FOODNAME + " text primary key, " +
                 DISHID_COLUMN_VERSION + " integer, " +
                 DISHID_COLUMN_IMGPATH + " text default null, " +
-                DISHID_COLUMN_NUTRITIONJSON + "text, " +
-                DISHID_COLUMN_INGREDIENTLIST + "text); ";
+                DISHID_COLUMN_NUTRITIONJSON + " text, " +
+                DISHID_COLUMN_INGREDIENTLIST + " text); ";
 
         db.execSQL(CREATE_TABLE_MEALSHISTORY);
         db.execSQL(CREATE_TABLE_DISHID);
@@ -234,7 +234,7 @@ public class DBHandler extends SQLiteOpenHelper {
         cv.put(DISHID_COLUMN_INGREDIENTLIST, IngListstr);
         cv.put(DISHID_COLUMN_IMGPATH, ImgPath);
 
-        db.insertWithOnConflict(HISTORY_TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+        db.insertWithOnConflict(DISHID_TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
 
     }
 
@@ -245,13 +245,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selection = DISHID_COLUMN_FOODNAME + " = ? ";
 
-        String[] selectionArgs = {"'" + FoodName + "'"};
+        String[] selectionArgs = { FoodName };
 
         Cursor cursor = db.query(DISHID_TABLE_NAME, null, selection, selectionArgs,
                 null, null, null);
 
         if (cursor.moveToFirst()){
-
             b.putBoolean("Exists", true);
             b.putString("FoodName", cursor.getString(0));
             b.putInt("Version", cursor.getInt(1));

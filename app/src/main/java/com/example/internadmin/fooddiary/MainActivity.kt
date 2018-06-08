@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
@@ -39,7 +40,9 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        //var mydishid = DishID("Briyani", 1, this);
+        var mydishid = DishID("chapati", 1, this)
+        Log.i("HALP", mydishid.nutrition.toString());
+
 
 
     }
@@ -47,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     private fun putsharedpref(){
         val sharedpref = PreferenceManager.getDefaultSharedPreferences(this);
         val editor = sharedpref.edit();
-        editor.putString("server_address", "http://127.0.0.1/");
+        editor.putString("server_address", "http://155.69.53.72:8000/getinfo/");
         editor.apply();
     }
 }

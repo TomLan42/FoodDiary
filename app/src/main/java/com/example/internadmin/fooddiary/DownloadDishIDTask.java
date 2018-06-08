@@ -37,7 +37,7 @@ import java.util.Iterator;
 public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
 
     private String dstURL;
-    private JSONObject ToServer = new JSONObject();
+    //private JSONObject ToServer = new JSONObject();
     private BufferedReader reader = null;
     private WeakReference<Context> weakContext;
     private String FoodName;
@@ -75,12 +75,12 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
         Bundle b = new Bundle();
 
         //Package
+        /*
         try{
-            ToServer.put("DishID", FoodName);
+            ToServer.put("dishname", FoodName);
         } catch (JSONException e){
             e.printStackTrace();
-        }
-
+        }*/
 
 
         try {
@@ -98,7 +98,7 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
             urlConnection.connect();
 
             outputStream = new DataOutputStream(urlConnection.getOutputStream());
-            outputStream.writeBytes("PostData=" + ToServer.toString());
+            outputStream.writeBytes("dishname=" + FoodName);
 
             outputStream.flush();
             outputStream.close();
@@ -125,7 +125,7 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
             b.putString(Result, "TOError: Request timed out.");
             return b;
         } catch (IOException e) {
-            Log.e("PlaceholderFragment", "Error ", e);
+            Log.e("PlaceholderFragment", "Error " + e.getMessage());
             b.putString(Result, "IOError: Could not download dishes.");
             return b;
         } finally{
@@ -153,11 +153,11 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
 
                 b.putString(Result, Success);
                 b.putString("FoodName", FoodName);
-                b.putInt("Version", FromServer.getInt("Version"));
+                b.putInt("Version", FromServer.getInt("version"));
                 b.putSerializable("FoodImg",
-                        GetImageFromURL(FoodName, FromServer.getString("ImgURL")));
-                b.putString("Nutrition", FromServer.getJSONObject("Nutrition").toString());
-                b.putString("Ingredients", FromServer.getJSONArray("Ingredients").toString());
+                        GetImageFromURL(FoodName, FromServer.getString("image_url")));
+                b.putString("Nutrition", FromServer.getJSONObject("nutrition").toString());
+                b.putString("Ingredients", FromServer.getJSONArray("ingredients").toString());
 
                 //Write JSON back to file
                 return b;

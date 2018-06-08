@@ -93,7 +93,6 @@ public class DishID {
             this.Ingredients = new Gson().fromJson(b.getString("Ingredients"), category);
 
             this.FoodImg = (File) b.getSerializable("FoodImg");
-
         }else{
             return false;
         }

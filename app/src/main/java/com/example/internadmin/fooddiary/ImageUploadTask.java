@@ -32,8 +32,8 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
     private WeakReference<Context> weakContext;
     private ProgressDialog progDialog;
 
-    Bitmap bmp;
-    String dstURL;
+    private Bitmap bmp;
+    private String dstURL;
     private PostTaskListener<Bundle> postTaskListener;
     public static final String Result = "Result";
 
@@ -60,7 +60,7 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
     protected Bundle doInBackground(Void... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-        OutputStream outputStream = null;
+        OutputStream outputStream;
 
         // Will contain the raw JSON response as a string.
         String forecastJsonStr;
