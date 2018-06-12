@@ -15,8 +15,11 @@ import android.util.LongSparseArray;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,7 +87,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     //Methods for manipulating Meal Table
 
-    public boolean insertMealEntry (String FoodName, Date TimeConsumed, float ServingAmt, Bitmap FoodImg) {
+    public boolean insertMealEntry (String FoodName, Date TimeConsumed, float ServingAmt, File FoodImg) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(HISTORY_COLUMN_FOODNAME, FoodName);
@@ -96,27 +99,25 @@ public class DBHandler extends SQLiteOpenHelper {
             return false;
         }else{
             ContentValues cv = new ContentValues();
-            cv.put(HISTORY_COLUMN_IMGPATH, SaveMealImg(ctx, rowID, FoodName, FoodImg));
+            try{
+                cv.put(HISTORY_COLUMN_IMGPATH, SaveMealImg(ctx, rowID, FoodName, FoodImg));
+            }catch (IOException e){
+                Log.e("I/O Error", e.getMessage());
+            }
+
             db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_IMGPATH + " = ? ", new String[] { Long.toString(rowID)});
             return true;
         }
 
     }
 
-    private String SaveMealImg(Context context, long rowID, String FoodName, Bitmap FoodImg){
+    private String SaveMealImg(Context context, long rowID, String FoodName, File FoodImg) throws IOException{
 
         ContextWrapper cw = new ContextWrapper(context);
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         File mypath = new File(directory, FoodName + "_" + Long.toString(rowID) +".jpg");
 
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream(mypath);
-            FoodImg.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-        } catch(FileNotFoundException e){
-            Log.e("Meal Save Image", e.getMessage());
-            return null;
-        }
+        copyFile(FoodImg, mypath);
 
         return mypath.getAbsolutePath();
     }
@@ -126,13 +127,17 @@ public class DBHandler extends SQLiteOpenHelper {
         return DatabaseUtils.queryNumEntries(db, HISTORY_TABLE_NAME);
     }
 
-    public boolean updateHistoryEntry (String FoodName, Date TimeConsumed, float ServingAmt, Bitmap FoodImg, Long RowID)  {
+    public boolean updateHistoryEntry (String FoodName, Date TimeConsumed, float ServingAmt, File FoodImg, Long RowID)  {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(HISTORY_COLUMN_FOODNAME, FoodName);
         cv.put(HISTORY_COLUMN_TIME, dateFormat.format(TimeConsumed));
         cv.put(HISTORY_COLUMN_SERVINGS, ServingAmt);
-        cv.put(HISTORY_COLUMN_IMGPATH, SaveMealImg(ctx, RowID, FoodName, FoodImg));
+        try{
+            cv.put(HISTORY_COLUMN_IMGPATH, SaveMealImg(ctx, RowID, FoodName, FoodImg));
+        }catch (IOException e){
+            Log.e("I/O Error", e.getMessage());
+        }
         db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_ID + "=" + RowID, null);
         return true;
 
@@ -273,6 +278,31 @@ public class DBHandler extends SQLiteOpenHelper {
         return db.delete(HISTORY_TABLE_NAME,
                 DISHID_COLUMN_FOODNAME + " = ? ",
                 new String[] { "'" + FoodName + "'" });
+    }
+
+    private static void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!destFile.getParentFile().exists())
+            destFile.getParentFile().mkdirs();
+
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
+        }
     }
 
 }

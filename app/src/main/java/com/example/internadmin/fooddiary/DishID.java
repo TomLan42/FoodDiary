@@ -30,14 +30,11 @@ public class DishID {
     private List<String> Ingredients;
     private File FoodImg;
     private Context ctx;
-    private SharedPreferences sharedPrefs;
 
     public DishID(String FoodName, int ver, Context ctx){
         this.FoodName = FoodName;
         this.ver = ver;
         this.ctx = ctx;
-
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         boolean fromDB = populateFromDatabase(FoodName, ver);
 
@@ -48,8 +45,15 @@ public class DishID {
 
     }
 
-    public String getFoodName() {
-        return FoodName;
+    public String getFoodName(){
+        String[] strArray = FoodName.split("_");
+        StringBuilder builder = new StringBuilder();
+        for (String s : strArray) {
+            String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
+            builder.append(cap + " ");
+        }
+
+        return builder.toString();
     }
 
     public int getVer(){
@@ -82,7 +86,6 @@ public class DishID {
 
 
     private boolean populateFromDatabase(String FoodName, int ver){
-
         DBHandler mydbhandler = new DBHandler(ctx);
         Bundle b = mydbhandler.getDishID(FoodName);
 
@@ -125,6 +128,8 @@ public class DishID {
 
                     saveToDatabase();
 
+                    Log.i("Dish ID", Nutjson2str());
+
                 } else{
                     Toast.makeText( ctx, result.getString(DownloadDishIDTask.Result),
                             Toast.LENGTH_LONG).show();
@@ -133,7 +138,7 @@ public class DishID {
             }
         };
 
-        new DownloadDishIDTask(postTaskListener, sharedPrefs.getString("server_address", ""), ctx, FoodName).execute();
+        new DownloadDishIDTask(postTaskListener, ctx, FoodName).execute();
 
     }
 

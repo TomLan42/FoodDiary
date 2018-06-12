@@ -47,8 +47,8 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
     private PostTaskListener<Bundle> ptl;
 
 
-    DownloadDishIDTask(PostTaskListener<Bundle> ptl, String addr, Context context, String FoodName) {
-        this.dstURL = addr;
+    DownloadDishIDTask(PostTaskListener<Bundle> ptl, Context context, String FoodName) {
+        this.dstURL = URLAddress.getinfoAddress;
         weakContext = new WeakReference<>(context);
         this.FoodName = FoodName;
         this.ptl = ptl;

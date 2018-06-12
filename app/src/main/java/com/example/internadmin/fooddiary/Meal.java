@@ -20,21 +20,12 @@ public class Meal {
     private long RowID;
     private DBHandler mydbhandler;
 
-    public Meal(String FoodName, int ver, Bitmap FoodImg, Context ctx, Date TimeConsumed, float ServingAmt){
+    public Meal(String FoodName, int ver, File FoodImg, Context ctx, Date TimeConsumed, float ServingAmt){
 
         MyDishID = new DishID(FoodName, ver, ctx);
         this.TimeConsumed = TimeConsumed;
         this.ServingAmt = ServingAmt;
-
-        try{
-            this.FoodImg = File.createTempFile("tempfoodimg", "jpg", ctx.getCacheDir());
-            this.FoodImg.deleteOnExit();
-            FileOutputStream outStream = new FileOutputStream(this.FoodImg);
-            FoodImg.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-            outStream.close();
-        } catch (IOException e){
-            Log.e("Meal Caching", "Cannot create Cached Image: " + e.getMessage());
-        }
+        this.FoodImg = FoodImg;
 
 
     }
@@ -42,9 +33,8 @@ public class Meal {
     public boolean saveToDatabase(Context ctx){
 
         mydbhandler = new DBHandler(ctx);
-        Bitmap mybitmap = BitmapFactory.decodeFile(FoodImg.getAbsolutePath());
 
-        return mydbhandler.insertMealEntry(MyDishID.getFoodName(), TimeConsumed, ServingAmt, mybitmap);
+        return mydbhandler.insertMealEntry(MyDishID.getFoodName(), TimeConsumed, ServingAmt, FoodImg);
     }
 
     public void populateFromDatabase(long MealID, Context ctx){
@@ -60,9 +50,8 @@ public class Meal {
     }
 
     public boolean updateInDatabase(Context ctx){
-        Bitmap mybitmap = BitmapFactory.decodeFile(FoodImg.getAbsolutePath());
 
-        return mydbhandler.updateHistoryEntry(MyDishID.getFoodName(), TimeConsumed, ServingAmt, mybitmap, RowID);
+        return mydbhandler.updateHistoryEntry(MyDishID.getFoodName(), TimeConsumed, ServingAmt, FoodImg, RowID);
     }
 
     public void setTimeConsumed(Date date){
@@ -96,3 +85,4 @@ public class Meal {
 
 
 }
+

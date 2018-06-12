@@ -1,5 +1,7 @@
 package com.example.internadmin.fooddiary
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -16,6 +18,9 @@ import io.fotoapparat.parameter.Flash
 import io.fotoapparat.result.transformer.scaled
 import io.fotoapparat.selector.*
 import kotlinx.android.synthetic.main.activity_camera.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 /**
@@ -143,6 +148,38 @@ class CameraActivity : AppCompatActivity() {
                             ?.let {
                                 Log.i(LOGGING_TAG, "New photo captured. Bitmap length: ${it.bitmap.byteCount}")
                                 Toast.makeText(this, "Photo captured", Toast.LENGTH_LONG).show()
+
+                                val postTaskListener = PostTaskListener<Bundle> { result ->
+                                    if (result.getString(ImageUploadTask.Result).equals(ImageUploadTask.Success)) {
+
+                                        result.remove(ImageUploadTask.Result)
+
+                                        try {
+                                            val myfile = File.createTempFile("tempfoodimg", "jpg", this.getCacheDir())
+                                            myfile.deleteOnExit()
+                                            val outStream = FileOutputStream(myfile)
+                                            it.bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
+                                            outStream.close()
+                                            result.putSerializable("FoodImg", myfile)
+                                        } catch (e: IOException) {
+                                            Log.e("Meal Caching", "Cannot create Cached Image: " + e.message)
+                                        }
+
+                                        val myintent = Intent(this, PredictionActivity::class.java)
+                                        myintent.putExtras(result)
+                                        startActivity(myintent)
+                                        //Toast.makeText(this, "There are " + result.getInt("NoOfPredictions").toString(), Toast.LENGTH_LONG).show()
+
+                                    } else {
+                                        Toast.makeText(this, result.getString(DownloadDishIDTask.Result),
+                                                Toast.LENGTH_LONG).show()
+
+                                        val myintent = Intent(this, MainActivity::class.java)
+                                        startActivity(myintent)
+                                    }
+                                }
+
+                                ImageUploadTask(postTaskListener, it.bitmap, this).execute()
 
                             }
                             ?: Log.e(LOGGING_TAG, "Couldn't capture photo.")

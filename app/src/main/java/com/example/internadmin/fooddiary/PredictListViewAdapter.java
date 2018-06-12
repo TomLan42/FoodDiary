@@ -63,4 +63,5 @@ public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
         return convertView;
 
     };
+
 }

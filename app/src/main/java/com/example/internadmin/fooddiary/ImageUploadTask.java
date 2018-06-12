@@ -36,10 +36,12 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
     private String dstURL;
     private PostTaskListener<Bundle> postTaskListener;
     public static final String Result = "Result";
+    public static final String Success = "Success";
+    public static final String noofpredictions = "NoOfPredictions";
 
 
-    ImageUploadTask(PostTaskListener<Bundle> postTaskListener, String addr, Bitmap bmp, Context ctx) {
-        this.dstURL = addr;
+    ImageUploadTask(PostTaskListener<Bundle> postTaskListener, Bitmap bmp, Context ctx) {
+        this.dstURL = URLAddress.getpredictionAddress;
         this.bmp = bmp;
         this.postTaskListener = postTaskListener;
         weakContext = new WeakReference<>(ctx);
@@ -69,7 +71,7 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
         try {
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            Bitmap.createScaledBitmap(bmp, 255, 255, false).compress(Bitmap.CompressFormat.JPEG, 100, bos);
             ContentBody contentPart = new ByteArrayBody(bos.toByteArray(), "image.jpg");
 
             MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -79,8 +81,8 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
-            urlConnection.setConnectTimeout(5000);
-            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(7000);
+            urlConnection.setReadTimeout(7000);
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
             urlConnection.setUseCaches(false);
@@ -108,20 +110,29 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
             }
 
             if (buffer.length() == 0) {
-                return null;
+                b.putString(Result, "Empty Buffer");
+                return b;
             }
             forecastJsonStr = buffer.toString();
             JsonParser parser = new JsonParser();
             JsonObject myJson = parser.parse(forecastJsonStr).getAsJsonObject();
-            JsonArray Predictions = myJson.getAsJsonArray("Predictions");
-            int noOfPredictions = Predictions.size();
-            b.putInt("NoOfPredictions", noOfPredictions);
 
-            for (int i = 0; i < noOfPredictions; i++){
-                JsonObject prediction = Predictions.get(i).getAsJsonObject();
-                Prediction mypredict = new Prediction(prediction.get("FoodName").getAsString(),
-                                        prediction.get("ver").getAsInt());
-                b.putSerializable(Integer.toString(i), mypredict);
+            String myresult = myJson.get(Result).getAsString();
+
+            if(myresult.equals(Success)){
+                b.putString(Result, Success);
+                JsonArray Predictions = myJson.getAsJsonArray("Predictions");
+                int noOfPredictions = Predictions.size();
+                b.putInt(noofpredictions, noOfPredictions);
+
+                for (int i = 0; i < noOfPredictions; i++){
+                    JsonObject prediction = Predictions.get(i).getAsJsonObject();
+                    Prediction mypredict = new Prediction(prediction.get("FoodName").getAsString(),
+                            prediction.get("ver").getAsInt());
+                    b.putSerializable(Integer.toString(i), mypredict);
+                }
+            }else{
+                b.putString(Result, myresult);
             }
 
             return b;

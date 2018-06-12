@@ -12,7 +12,14 @@ public class Prediction implements Serializable {
     }
 
     public String getFoodName(){
-        return FoodName;
+        String[] strArray = FoodName.split("_");
+        StringBuilder builder = new StringBuilder();
+        for (String s : strArray) {
+            String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
+            builder.append(cap + " ");
+        }
+
+        return builder.toString();
     }
 
     public int getVer(){
