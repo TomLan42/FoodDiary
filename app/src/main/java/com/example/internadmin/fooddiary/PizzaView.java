@@ -31,7 +31,7 @@ public class PizzaView extends View {
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextSize(48);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
-        mTextPaint.setColor(0xffffaa00);
+        mTextPaint.setColor(0xffffffff);
         mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
         w2 = getWidth() / 2f;
         h2 = getHeight() / 2f;
@@ -106,5 +106,14 @@ public class PizzaView extends View {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    public float getServingSlice(){
+        return mAngle/360f;
+    }
+
+    public void setServingSlice(float fraction){
+        mAngle = (fraction - (float)Math.floor((double) fraction))*360;
+        invalidate();
     }
 }

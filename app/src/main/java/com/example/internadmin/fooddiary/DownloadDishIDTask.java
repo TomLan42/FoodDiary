@@ -74,13 +74,6 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
         StringBuilder buffer = new StringBuilder();
         Bundle b = new Bundle();
 
-        //Package
-        /*
-        try{
-            ToServer.put("dishname", FoodName);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }*/
 
 
         try {

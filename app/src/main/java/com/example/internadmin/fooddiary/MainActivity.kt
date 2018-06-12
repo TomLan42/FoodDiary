@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         val btn_PieSliderDialog = findViewById<Button>(R.id.btnPieSliderDialog);
         btn_PieSliderDialog.setOnClickListener{
-            val cdd = PieSliderDialog(this);
-            cdd.show();
+            //val cdd = PieSliderDialog(this);
+            //cdd.show();
         }
 
         val btn_CameraActivity = findViewById<Button>(R.id.btnCamera);

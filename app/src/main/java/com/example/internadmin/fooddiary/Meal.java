@@ -9,9 +9,10 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Meal {
+public class Meal implements Serializable{
 
     private DishID MyDishID;
     private Date TimeConsumed;
@@ -19,18 +20,22 @@ public class Meal {
     private File FoodImg;
     private long RowID;
     private DBHandler mydbhandler;
+    private Context ctx;
 
-    public Meal(String FoodName, int ver, File FoodImg, Context ctx, Date TimeConsumed, float ServingAmt){
+    public Meal(DishID MyDishID, Context ctx, Date TimeConsumed, float ServingAmt){
 
-        MyDishID = new DishID(FoodName, ver, ctx);
+        this.MyDishID = MyDishID;
         this.TimeConsumed = TimeConsumed;
         this.ServingAmt = ServingAmt;
-        this.FoodImg = FoodImg;
-
+        this.ctx = ctx;
 
     }
 
-    public boolean saveToDatabase(Context ctx){
+    public void setFoodImg(File foodImg) {
+        FoodImg = foodImg;
+    }
+
+    public boolean saveToDatabase(){
 
         mydbhandler = new DBHandler(ctx);
 
@@ -38,12 +43,15 @@ public class Meal {
     }
 
     public void populateFromDatabase(long MealID, Context ctx){
+        this.ctx = ctx;
         mydbhandler = new DBHandler(ctx);
 
         Bundle b = mydbhandler.getMeal(MealID);
         MyDishID = new DishID(b.getString("FoodName"), -1, ctx);
         this.TimeConsumed = (Date) b.getSerializable("TimeConsumed");
-        this.FoodImg = (File) b.getSerializable("FoodImg");
+        if(b.containsKey("FoodImg")){
+            this.FoodImg = (File) b.getSerializable("FoodImg");
+        }
         this.ServingAmt = b.getFloat("ServingAmt");
         this.RowID = MealID;
 

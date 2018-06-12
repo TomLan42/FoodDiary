@@ -61,6 +61,7 @@
             android:layout_width="match_parent"
             android:text="@string/amt_per_serve"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
     </LinearLayout>
@@ -80,6 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:paddingEnd="3sp"
             android:text="@string/calories"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -109,9 +111,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/daily_val"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:gravity="end"
+            android:text="@string/daily_val"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="12sp" />
     </LinearLayout>
@@ -132,6 +135,7 @@
             android:layout_width="wrap_content"
             android:text="@string/total_fat"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:paddingEnd="3sp"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
@@ -158,6 +162,7 @@
             android:gravity="end"
             android:layout_gravity="right"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
@@ -220,6 +225,7 @@
             android:gravity="end"
             android:layout_gravity="right"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
@@ -298,6 +304,7 @@
             android:layout_width="wrap_content"
             android:text="@string/cholesterol"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:paddingEnd="3sp"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
@@ -324,6 +331,7 @@
             android:gravity="end"
             android:layout_gravity="right"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
@@ -345,6 +353,7 @@
             android:layout_width="wrap_content"
             android:text="@string/sodium"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:paddingEnd="3sp"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
@@ -371,6 +380,7 @@
             android:gravity="end"
             android:layout_gravity="right"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
@@ -392,6 +402,7 @@
             android:layout_width="wrap_content"
             android:text="@string/totalcarbohydrate"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:paddingEnd="3sp"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
@@ -418,6 +429,7 @@
             android:gravity="end"
             android:layout_gravity="right"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
@@ -480,6 +492,7 @@
             android:gravity="end"
             android:layout_gravity="right"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
@@ -550,6 +563,7 @@
             android:layout_width="wrap_content"
             android:text="@string/protein"
             android:fontFamily="@font/helvetica_black"
+            android:textStyle="bold"
             android:paddingEnd="3sp"
             android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>

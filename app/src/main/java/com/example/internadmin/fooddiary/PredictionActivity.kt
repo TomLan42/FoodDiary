@@ -25,6 +25,7 @@ class PredictionActivity : AppCompatActivity() {
     private lateinit var  predictionlistview: ListView
     private lateinit var predictAdapter: PredictListViewAdapter
     private var mypos = -1
+    private lateinit var FoodImgFile: File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +35,6 @@ class PredictionActivity : AppCompatActivity() {
         predictionlistview = findViewById(R.id.predictionlistview)
         predictionlistview.setChoiceMode(ListView.CHOICE_MODE_SINGLE)
         predictionlistview.setSelector(R.color.grey)
-
 
         updateView()
 
@@ -51,7 +51,21 @@ class PredictionActivity : AppCompatActivity() {
 
         btn_mealActivity.setOnClickListener{
             val mypredict = predictionlistview.getItemAtPosition(mypos) as Prediction
-            Toast.makeText(this, mypredict.foodName, Toast.LENGTH_LONG).show()
+            val mydishid = DishID(mypredict.foodName, mypredict.ver, this)
+            mydishid.setDishIDPopulatedListener { dataAdded ->
+                if(dataAdded){
+                    val b = Bundle()
+                    b.putSerializable("FoodImg", FoodImgFile)
+                    b.putSerializable("DishID", mydishid)
+                    val intent = Intent(this, MealActivity::class.java)
+                    intent.putExtras(b)
+                    startActivity(intent)
+                }else{
+                    RedirectToMainOnError("Could not get Dish ID.", this)
+                }
+            }
+
+            //Toast.makeText(this, mypredict.foodName, Toast.LENGTH_LONG).show()
         }
 
     }
@@ -65,7 +79,8 @@ class PredictionActivity : AppCompatActivity() {
             }
 
             val imgview = findViewById<ImageView>(R.id.img_takenpic)
-            val imgpath = (intent.getSerializableExtra("FoodImg") as File).absolutePath
+            FoodImgFile = intent.getSerializableExtra("FoodImg") as File
+            val imgpath = FoodImgFile.absolutePath
             imgview.setImageBitmap(BitmapFactory.decodeFile(imgpath))
 
             btn_mealActivity.isEnabled = false

@@ -66,9 +66,11 @@
 
 
             <LinearLayout
-                android:id="@+id/linLayout"
+                android:id="@+id/view_servings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
                 android:orientation="horizontal"
                 android:padding="3dp">
 
@@ -76,8 +78,8 @@
                 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/pizzacounter"
                     android:layout_width="wrap_content"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/imageView1"
@@ -101,12 +103,11 @@
 
                 </FrameLayout>
 
-                <ImageView
+                <com.example.internadmin.fooddiary.miniPizzaView
                     android:id="@+id/pizzaslicer"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:padding="5dp"
-                    android:src="@drawable/cutpizza_small" />
+                    android:padding="5dp" />
 
                 <View
                     android:layout_width="0dp"
@@ -149,11 +150,11 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/setday"
+                        android:id="@+id/setmealofday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="2dp"
-                        android:text="Monday"
+                        android:text="Lunch"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:textSize="20sp" />
 

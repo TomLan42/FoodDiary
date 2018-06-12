@@ -1,12 +1,15 @@
 package com.example.internadmin.fooddiary;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,10 +54,44 @@ public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
             //On click function
             public void onClick(View view) {
                 int position = (Integer) view.getTag();
-                //Create the intent to start another activity
-                Toast.makeText(getContext(), getItem(position).getFoodName(), Toast.LENGTH_LONG).show();
-                //Intent intent = new Intent(view.getContext(), AnotherActivity.class);
-                //startActivity(intent);
+                final DishID mydishid = new DishID(getItem(position).getFoodName(), getItem(position).getVer(), getContext());
+                mydishid.setDishIDPopulatedListener(new DishIDPopulatedListener() {
+                    @Override
+                    public void onPopulated(boolean dataAdded) {
+
+                        if(dataAdded){
+                            AlertDialog.Builder alertadd = new AlertDialog.Builder(getContext());
+                            LayoutInflater factory = LayoutInflater.from(getContext());
+                            final View view = factory.inflate(R.layout.predictionactivityhelp_dialog, null);
+                            ImageView dishimg = view.findViewById(R.id.dialog_imageview);
+                            dishimg.setImageBitmap(mydishid.getFoodImg());
+                            alertadd.setView(view);
+                            alertadd.setTitle(mydishid.getFoodName());
+                            alertadd.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dlg, int sumthin) {
+                                    dlg.dismiss();
+                                }
+                            });
+
+                            alertadd.show();
+                        }else{
+                            AlertDialog.Builder builder;
+                            builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Error")
+                                    .setMessage("Could not receive Dish data.")
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
+                        }
+
+                    }
+                });
+
+                //Toast.makeText(getContext(), getItem(position).getFoodName(), Toast.LENGTH_LONG).show();
+
             }
         });
 

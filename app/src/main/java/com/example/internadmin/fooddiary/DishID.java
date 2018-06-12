@@ -18,11 +18,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DishID {
+public class DishID implements Serializable, PostTaskListener<Bundle> {
 
     private String FoodName;
     private int ver;
@@ -30,6 +31,7 @@ public class DishID {
     private List<String> Ingredients;
     private File FoodImg;
     private Context ctx;
+    private DishIDPopulatedListener listener;
 
     public DishID(String FoodName, int ver, Context ctx){
         this.FoodName = FoodName;
@@ -43,6 +45,10 @@ public class DishID {
         }
 
 
+    }
+
+    public void setDishIDPopulatedListener(DishIDPopulatedListener listener){
+        this.listener = listener;
     }
 
     public String getFoodName(){
@@ -70,7 +76,7 @@ public class DishID {
 
     public Bitmap getFoodImg(){
         if(FoodImg == null){
-            return BitmapFactory.decodeResource(ctx.getResources(), R.drawable.cutpizza);
+            return BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_error_outline_black);
         }else{
             return BitmapFactory.decodeFile(FoodImg.getAbsolutePath());
         }
@@ -100,46 +106,48 @@ public class DishID {
             return false;
         }
 
+        if(listener != null)
+            listener.onPopulated(true);
+
         return true;
 
     }
 
     private void populateFromOnline(String FoodName){
 
-        PostTaskListener<Bundle> postTaskListener = new PostTaskListener<Bundle>() {
-            @Override
-            public void onPostTask(Bundle result) {
+        new DownloadDishIDTask(this, ctx, FoodName).execute();
 
+    }
 
-                if (result.getString(DownloadDishIDTask.Result).equals(DownloadDishIDTask.Success)){
-                    ver = result.getInt("Version");
-                    FoodImg = (File) result.getSerializable("FoodImg");
-                    JsonParser parser = new JsonParser();
-                    Nutrition = parser.parse(result.getString("Nutrition")).getAsJsonObject();
-                    JSONArray temparray;
-                    Ingredients = new ArrayList<>();
-                    try{
-                        temparray = new JSONArray(result.getString("Ingredients"));
-                        for (int i=0; i < temparray.length(); i++)
-                            Ingredients.add(temparray.getString(i));
-                    } catch(JSONException e){
-                        Log.e("DishID Online", "JSONArray Error:" + e.getMessage());
-                    }
+    public void onPostTask(Bundle result){
 
-                    saveToDatabase();
-
-                    Log.i("Dish ID", Nutjson2str());
-
-                } else{
-                    Toast.makeText( ctx, result.getString(DownloadDishIDTask.Result),
-                            Toast.LENGTH_LONG).show();
-                }
-
+        if (result.getString(DownloadDishIDTask.Result).equals(DownloadDishIDTask.Success)){
+            ver = result.getInt("Version");
+            FoodImg = (File) result.getSerializable("FoodImg");
+            JsonParser parser = new JsonParser();
+            Nutrition = parser.parse(result.getString("Nutrition")).getAsJsonObject();
+            JSONArray temparray;
+            Ingredients = new ArrayList<>();
+            try{
+                temparray = new JSONArray(result.getString("Ingredients"));
+                for (int i=0; i < temparray.length(); i++)
+                    Ingredients.add(temparray.getString(i));
+            } catch(JSONException e){
+                Log.e("DishID Online", "JSONArray Error:" + e.getMessage());
             }
-        };
 
-        new DownloadDishIDTask(postTaskListener, ctx, FoodName).execute();
+            saveToDatabase();
 
+            if(listener != null)
+                listener.onPopulated(true);
+
+        } else{
+            Toast.makeText( ctx, result.getString(DownloadDishIDTask.Result),
+                    Toast.LENGTH_LONG).show();
+
+            if(listener != null)
+                listener.onPopulated(false);
+        }
     }
 
     private void saveToDatabase(){

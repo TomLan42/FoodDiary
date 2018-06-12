@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:text="Serving Size"
-        android:textSize="20dp"
+        android:text="Set Serving Slice"
+        android:textSize="20sp"
         android:textStyle="bold"/>
 
     <com.example.internadmin.fooddiary.PizzaView
@@ -29,21 +29,13 @@
         android:paddingTop="10dp">
 
         <Button
-            android:id="@+id/btn_yes"
+            android:id="@+id/btn_setslice"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:text="Yes"
+            android:text="Set"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btn_no"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:clickable="true"
-            android:text="No"
-            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>

@@ -98,14 +98,18 @@ public class DBHandler extends SQLiteOpenHelper {
         if(rowID == -1){
             return false;
         }else{
-            ContentValues cv = new ContentValues();
-            try{
-                cv.put(HISTORY_COLUMN_IMGPATH, SaveMealImg(ctx, rowID, FoodName, FoodImg));
-            }catch (IOException e){
-                Log.e("I/O Error", e.getMessage());
+
+            if(FoodImg != null){
+                ContentValues cv = new ContentValues();
+                try{
+                    cv.put(HISTORY_COLUMN_IMGPATH, SaveMealImg(ctx, rowID, FoodName, FoodImg));
+                }catch (IOException e){
+                    Log.e("I/O Error", e.getMessage());
+                }
+
+                db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_IMGPATH + " = ? ", new String[] { Long.toString(rowID)});
             }
 
-            db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_IMGPATH + " = ? ", new String[] { Long.toString(rowID)});
             return true;
         }
 
