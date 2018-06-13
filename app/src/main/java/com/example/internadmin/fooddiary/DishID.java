@@ -23,11 +23,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DishID implements Serializable, PostTaskListener<Bundle> {
+public class DishID implements PostTaskListener<Bundle> {
 
     private String FoodName;
     private int ver;
-    private JsonObject Nutrition;
+    private transient JsonObject Nutrition;
     private List<String> Ingredients;
     private File FoodImg;
     private Context ctx;
@@ -38,17 +38,18 @@ public class DishID implements Serializable, PostTaskListener<Bundle> {
         this.ver = ver;
         this.ctx = ctx;
 
+    }
+
+    public void setDishIDPopulatedListener(DishIDPopulatedListener listener){
+        this.listener = listener;
+    }
+
+    public void execute(){
         boolean fromDB = populateFromDatabase(FoodName, ver);
 
         if(!fromDB){
             populateFromOnline(FoodName);
         }
-
-
-    }
-
-    public void setDishIDPopulatedListener(DishIDPopulatedListener listener){
-        this.listener = listener;
     }
 
     public String getFoodName(){
@@ -60,6 +61,10 @@ public class DishID implements Serializable, PostTaskListener<Bundle> {
         }
 
         return builder.toString();
+    }
+
+    public String getInternalFoodName(){
+        return FoodName;
     }
 
     public int getVer(){

@@ -8,11 +8,13 @@ import android.graphics.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_meal.*
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.nutritionfactlabel.*
 import java.io.File
@@ -41,16 +43,26 @@ class MealActivity : AppCompatActivity() {
             servingcounter = Math.round(totalserving - 0.5).toInt()
             servingslice = totalserving - servingcounter.toFloat()
         }else if(intent.hasExtra("DishID")){
-            val mydishid = intent.getSerializableExtra("DishID") as DishID
-            totalserving = 1.8f;
-            //TODO: get servings from older entries
-            servingcounter = Math.round(totalserving - 0.5).toInt()
-            servingslice = totalserving - servingcounter.toFloat()
-            mymeal = Meal(mydishid, this, Date(), totalserving)
-            mymeal.setFoodImg(intent.getSerializableExtra("FoodImg") as File)
+            val mydishid = DishID(intent.getStringExtra("DishID"), intent.getIntExtra("Version", -1), this)
+            totalserving = 1.8f
+            mydishid.setDishIDPopulatedListener{
+                servingcounter = Math.round(totalserving - 0.5).toInt()
+                servingslice = totalserving - servingcounter.toFloat()
+                Log.i("Serving Slice", servingslice.toString())
+                mymeal = Meal(mydishid, this, Date(), totalserving)
+                mymeal.setFoodImg(intent.getSerializableExtra("FoodImg") as File)
+                executeOnMealInitialized()
+            }
+            mydishid.execute()
+
         }else{
             RedirectToMainOnError("Could not receive Meal or Dish Information.", this)
         }
+
+
+    }
+
+    private fun executeOnMealInitialized(){
 
         if(::mymeal.isInitialized){
             img_mealpic.setImageBitmap(mymeal.foodImg)
@@ -61,6 +73,8 @@ class MealActivity : AppCompatActivity() {
                 val myintent = Intent(this, MainActivity::class.java)
                 startActivity(myintent)
             }
+
+
 
             servingsviewgroup()
             datetimeviewgroup(mymeal.timeConsumed)
@@ -73,7 +87,7 @@ class MealActivity : AppCompatActivity() {
     private fun servingsviewgroup(){
 
         pizzacounternumber.text = servingcounter.toString()
-        pizzaslicer.setServingSlice(servingslice)
+        //pizzaslicer.setServingSlice(servingslice)
         //TODO: set pizza slice in meal activity
 
         btn_pluspizzacount.setOnClickListener{
@@ -198,8 +212,8 @@ class MealActivity : AppCompatActivity() {
 
     private fun getnutritionstr(nutrition: JsonObject,
                                 memberstr: String, default: String): String{
-       val myobj = nutrition.get(memberstr)
-       if(myobj.isJsonNull)
+       val myobj: JsonElement? = nutrition.get(memberstr)
+       if(myobj == null)
             return default
        else
             return myobj.asString
@@ -207,17 +221,17 @@ class MealActivity : AppCompatActivity() {
 
     private fun getnutritionfloat(nutrition: JsonObject,
                                   memberstr: String, unit: String): String{
-        val myobj = nutrition.get(memberstr)
-        if(myobj.isJsonNull)
+        var myobj: JsonElement? = nutrition.get(memberstr)
+        if(myobj == null)
             return "-"
         else
-            return String.format("%.2f%s",myobj.asFloat, unit)
+            return String.format("%.2f%s",myobj!!.asFloat, unit)
     }
 
     private fun getdailyval(nutrition: JsonObject,
                             memberstr: String, recommendedintake: Float): String{
-        val myobj = nutrition.get(memberstr)
-        if(myobj.isJsonNull)
+        var myobj: JsonElement? = nutrition.get(memberstr)
+        if(myobj == null)
             return "0%"
         else
             return String.format("%.0f", myobj.asFloat/recommendedintake*100) + "%"

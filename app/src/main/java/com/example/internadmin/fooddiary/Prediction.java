@@ -22,6 +22,10 @@ public class Prediction implements Serializable {
         return builder.toString();
     }
 
+    public String getInternalFoodName(){
+        return FoodName;
+    }
+
     public int getVer(){
         return ver;
     }

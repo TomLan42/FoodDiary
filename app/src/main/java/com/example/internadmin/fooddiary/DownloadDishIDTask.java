@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
@@ -34,7 +35,7 @@ import java.text.ParseException;
 import java.util.Iterator;
 
 
-public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
+public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> implements Serializable {
 
     private String dstURL;
     //private JSONObject ToServer = new JSONObject();

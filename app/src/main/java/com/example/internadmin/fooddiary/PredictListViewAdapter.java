@@ -54,7 +54,7 @@ public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
             //On click function
             public void onClick(View view) {
                 int position = (Integer) view.getTag();
-                final DishID mydishid = new DishID(getItem(position).getFoodName(), getItem(position).getVer(), getContext());
+                final DishID mydishid = new DishID(getItem(position).getInternalFoodName(), getItem(position).getVer(), getContext());
                 mydishid.setDishIDPopulatedListener(new DishIDPopulatedListener() {
                     @Override
                     public void onPopulated(boolean dataAdded) {
@@ -89,6 +89,7 @@ public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
 
                     }
                 });
+                mydishid.execute();
 
                 //Toast.makeText(getContext(), getItem(position).getFoodName(), Toast.LENGTH_LONG).show();
 

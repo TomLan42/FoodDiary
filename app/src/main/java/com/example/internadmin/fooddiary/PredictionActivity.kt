@@ -17,6 +17,7 @@ import java.io.File
 import android.content.DialogInterface
 import android.os.Build
 import android.support.v7.app.AlertDialog
+import android.util.Log
 
 
 class PredictionActivity : AppCompatActivity() {
@@ -51,12 +52,13 @@ class PredictionActivity : AppCompatActivity() {
 
         btn_mealActivity.setOnClickListener{
             val mypredict = predictionlistview.getItemAtPosition(mypos) as Prediction
-            val mydishid = DishID(mypredict.foodName, mypredict.ver, this)
+            val mydishid = DishID(mypredict.internalFoodName, mypredict.ver, this)
             mydishid.setDishIDPopulatedListener { dataAdded ->
                 if(dataAdded){
                     val b = Bundle()
                     b.putSerializable("FoodImg", FoodImgFile)
-                    b.putSerializable("DishID", mydishid)
+                    b.putString("DishID", mydishid.internalFoodName)
+                    b.putInt("Version", mydishid.ver)
                     val intent = Intent(this, MealActivity::class.java)
                     intent.putExtras(b)
                     startActivity(intent)
@@ -64,6 +66,7 @@ class PredictionActivity : AppCompatActivity() {
                     RedirectToMainOnError("Could not get Dish ID.", this)
                 }
             }
+            mydishid.execute()
 
             //Toast.makeText(this, mypredict.foodName, Toast.LENGTH_LONG).show()
         }
