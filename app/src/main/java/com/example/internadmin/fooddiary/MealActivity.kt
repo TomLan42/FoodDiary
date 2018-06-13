@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_meal.*
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.nutritionfactlabel.*
 import java.io.File
@@ -64,6 +65,7 @@ class MealActivity : AppCompatActivity() {
             servingsviewgroup()
             datetimeviewgroup(mymeal.timeConsumed)
             nutritionfactsviewgroup(mymeal.dishID.nutrition)
+            ingredientsviewgroup(mymeal.dishID.ingredients)
         }
 
     }
@@ -168,7 +170,7 @@ class MealActivity : AppCompatActivity() {
 
     private fun nutritionfactsviewgroup(nutrition: JsonObject){
         btn_expandnutritionfacts.setOnClickListener{
-            expandable_layout.toggle()
+            nutrition_expandable.toggle()
         }
 
         text_servingsize.text =
@@ -219,6 +221,22 @@ class MealActivity : AppCompatActivity() {
             return "0%"
         else
             return String.format("%.0f", myobj.asFloat/recommendedintake*100) + "%"
+
+    }
+
+    private fun ingredientsviewgroup(ingredients: List<String>){
+        btn_expandingredients.setOnClickListener {
+            ingredients_expandable.toggle()
+        }
+
+        val mystring = StringBuilder()
+        val myseparator = ", "
+
+        for(ingredient in ingredients){
+            mystring.append(myseparator).append(ingredient)
+        }
+
+        text_ingredients.text = mystring.substring(0, mystring.length- 2).toString()
 
     }
 

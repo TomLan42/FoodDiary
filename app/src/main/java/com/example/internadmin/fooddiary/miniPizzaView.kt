@@ -79,7 +79,7 @@ class miniPizzaView
         return BitmapFactory.decodeResource(res, resId, options)
     }
 
-    public fun setServingSlice(fraction: Float){
+    fun setServingSlice(fraction: Float){
         angle = (fraction - Math.floor(fraction.toDouble()).toFloat()) * 360
         invalidate()
     }
