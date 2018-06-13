@@ -1,6 +1,7 @@
 package com.example.internadmin.fooddiary;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -72,6 +74,16 @@ public class Summary extends Fragment {
         ll.addView(breakfastcard);
         ll.addView(lunchcard);
         ll.addView(dinnercard);
+        Button btn = new Button(getContext());
+        btn.setText("New");
+        ll.addView(btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myintent = new Intent(getActivity(), CameraActivity.class);
+                startActivity(myintent);
+            }
+        });
         return sv;
     }
 

@@ -36,6 +36,7 @@ class MealActivity : AppCompatActivity() {
         setContentView(R.layout.activity_meal)
 
         val totalserving: Float
+        val mypizzaslicer = findViewById<miniPizzaView>(R.id.pizzaslicer)
 
         if(intent.hasExtra("Meal")){
             mymeal = intent.getSerializableExtra("Meal") as Meal
@@ -51,7 +52,7 @@ class MealActivity : AppCompatActivity() {
                 Log.i("Serving Slice", servingslice.toString())
                 mymeal = Meal(mydishid, this, Date(), totalserving)
                 mymeal.setFoodImg(intent.getSerializableExtra("FoodImg") as File)
-                executeOnMealInitialized()
+                executeOnMealInitialized(mypizzaslicer)
             }
             mydishid.execute()
 
@@ -60,9 +61,12 @@ class MealActivity : AppCompatActivity() {
         }
 
 
+
+
+
     }
 
-    private fun executeOnMealInitialized(){
+    private fun executeOnMealInitialized(mypizzaslicer: miniPizzaView){
 
         if(::mymeal.isInitialized){
             img_mealpic.setImageBitmap(mymeal.foodImg)
@@ -76,7 +80,7 @@ class MealActivity : AppCompatActivity() {
 
 
 
-            servingsviewgroup()
+            servingsviewgroup(mypizzaslicer)
             datetimeviewgroup(mymeal.timeConsumed)
             nutritionfactsviewgroup(mymeal.dishID.nutrition)
             ingredientsviewgroup(mymeal.dishID.ingredients)
@@ -84,10 +88,12 @@ class MealActivity : AppCompatActivity() {
 
     }
 
-    private fun servingsviewgroup(){
+    private fun servingsviewgroup(mypizzaslicer: miniPizzaView){
 
         pizzacounternumber.text = servingcounter.toString()
-        //pizzaslicer.setServingSlice(servingslice)
+        if(servingcounter > 0)
+            pizzacounter.visibility = View.VISIBLE
+        mypizzaslicer.setServingSlice(servingslice)
         //TODO: set pizza slice in meal activity
 
         btn_pluspizzacount.setOnClickListener{
@@ -112,7 +118,7 @@ class MealActivity : AppCompatActivity() {
         view_servings.setOnClickListener{
             val cdd = PieSliderDialog(this, servingslice, ServingSliceListener {
                 servingslice = it
-                pizzaslicer.setServingSlice(servingslice)
+                mypizzaslicer.setServingSlice(servingslice)
                 mymeal.servingAmt = servingcounter + servingslice
             })
             cdd.show()
@@ -123,7 +129,7 @@ class MealActivity : AppCompatActivity() {
 
     private fun datetimeviewgroup(defaultdate: Date){
 
-        val dateFormat = SimpleDateFormat("E, d MM y, hh:mm")
+        val dateFormat = SimpleDateFormat("E, d MMM y, hh:mm")
         setdatetime.text = dateFormat.format(defaultdate)
 
         setmealofday.text = getMealType(defaultdate)

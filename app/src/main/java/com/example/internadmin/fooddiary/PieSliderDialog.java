@@ -29,12 +29,13 @@ public class PieSliderDialog extends Dialog implements
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.pieslider_dialog);
-        myPizzaView = (PizzaView) findViewById(R.id.ViewPizza);
+        myPizzaView = findViewById(R.id.ViewPizza);
+        set = findViewById(R.id.btn_setslice);
         myPizzaView.setServingSlice(ServingSlice);
-        set = (Button) findViewById(R.id.btn_setslice);
         set.setOnClickListener(this);
 
     }
+
 
     @Override
     public void onClick(View v) {

@@ -6,8 +6,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 
-class miniPizzaView
-(context: Context, AttributeSet: AttributeSet) : View(context) {
+class miniPizzaView : View {
 
     private var angle = 90f
     private lateinit var mBitmap: Bitmap
@@ -15,6 +14,12 @@ class miniPizzaView
     private var mOval: RectF
     private var w2: Float = 0f
     private var h2:Float = 0f
+
+    constructor(context: Context) : super(context)
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)

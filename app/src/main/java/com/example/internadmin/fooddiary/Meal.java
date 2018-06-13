@@ -22,6 +22,10 @@ public class Meal implements Serializable{
     private DBHandler mydbhandler;
     private Context ctx;
 
+    public Meal(){
+        this.ctx = ctx;
+    }
+
     public Meal(DishID MyDishID, Context ctx, Date TimeConsumed, float ServingAmt){
 
         this.MyDishID = MyDishID;
@@ -30,6 +34,7 @@ public class Meal implements Serializable{
         this.ctx = ctx;
 
     }
+
 
     public void setFoodImg(File foodImg) {
         FoodImg = foodImg;
