@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity{
     private int fetchColor(@ColorRes int color) {
         return ContextCompat.getColor(this, color);
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
@@ -188,5 +188,5 @@ public class MainActivity extends AppCompatActivity{
         } else {
             super.onBackPressed();
         }
-    }
+    }*/
 }

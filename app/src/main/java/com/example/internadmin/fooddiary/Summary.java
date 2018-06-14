@@ -82,7 +82,7 @@ public class Summary extends Fragment {
         List<Long> lunchlist = handler.getHistoryEntries(getLunchStart(), getLunchEnd());
         List<Long> dinnerlist = handler.getHistoryEntries(getDinnerStart(), getDinnerEnd());
         if(breakfastlist.size() > 0){
-            CardView breakfastcard = createBreakfast();
+            CardView breakfastcard = createBreakfast(breakfastlist);
             ll.addView(breakfastcard);
         }
         if(lunchlist.size() > 0){
@@ -90,12 +90,12 @@ public class Summary extends Fragment {
             ll.addView(lunchcard);
         }
         if(dinnerlist.size() > 0){
-            CardView dinnercard = createDinner();
+            CardView dinnercard = createDinner(dinnerlist);
             ll.addView(dinnercard);
         }
 
         //sv.addView(fab);
-        sv.fullScroll(ScrollView.FOCUS_UP);
+        sv.smoothScrollTo(0, 0);
         return sv;
     }
 
@@ -202,7 +202,7 @@ public class Summary extends Fragment {
     }
 
 
-    public CardView createBreakfast(){
+    public CardView createBreakfast(List<Long> mealdata){
         /*
         function to create cardview for breakfast.
         Creates a cardview.
@@ -249,15 +249,18 @@ public class Summary extends Fragment {
         rl.addView(sunrise, sunriseparams);
         breakfastlist = new NonScrollListView(getContext());
         ArrayList<FoodItem> foodlist = new ArrayList<>();
-        foodlist.add(new FoodItem("thosai", "yummy"));
-        foodlist.add(new FoodItem("thosai", "yummy"));
-        foodlist.add(new FoodItem("aloo paratha", "not so good"));
+        for(int i = 0; i < mealdata.size(); i++){
+            Long id = mealdata.get(i);
+            Meal meal = new Meal(getContext());
+            meal.populateFromDatabase(id, getContext());
+            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
+        }
         FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
         breakfastlist.setAdapter(adapter);
         breakfastlayout.addView(breakfastlist);
         return breakfastcard;
     }
-    public CardView createLunch(List<Long> lunchdata){
+    public CardView createLunch(List<Long> mealdata){
         /*
         Formatting same as createbreakfast
         */
@@ -298,8 +301,8 @@ public class Summary extends Fragment {
         ArrayList<FoodItem> foodlist = new ArrayList<>();
 
         // adding data from lunchlist to the cardlist
-        for(int i = 0; i < lunchdata.size(); i++){
-            Long id = lunchdata.get(i);
+        for(int i = 0; i < mealdata.size(); i++){
+            Long id = mealdata.get(i);
             Meal meal = new Meal(getContext());
             meal.populateFromDatabase(id, getContext());
             foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
@@ -312,7 +315,7 @@ public class Summary extends Fragment {
         lunchlayout.addView(lunchlist);
         return lunchcard;
     }
-    public CardView createDinner(){
+    public CardView createDinner(List<Long> mealdata){
         /*
         Formatting same as createbreakfast
         */
@@ -350,9 +353,12 @@ public class Summary extends Fragment {
         rl.addView(moon, moonparams);
         dinnerlist = new NonScrollListView(getContext());
         ArrayList<FoodItem> foodlist = new ArrayList<>();
-        foodlist.add(new FoodItem("thosai", "yummy"));
-        foodlist.add(new FoodItem("thosai", "yummy"));
-        foodlist.add(new FoodItem("aloo paratha", "not so good"));
+        for(int i = 0; i < mealdata.size(); i++){
+            Long id = mealdata.get(i);
+            Meal meal = new Meal(getContext());
+            meal.populateFromDatabase(id, getContext());
+            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
+        }
         FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
         dinnerlist.setAdapter(adapter);
         dinnerlayout.addView(dinnerlist);
