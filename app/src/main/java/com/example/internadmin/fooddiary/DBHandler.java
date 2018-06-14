@@ -57,6 +57,14 @@ public class DBHandler extends SQLiteOpenHelper {
         ctx = context;
     }
 
+    /* Creates the database tables required for operation. The 2 tables are mealshistory and DishID.
+    The format for the 2 tables are shown below:
+
+    mealshistory
+
+
+     */
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -107,7 +115,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     Log.e("I/O Error", e.getMessage());
                 }
 
-                db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_IMGPATH + " = ? ", new String[] { Long.toString(rowID)});
+                db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_ID + " = ? ", new String[] { Long.toString(rowID)});
             }
 
             return true;
