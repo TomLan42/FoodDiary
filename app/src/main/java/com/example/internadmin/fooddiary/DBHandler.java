@@ -57,13 +57,31 @@ public class DBHandler extends SQLiteOpenHelper {
         ctx = context;
     }
 
-    /* Creates the database tables required for operation. The 2 tables are mealshistory and DishID.
+    /*
+    OnCreate() -> Creates the database tables required for operation. The 2 tables are mealshistory and DishID.
     The format for the 2 tables are shown below:
-
-    mealshistory
-
-
-     */
+                  ------------------------
+    Table Name:   | mealshistory         |
+                  ----------------------------------------------------------------------------------------------------
+    Column Names: | id(INTEGER, PRI KEY) | foodname(TEXT) | time(DATETIME)        | servingamt(REAL) | imgpath(TEXT) |
+                  ----------------------------------------------------------------------------------------------------
+    Column Desc:  | Entry ID             | Name of Food   | Time Meal is Consumed | Serving Amount   | Path to Image |
+                  ----------------------------------------------------------------------------------------------------
+                                                                                    (Dependent on a
+                                                                                    particular dish's
+                                                                                    serving size)
+                  ---------------------------
+    Table Name:   | DishID                  |
+                  ------------------------------------------------------------------------------------------------------------
+    Column Names: | foodname(TEXT, PRI KEY) | version(INTEGER)  | nutritionjson(TEXT) | ingredientlist(TEXT) | imgpath(TEXT) |
+                  ------------------------------------------------------------------------------------------------------------
+    Column Desc:  | Dish Name as identifier | Dish Info Version | Nutrition Facts     | List of Ingredients  | Path to Image |
+                  ------------------------------------------------------------------------------------------------------------
+                                              (Trigger update if  (Stored as a JSON     (Stored as a GSON      (Image of Dish)
+                                              Dish info version   string)               string)
+                                              is older than
+                                              server's)
+    */
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -86,6 +104,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_DISHID);
     }
 
+    /* Deletes the Tables if an upgrade is called */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE_NAME);
@@ -93,7 +112,21 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    //Methods for manipulating Meal Table
+    //---------------------------------------
+    //| Methods for manipulating Meal Table |
+    //---------------------------------------
+
+
+    /*
+    ------------------------------------------------------------------------
+    insertMealEntry(): Adds a new entry into the mealhistory table.
+
+    Expects data from the Meal class method saveToDatabase, and returns true if the insertion is successful.
+    First creates an entry, then gets the ID. Updates the entry with the image path.
+
+    Returns false if entry insertion into mealhistory table is unsuccessful.
+    -------------------------------------------------------------------------
+    */
 
     public boolean insertMealEntry (String FoodName, Date TimeConsumed, float ServingAmt, File FoodImg) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -123,6 +156,21 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    /*
+    ------------------------------------------------------------------------
+    SaveMealImg(): Private Method used by insertMealEntry and updateMealEntry to save the food image to internal directory.
+
+    During database insertion, the ID is not known until the entry created. Hence, the file, which requires the ID for naming,
+    can only be saved to imageDir directory after the entry is created.
+
+    SaveMealImg takes the original file (likely from cache), copies it to imageDir directory (using private method copyFile),
+    and names it with the FoodName it represents, and the rowID.
+
+    Returns the path of full path of the image, to be stored in the database for future retrieval.
+
+    -------------------------------------------------------------------------
+    */
+
     private String SaveMealImg(Context context, long rowID, String FoodName, File FoodImg) throws IOException{
 
         ContextWrapper cw = new ContextWrapper(context);
@@ -134,10 +182,30 @@ public class DBHandler extends SQLiteOpenHelper {
         return mypath.getAbsolutePath();
     }
 
+    /*
+    ------------------------------------------------------------------------
+
+    numberOfMealRecords(): Returns the number of records the user has saved into mealhistory
+
+    -------------------------------------------------------------------------
+    */
+
     public Long numberOfMealRecords(){
         SQLiteDatabase db = this.getReadableDatabase();
         return DatabaseUtils.queryNumEntries(db, HISTORY_TABLE_NAME);
     }
+
+    /*
+    ------------------------------------------------------------------------
+
+    updateHistoryEntry(): Performs updates on an existing entry
+
+    Expects data from the Meal class method saveToDatabase, and returns true if the update is successful.
+
+    Returns false if entry not updated.
+
+    -------------------------------------------------------------------------
+    */
 
     public boolean updateHistoryEntry (String FoodName, Date TimeConsumed, float ServingAmt, File FoodImg, Long RowID)  {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -150,17 +218,43 @@ public class DBHandler extends SQLiteOpenHelper {
         }catch (IOException e){
             Log.e("I/O Error", e.getMessage());
         }
-        db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_ID + "=" + RowID, null);
-        return true;
+
+        int updated = db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_ID + "=" + RowID, null);
+
+        return (updated > 0);
 
     }
 
-    public Integer deleteHistoryEntry (long id) {
+    /*
+    ------------------------------------------------------------------------
+
+    updateHistoryEntry(): Deletes an existing entry
+
+    Expects the ID of the entry. Returns true if deleted.
+
+    Returns false if no entry is deleted.
+
+    -------------------------------------------------------------------------
+    */
+
+    public boolean deleteHistoryEntry (long id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(HISTORY_TABLE_NAME,
+        return (db.delete(HISTORY_TABLE_NAME,
                 "id = ? ",
-                new String[] { Long.toString(id) });
+                new String[] { Long.toString(id) }) > 0);
     }
+
+    /*
+    ------------------------------------------------------------------------
+
+    getHistoryEntries(): Gives a list of IDs from mealhistory that are within given time range.
+
+    Expects the starting time and ending time.
+
+    Returns a List of Long.
+
+    -------------------------------------------------------------------------
+    */
 
     public List<Long> getHistoryEntries(Date startdate, Date enddate) {
         List<Long> list = new ArrayList<>();
@@ -193,6 +287,18 @@ public class DBHandler extends SQLiteOpenHelper {
         res.close();
         return list;
     }
+
+    /*
+    ------------------------------------------------------------------------
+
+    getAllServingsTimePeriod(): Sums the number of servings within a time period for each FoodName.
+
+    Expects the starting time and ending time.
+
+    Returns a Hashmap of the FoodName and the corresponding sum of servings.
+
+    -------------------------------------------------------------------------
+    */
 
     public HashMap<String, Float> getAllServingsTimePeriod(Date startdate, Date enddate) {
         HashMap<String, Float> hmap = new HashMap<>();
