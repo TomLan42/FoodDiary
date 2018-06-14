@@ -291,11 +291,11 @@ public class DBHandler extends SQLiteOpenHelper {
     /*
     ------------------------------------------------------------------------
 
-    getAllServingsTimePeriod(): Gives a list of IDs from mealhistory that are within given time range.
+    getAllServingsTimePeriod(): Sums the number of servings within a time period for each FoodName.
 
     Expects the starting time and ending time.
 
-    Returns a List of Long.
+    Returns a Hashmap of the FoodName and the corresponding sum of servings.
 
     -------------------------------------------------------------------------
     */
