@@ -39,7 +39,9 @@ class MealActivity : AppCompatActivity() {
         val mypizzaslicer = findViewById<miniPizzaView>(R.id.pizzaslicer)
 
         if(intent.hasExtra("Meal")){
-            mymeal = intent.getSerializableExtra("Meal") as Meal
+            val mymealID = intent.getLongExtra("Meal", -1)
+            mymeal = Meal()
+            mymeal.populateFromDatabase(mymealID, this)
             totalserving = mymeal.servingAmt
             servingcounter = Math.round(totalserving - 0.5).toInt()
             servingslice = totalserving - servingcounter.toFloat()

@@ -23,7 +23,7 @@ public class Meal implements Serializable{
     private Context ctx;
 
     public Meal(){
-        this.ctx = ctx;
+
     }
 
     public Meal(DishID MyDishID, Context ctx, Date TimeConsumed, float ServingAmt){

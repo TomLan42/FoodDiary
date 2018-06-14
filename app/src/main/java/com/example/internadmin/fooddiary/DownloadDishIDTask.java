@@ -38,7 +38,6 @@ import java.util.Iterator;
 public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
 
     private String dstURL;
-    //private JSONObject ToServer = new JSONObject();
     private BufferedReader reader = null;
     private WeakReference<Context> weakContext;
     private String FoodName;
