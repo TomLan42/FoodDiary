@@ -1,7 +1,9 @@
 package com.example.internadmin.fooddiary;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.annotation.ColorRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -38,8 +40,9 @@ public class MainActivity extends AppCompatActivity{
         display.getSize(size);
         FrameLayout main = new FrameLayout(MainActivity.this);
         // HANDLING THE TOOLBAR
-        toolbar = new Toolbar(MainActivity.this);
-        searchView = new MaterialSearchView(MainActivity.this);
+        //toolbar = new Toolbar(MainActivity.this);
+        //searchView = new MaterialSearchView(MainActivity.this);
+        /*
         FrameLayout.LayoutParams toolparams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         FrameLayout.LayoutParams searchparams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         searchView.setLayoutParams(searchparams);
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity{
             public void onSearchViewClosed() {
                 //Do some magic
             }
-        });
+        });*/
         //searchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
 
         // HANDLING THE TOOLBAR
@@ -86,19 +89,32 @@ public class MainActivity extends AppCompatActivity{
             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
         }
         //main.setOrientation(LinearLayout.VERTICAL);
-        main.setId(94);
-        main.addView(toolbar);
-        main.addView(searchView);
+        MovableFloatingActionButton fab = new MovableFloatingActionButton(MainActivity.this);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent camera = new Intent(MainActivity.this, CameraActivity.class);
+                startActivity(camera);
+            }
+        });
+        FrameLayout.LayoutParams fabparams = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        fabparams.width = (int)(size.x*0.16);
+        fabparams.height = (int)(size.x*0.16);
+        fab.setId(899);
+        fab.setLayoutParams(fabparams);
+        main.setId(894);
+        //main.addView(toolbar);
+        //main.addView(searchView);
         final LinearLayout ll = new LinearLayout(MainActivity.this);
-        ll.setId(95);
+        ll.setId(895);
         ll.setOrientation(LinearLayout.VERTICAL);
         FrameLayout.LayoutParams fragparams = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        fragparams.setMargins(0, actionBarHeight, 0, (int)(size.y*0.1));
-        fragparams.height = (int)(size.y - size.y*0.14-actionBarHeight);
+        fragparams.setMargins(0, 0, 0, (int)(size.y*0.1));
+        fragparams.height = (int)(size.y - size.y*0.14);
         fragparams.width = (int)(size.x*1);
         ll.setLayoutParams(fragparams);
         AHBottomNavigation bottomNavigation = new AHBottomNavigation(MainActivity.this);
-        bottomNavigation.setId(96);
+        bottomNavigation.setId(1196);
         FrameLayout.LayoutParams navparams = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         navparams.height = (int)((size.y)*0.1);
         bottomNavigation.setLayoutParams(navparams);
@@ -150,6 +166,7 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
+        main.addView(fab);
         setContentView(main);
     }
 
