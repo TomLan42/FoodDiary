@@ -41,7 +41,7 @@ public class Meal implements Serializable{
 
         mydbhandler = new DBHandler(ctx);
 
-        return mydbhandler.insertMealEntry(MyDishID.getFoodName(), TimeConsumed, ServingAmt, FoodImg);
+        return mydbhandler.insertMealEntry(MyDishID.getInternalFoodName(), TimeConsumed, ServingAmt, FoodImg);
     }
 
     public void populateFromDatabase(long MealID, Context ctx){
@@ -61,7 +61,7 @@ public class Meal implements Serializable{
 
     public boolean updateInDatabase(Context ctx){
 
-        return mydbhandler.updateHistoryEntry(MyDishID.getFoodName(), TimeConsumed, ServingAmt, FoodImg, RowID);
+        return mydbhandler.updateHistoryEntry(MyDishID.getInternalFoodName(), TimeConsumed, ServingAmt, FoodImg, RowID);
     }
 
     public void setTimeConsumed(Date date){
