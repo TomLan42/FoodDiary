@@ -40,7 +40,7 @@ class MealActivity : AppCompatActivity() {
 
         if(intent.hasExtra("Meal")){
             val mymealID = intent.getLongExtra("Meal", -1)
-            mymeal = Meal()
+            //mymeal = Meal()
             mymeal.populateFromDatabase(mymealID, this)
             totalserving = mymeal.servingAmt
             servingcounter = Math.round(totalserving - 0.5).toInt()
