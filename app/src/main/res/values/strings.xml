@@ -19,6 +19,7 @@
     <string name="fibre">Dietary Fibre</string>
     <string name="sugars">Sugars</string>
     <string name="protein">Protein</string>
+    <string name="pref_previously_started">prevstart</string>
     <string name="notedv">*Percent Daily Values are based on a 2,000 calorie diet. Your Daily Values may be higher or lower depending on your calorie needs.</string>
     <string name="settime">Set Time</string>
     <string name="ingredients">Ingredients</string>

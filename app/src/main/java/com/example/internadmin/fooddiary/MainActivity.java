@@ -1,7 +1,9 @@
 package com.example.internadmin.fooddiary;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -34,6 +36,24 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+
+        // working with the app intro
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
+        if(!previouslyStarted) {
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+            edit.commit();
+            Intent intro = new Intent(MainActivity.this, IntroActivity.class);
+            startActivity(intro);
+        }
+
+
+
+
+
+
         // main scrollview for MainActivity
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();

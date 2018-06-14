@@ -6,12 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
-public class IntroActivity extends AppIntro2 {
+public class IntroActivity extends AppIntro {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,13 +29,14 @@ public class IntroActivity extends AppIntro2 {
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest.
         String title = "Hello World!";
-        String description = "This is a sample slide";
+        String description = "Please provide us some information we need to make your experience better";
         int color = Color.parseColor("#3F51B5");
         addSlide(AppIntroFragment.newInstance(title, description, R.drawable.ic_launcher_foreground, color));
         String title2 = "Hello Again!";
         String description2 = "This is another sample slide";
         addSlide(AppIntroFragment.newInstance(title2, description2, R.drawable.ic_launcher_foreground, color));
-
+        IntroHello hello = new IntroHello();
+        addSlide(hello);
         // OPTIONAL METHODS
         // Override bar/separator color.
         setBarColor(color);
@@ -67,5 +69,8 @@ public class IntroActivity extends AppIntro2 {
     public void onSlideChanged(@Nullable Fragment oldFragment, @Nullable Fragment newFragment) {
         super.onSlideChanged(oldFragment, newFragment);
         // Do something when the slide changes.
+        if(newFragment instanceof IntroHello){
+            Toast.makeText(this, "Slide changed", Toast.LENGTH_SHORT).show();
+        }
     }
 }
