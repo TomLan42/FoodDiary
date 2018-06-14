@@ -216,7 +216,7 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.query(HISTORY_TABLE_NAME, columns, selection, selectionArgs,
                 null, null, null);
 
-        if(cursor != null){
+        if(cursor.moveToFirst()){
             b.putString("FoodName", cursor.getString(0));
             b.putFloat("ServingAmt", cursor.getFloat(2));
             try{
@@ -224,6 +224,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 b.putSerializable("FoodImg", new File(cursor.getString(3)));
             }catch (ParseException e){
                 Log.e("getMeal", "Parse Error: " + e.getMessage());
+            }catch(NullPointerException e){
+                //Log.e("NULLLLLLEXCEPPPTIONNNNNNNERRRROOOORRRR", "MESSAGE: " + cursor.getString(3));
             }
 
         }

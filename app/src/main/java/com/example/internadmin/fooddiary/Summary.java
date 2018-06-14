@@ -1,6 +1,7 @@
 package com.example.internadmin.fooddiary;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,10 +29,15 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class Summary extends Fragment {
     ScrollView sv;
     CardView barcard;
+    DBHandler handler;
     BarChart chart;
     NonScrollListView breakfastlist;
     NonScrollListView lunchlist;
@@ -53,10 +60,12 @@ public class Summary extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // initializing main scrollview
         sv = new ScrollView(getContext());
         LinearLayout ll = new LinearLayout(getContext());
         ll.setOrientation(LinearLayout.VERTICAL);
         sv.addView(ll);
+        handler = new DBHandler(getContext());
         // get display size of phone
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         size = new Point();
@@ -66,14 +75,88 @@ public class Summary extends Fragment {
         vals[1] = new int[]{100, 20, 33, 46, 25, 65, 107};
         CardView barcard = createChart(vals);
         ll.addView(barcard);
-        CardView breakfastcard = createBreakfast();
-        CardView lunchcard = createLunch();
-        CardView dinnercard = createDinner();
-        ll.addView(breakfastcard);
-        ll.addView(lunchcard);
-        ll.addView(dinnercard);
+        // checking whether breakfast lunch and dinner are required or not
+        // check for breakfast
+        List<Long> breakfastlist = handler.getHistoryEntries(getBreakFastStart(), getBreakFastEnd());
+        List<Long> lunchlist = handler.getHistoryEntries(getLunchStart(), getLunchEnd());
+        List<Long> dinnerlist = handler.getHistoryEntries(getDinnerStart(), getDinnerEnd());
+        if(breakfastlist.size() > 0){
+            CardView breakfastcard = createBreakfast();
+            ll.addView(breakfastcard);
+        }
+        if(lunchlist.size() > 0){
+            CardView lunchcard = createLunch(lunchlist);
+            ll.addView(lunchcard);
+        }
+        if(dinnerlist.size() > 0){
+            CardView dinnercard = createDinner();
+            ll.addView(dinnercard);
+        }
+        Button btn = new Button(getContext());
+        btn.setText("camera");
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent camera = new Intent(getContext(), CameraActivity.class);
+                startActivity(camera);
+
+            }
+        });
+        ll.addView(btn);
         return sv;
     }
+
+    public Date getBreakFastStart(){
+        Calendar mealtime = new GregorianCalendar();
+        mealtime.setTime(new Date());
+        mealtime.set(Calendar.HOUR_OF_DAY, 7);
+        mealtime.set(Calendar.MINUTE, 0);
+        mealtime.set(Calendar.SECOND, 0);
+        return mealtime.getTime();
+    }
+    public Date getBreakFastEnd(){
+        Calendar mealtime = new GregorianCalendar();
+        mealtime.setTime(new Date());
+        mealtime.set(Calendar.HOUR_OF_DAY, 11);
+        mealtime.set(Calendar.MINUTE, 0);
+        mealtime.set(Calendar.SECOND, 0);
+        return mealtime.getTime();
+    }
+
+    public Date getLunchStart(){
+        Calendar mealtime = new GregorianCalendar();
+        mealtime.setTime(new Date());
+        mealtime.set(Calendar.HOUR_OF_DAY, 12);
+        mealtime.set(Calendar.MINUTE, 0);
+        mealtime.set(Calendar.SECOND, 0);
+        return mealtime.getTime();
+    }
+    public Date getLunchEnd(){
+        Calendar mealtime = new GregorianCalendar();
+        mealtime.setTime(new Date());
+        mealtime.set(Calendar.HOUR_OF_DAY, 16);
+        mealtime.set(Calendar.MINUTE, 0);
+        mealtime.set(Calendar.SECOND, 0);
+        return mealtime.getTime();
+    }
+
+    public Date getDinnerStart(){
+        Calendar mealtime = new GregorianCalendar();
+        mealtime.setTime(new Date());
+        mealtime.set(Calendar.HOUR_OF_DAY, 20);
+        mealtime.set(Calendar.MINUTE, 0);
+        mealtime.set(Calendar.SECOND, 0);
+        return mealtime.getTime();
+    }
+    public Date getDinnerEnd(){
+        Calendar mealtime = new GregorianCalendar();
+        mealtime.setTime(new Date());
+        mealtime.set(Calendar.HOUR_OF_DAY, 23);
+        mealtime.set(Calendar.MINUTE, 0);
+        mealtime.set(Calendar.SECOND, 0);
+        return mealtime.getTime();
+    }
+
 
     public CardView createChart(int[][] vals){
         /*
@@ -181,10 +264,11 @@ public class Summary extends Fragment {
         breakfastlayout.addView(breakfastlist);
         return breakfastcard;
     }
-    public CardView createLunch(){
+    public CardView createLunch(List<Long> lunchdata){
         /*
         Formatting same as createbreakfast
         */
+        // getting the meal from the list
         CardView lunchcard = new CardView(getContext());
         LinearLayout lunchlayout = new LinearLayout(getContext());
         lunchlayout.setOrientation(LinearLayout.VERTICAL);
@@ -219,9 +303,17 @@ public class Summary extends Fragment {
         rl.addView(suncomp, suncompparams);
         lunchlist = new NonScrollListView(getContext());
         ArrayList<FoodItem> foodlist = new ArrayList<>();
-        foodlist.add(new FoodItem("thosai", "yummy"));
-        foodlist.add(new FoodItem("thosai", "yummy"));
-        foodlist.add(new FoodItem("aloo paratha", "not so good"));
+
+        // adding data from lunchlist to the cardlist
+        for(int i = 0; i < lunchdata.size(); i++){
+            Long id = lunchdata.get(i);
+            Meal meal = new Meal(getContext());
+            meal.populateFromDatabase(id, getContext());
+            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
+        }
+        //foodlist.add(new FoodItem("thosai", "yummy"));
+        //foodlist.add(new FoodItem("thosai", "yummy"));
+        //foodlist.add(new FoodItem("aloo paratha", "not so good"));
         FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
         lunchlist.setAdapter(adapter);
         lunchlayout.addView(lunchlist);

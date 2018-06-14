@@ -30,7 +30,9 @@ public class Meal implements Serializable{
         this.ctx = ctx;
 
     }
-
+    public Meal(Context ctx){
+        this.ctx = ctx;
+    }
     public void setFoodImg(File foodImg) {
         FoodImg = foodImg;
     }
