@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity{
     MaterialSearchView searchView;
     Toolbar toolbar;
     int prevpos = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

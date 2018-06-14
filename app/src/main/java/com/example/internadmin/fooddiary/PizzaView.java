@@ -2,6 +2,7 @@ package com.example.internadmin.fooddiary;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -20,21 +21,27 @@ public class PizzaView extends View {
     private Bitmap mBitmap;
     private Paint mPaint;
     private RectF mOval;
-    private float mAngle = 135;
+    private float mAngle;
     private Paint mTextPaint;
     private float w2,h2;
 
-    public PizzaView(Context context, AttributeSet AttributeSet) {
-        super(context);
+    public PizzaView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mOval = new RectF();
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextSize(48);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
-        mTextPaint.setColor(0xffffffff);
+        mTextPaint.setColor(0x000000);
         mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
         w2 = getWidth() / 2f;
         h2 = getHeight() / 2f;
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PizzaView, 0, 0);
+        try {
+            mAngle = ta.getDimension(R.styleable.PizzaView_StartingAngle, 90.0f);
+        } finally {
+            ta.recycle();
+        }
     }
 
     @Override

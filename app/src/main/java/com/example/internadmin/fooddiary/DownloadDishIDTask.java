@@ -35,16 +35,15 @@ import java.text.ParseException;
 import java.util.Iterator;
 
 
-public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> implements Serializable {
+public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
 
     private String dstURL;
-    //private JSONObject ToServer = new JSONObject();
     private BufferedReader reader = null;
     private WeakReference<Context> weakContext;
     private String FoodName;
     public static final String Result = "Result";
     public static final String Success = "Success";
-    private ProgressDialog progDialog;
+    private WeakReference<ProgressDialog> progDialogref;
     private PostTaskListener<Bundle> ptl;
 
 
@@ -53,12 +52,13 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> implements
         weakContext = new WeakReference<>(context);
         this.FoodName = FoodName;
         this.ptl = ptl;
-        this.progDialog = new ProgressDialog(weakContext.get());
+        this.progDialogref = new WeakReference<>(new ProgressDialog(weakContext.get()));
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        ProgressDialog progDialog = progDialogref.get();
         progDialog.setMessage("Downloading Resources...");
         progDialog.setIndeterminate(false);
         progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -172,8 +172,8 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> implements
         if(result != null && ptl != null){
             ptl.onPostTask(result);
         }
-        if (progDialog.isShowing()) {
-            progDialog.dismiss();
+        if (progDialogref.get() != null && progDialogref.get().isShowing()) {
+            progDialogref.get().dismiss();
         }
     }
 
