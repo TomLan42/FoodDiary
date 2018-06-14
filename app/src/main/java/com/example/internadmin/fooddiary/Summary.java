@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.TypedValue;
@@ -92,17 +93,9 @@ public class Summary extends Fragment {
             CardView dinnercard = createDinner();
             ll.addView(dinnercard);
         }
-        Button btn = new Button(getContext());
-        btn.setText("camera");
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent camera = new Intent(getContext(), CameraActivity.class);
-                startActivity(camera);
 
-            }
-        });
-        ll.addView(btn);
+        //sv.addView(fab);
+        sv.fullScroll(ScrollView.FOCUS_UP);
         return sv;
     }
 
