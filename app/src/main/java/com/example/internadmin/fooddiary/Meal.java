@@ -19,37 +19,36 @@ public class Meal implements Serializable{
     private float ServingAmt;
     private File FoodImg;
     private long RowID;
-    private DBHandler mydbhandler;
-    private Context ctx;
 
-    public Meal(DishID MyDishID, Context ctx, Date TimeConsumed, float ServingAmt){
+    public Meal(DishID MyDishID, Date TimeConsumed, float ServingAmt){
 
         this.MyDishID = MyDishID;
         this.TimeConsumed = TimeConsumed;
         this.ServingAmt = ServingAmt;
-        this.ctx = ctx;
 
     }
 
-    public Meal(Context ctx){
-        this.ctx = ctx;
-        mydbhandler = new DBHandler(ctx);
+    public Meal(){
     }
 
     public void setFoodImg(File foodImg) {
-        FoodImg = foodImg;
+        this.FoodImg = foodImg;
     }
 
-    public boolean saveToDatabase(){
+    public boolean saveToDatabase(Context ctx){
+
+        DBHandler mydbhandler = new DBHandler(ctx);
 
         return mydbhandler.insertMealEntry(MyDishID.getInternalFoodName(), TimeConsumed, ServingAmt, FoodImg);
     }
 
-    public void populateFromDatabase(long MealID){
+    public void populateFromDatabase(long MealID, Context ctx){
 
+        DBHandler mydbhandler = new DBHandler(ctx);
 
         Bundle b = mydbhandler.getMeal(MealID);
-        MyDishID = new DishID(b.getString("FoodName"), -1, ctx);
+        this.MyDishID = new DishID(b.getString("FoodName"), -1, ctx);
+        this.MyDishID.execute();
         this.TimeConsumed = (Date) b.getSerializable("TimeConsumed");
         if(b.containsKey("FoodImg")){
             this.FoodImg = (File) b.getSerializable("FoodImg");
@@ -59,9 +58,11 @@ public class Meal implements Serializable{
 
     }
 
-    public boolean updateInDatabase(){
+    public boolean updateInDatabase(Context ctx){
 
-        return mydbhandler.updateHistoryEntry(MyDishID.getInternalFoodName(), TimeConsumed, ServingAmt, FoodImg, RowID);
+        DBHandler mydbhandler = new DBHandler(ctx);
+
+        return mydbhandler.updateHistoryEntry(MyDishID.getInternalFoodName(), TimeConsumed, ServingAmt, RowID);
     }
 
     public void setTimeConsumed(Date date){

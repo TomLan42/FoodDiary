@@ -40,8 +40,8 @@ class MealActivity : AppCompatActivity() {
 
         if(intent.hasExtra("Meal")){
             val mymealID = intent.getLongExtra("Meal", -1)
-            mymeal = Meal(this)
-            mymeal.populateFromDatabase(mymealID)
+            mymeal = Meal()
+            mymeal.populateFromDatabase(mymealID, this)
             totalserving = mymeal.servingAmt
             servingcounter = Math.round(totalserving - 0.5).toInt()
             servingslice = totalserving - servingcounter.toFloat()
@@ -49,14 +49,14 @@ class MealActivity : AppCompatActivity() {
         }else if(intent.hasExtra("DishID")){
             val mydishid = DishID(intent.getStringExtra("DishID"), intent.getIntExtra("Version", -1), this)
             totalserving = 1.8f
-            mydishid.setDishIDPopulatedListener{
+            mydishid.setDishIDPopulatedListener({
                 servingcounter = Math.round(totalserving - 0.5).toInt()
                 servingslice = totalserving - servingcounter.toFloat()
                 Log.i("Serving Slice", servingslice.toString())
-                mymeal = Meal(mydishid, this, Date(), totalserving)
+                mymeal = Meal(mydishid, Date(), totalserving)
                 mymeal.setFoodImg(intent.getSerializableExtra("FoodImg") as File)
                 executeOnMealInitialized(mypizzaslicer, false)
-            }
+            })
             mydishid.execute()
 
         }else{
@@ -69,22 +69,23 @@ class MealActivity : AppCompatActivity() {
 
     }
 
-    private fun executeOnMealInitialized(mypizzaslicer: miniPizzaView, Update: Boolean){
+    private fun executeOnMealInitialized(mypizzaslicer: miniPizzaView, toUpdate: Boolean){
 
         if(::mymeal.isInitialized){
             img_mealpic.setImageBitmap(mymeal.foodImg)
 
             btn_saveentry.setOnClickListener {
-                if(Update){
-                    mymeal.updateInDatabase()
+                if(toUpdate){
+                    mymeal.updateInDatabase(this)
+                    Toast.makeText(this, "Updated Entry!", Toast.LENGTH_LONG).show()
                 }else{
-                    mymeal.saveToDatabase()
+                    mymeal.saveToDatabase(this)
+                    Toast.makeText(this, "Saved Entry!", Toast.LENGTH_LONG).show()
                 }
-                Toast.makeText(this, "Saved Entry!", Toast.LENGTH_LONG).show()
+
                 val myintent = Intent(this, MainActivity::class.java)
                 startActivity(myintent)
             }
-
 
 
             servingsviewgroup(mypizzaslicer)

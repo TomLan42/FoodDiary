@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -251,12 +252,21 @@ public class Summary extends Fragment {
         ArrayList<FoodItem> foodlist = new ArrayList<>();
         for(int i = 0; i < mealdata.size(); i++){
             Long id = mealdata.get(i);
-            Meal meal = new Meal(getContext());
-            meal.populateFromDatabase(id);
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
+            Meal meal = new Meal();
+            meal.populateFromDatabase(id, getContext());
+            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
         }
-        FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
+        final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
         breakfastlist.setAdapter(adapter);
+        breakfastlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Long myitem = adapter.getItem(position).getId();
+                Intent myintent = new Intent(getContext(), MealActivity.class);
+                myintent.putExtra("Meal", myitem);
+                startActivity(myintent);
+            }
+        });
         breakfastlayout.addView(breakfastlist);
         return breakfastcard;
     }
@@ -303,15 +313,24 @@ public class Summary extends Fragment {
         // adding data from lunchlist to the cardlist
         for(int i = 0; i < mealdata.size(); i++){
             Long id = mealdata.get(i);
-            Meal meal = new Meal(getContext());
-            meal.populateFromDatabase(id);
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
+            Meal meal = new Meal();
+            meal.populateFromDatabase(id, getContext());
+            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
         }
         //foodlist.add(new FoodItem("thosai", "yummy"));
         //foodlist.add(new FoodItem("thosai", "yummy"));
         //foodlist.add(new FoodItem("aloo paratha", "not so good"));
-        FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
+        final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
         lunchlist.setAdapter(adapter);
+        lunchlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Long myitem = adapter.getItem(position).getId();
+                Intent myintent = new Intent(getContext(), MealActivity.class);
+                myintent.putExtra("Meal", myitem);
+                startActivity(myintent);
+            }
+        });
         lunchlayout.addView(lunchlist);
         return lunchcard;
     }
@@ -355,12 +374,21 @@ public class Summary extends Fragment {
         ArrayList<FoodItem> foodlist = new ArrayList<>();
         for(int i = 0; i < mealdata.size(); i++){
             Long id = mealdata.get(i);
-            Meal meal = new Meal(getContext());
-            meal.populateFromDatabase(id);
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
+            Meal meal = new Meal();
+            meal.populateFromDatabase(id, getContext());
+            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
         }
-        FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
+        final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
         dinnerlist.setAdapter(adapter);
+        dinnerlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Long myitem = adapter.getItem(position).getId();
+                Intent myintent = new Intent(getContext(), MealActivity.class);
+                myintent.putExtra("Meal", myitem);
+                startActivity(myintent);
+            }
+        });
         dinnerlayout.addView(dinnerlist);
         return dinnercard;
     }

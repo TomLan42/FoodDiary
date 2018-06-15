@@ -140,7 +140,7 @@ class CameraActivity : AppCompatActivity() {
         val photoResult = fotoapparat
                 .autoFocus()
                 .takePicture()
-        
+
         if(isChecked) {
             toggleFlash(false)
         }

@@ -37,7 +37,6 @@ public class DishID implements PostTaskListener<Bundle> {
         this.FoodName = FoodName;
         this.ver = ver;
         this.ctx = ctx;
-
     }
 
     public void setDishIDPopulatedListener(DishIDPopulatedListener listener){
@@ -48,7 +47,7 @@ public class DishID implements PostTaskListener<Bundle> {
         boolean fromDB = populateFromDatabase(FoodName, ver);
 
         if(!fromDB){
-            populateFromOnline(FoodName);
+            populateFromOnline(FoodName, ctx);
         }
     }
 
@@ -97,6 +96,7 @@ public class DishID implements PostTaskListener<Bundle> {
 
 
     private boolean populateFromDatabase(String FoodName, int ver){
+
         DBHandler mydbhandler = new DBHandler(ctx);
         Bundle b = mydbhandler.getDishID(FoodName);
 
@@ -118,7 +118,7 @@ public class DishID implements PostTaskListener<Bundle> {
 
     }
 
-    private void populateFromOnline(String FoodName){
+    private void populateFromOnline(String FoodName, Context ctx){
 
         new DownloadDishIDTask(this, ctx, FoodName).execute();
 

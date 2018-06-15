@@ -207,17 +207,12 @@ public class DBHandler extends SQLiteOpenHelper {
     -------------------------------------------------------------------------
     */
 
-    public boolean updateHistoryEntry (String FoodName, Date TimeConsumed, float ServingAmt, File FoodImg, Long RowID)  {
+    public boolean updateHistoryEntry (String FoodName, Date TimeConsumed, float ServingAmt, Long RowID)  {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(HISTORY_COLUMN_FOODNAME, FoodName);
         cv.put(HISTORY_COLUMN_TIME, dateFormat.format(TimeConsumed));
         cv.put(HISTORY_COLUMN_SERVINGS, ServingAmt);
-        try{
-            cv.put(HISTORY_COLUMN_IMGPATH, SaveMealImg(ctx, RowID, FoodName, FoodImg));
-        }catch (IOException e){
-            Log.e("I/O Error", e.getMessage());
-        }
 
         int updated = db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_ID + "=" + RowID, null);
 
