@@ -228,7 +228,7 @@ public class DBHandler extends SQLiteOpenHelper {
     /*
     ------------------------------------------------------------------------
 
-    updateHistoryEntry(): Deletes an existing entry
+    deleteHistoryEntry(): Deletes an existing entry
 
     Expects the ID of the entry. Returns true if deleted.
 
@@ -318,6 +318,19 @@ public class DBHandler extends SQLiteOpenHelper {
         return hmap;
     }
 
+    /*
+    ------------------------------------------------------------------------
+
+    getMeal: Function used by Meal Class to populate class variables.
+
+    Takes the ID of the Meal and returns a bundle with the class variables.
+
+    Only can return 1 entry at a time.
+
+    -------------------------------------------------------------------------
+    */
+
+
     public Bundle getMeal(long mealID){
         SQLiteDatabase db = this.getReadableDatabase();
         Bundle b = new Bundle();
@@ -339,15 +352,31 @@ public class DBHandler extends SQLiteOpenHelper {
             }catch (ParseException e){
                 Log.e("getMeal", "Parse Error: " + e.getMessage());
             }catch(NullPointerException e){
-                //Log.e("NULLLLLLEXCEPPPTIONNNNNNNERRRROOOORRRR", "MESSAGE: " + cursor.getString(3));
+                e.getStackTrace();
             }
 
         }
 
+        cursor.close();
+
         return b;
     }
 
-    //Methods for manipulating DishID table
+    //-----------------------------------------
+    //| Methods for manipulating DishID Table |
+    //-----------------------------------------
+
+
+    /*
+    ------------------------------------------------------------------------
+    insertNewDishID(): Adds a new entry into the DishID table.
+
+    Expects data from the DishID class method saveToDatabase.
+    First creates an entry, then gets the ID. Updates the entry with the image path.
+
+    No return value.
+    -------------------------------------------------------------------------
+    */
 
     public void insertNewDishID(String FoodName, int ver, String NutritionJSONstr, String IngListstr, String ImgPath){
 
@@ -362,6 +391,19 @@ public class DBHandler extends SQLiteOpenHelper {
         db.insertWithOnConflict(DISHID_TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
 
     }
+
+    /*
+    ------------------------------------------------------------------------
+
+    getDishID: Function used by DishID Class to populate class variables.
+
+    Takes the FoodName Primary Key of the DishID and returns a bundle with the class variables.
+
+    Only can return 1 entry at a time.
+
+    -------------------------------------------------------------------------
+    */
+
 
     public Bundle getDishID(String FoodName){
 
@@ -393,12 +435,36 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public Integer deleteDishIDEntry (String FoodName) {
+    /*
+    ------------------------------------------------------------------------
+
+    deleteHistoryEntry(): Deletes an existing entry
+
+    Expects the FoodName primary key of the entry. Returns true if deleted.
+
+    Returns false if no entry is deleted.
+
+    -------------------------------------------------------------------------
+    */
+
+    public Boolean deleteDishIDEntry (String FoodName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(HISTORY_TABLE_NAME,
+        return (db.delete(HISTORY_TABLE_NAME,
                 DISHID_COLUMN_FOODNAME + " = ? ",
-                new String[] { "'" + FoodName + "'" });
+                new String[] { "'" + FoodName + "'" }) > 0);
     }
+
+    /*
+    ------------------------------------------------------------------------
+
+    copyFile(): Private Method used by saveFoodImg() to copy the Image
+
+    Expects a source file and destination file to copy the images.
+
+    Source file in FoodImage is likely from cache.
+
+    -------------------------------------------------------------------------
+    */
 
     private static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.getParentFile().exists())

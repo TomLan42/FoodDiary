@@ -30,23 +30,23 @@ public class Meal implements Serializable{
         this.ctx = ctx;
 
     }
+
     public Meal(Context ctx){
         this.ctx = ctx;
+        mydbhandler = new DBHandler(ctx);
     }
+
     public void setFoodImg(File foodImg) {
         FoodImg = foodImg;
     }
 
     public boolean saveToDatabase(){
 
-        mydbhandler = new DBHandler(ctx);
-
         return mydbhandler.insertMealEntry(MyDishID.getInternalFoodName(), TimeConsumed, ServingAmt, FoodImg);
     }
 
-    public void populateFromDatabase(long MealID, Context ctx){
-        this.ctx = ctx;
-        mydbhandler = new DBHandler(ctx);
+    public void populateFromDatabase(long MealID){
+
 
         Bundle b = mydbhandler.getMeal(MealID);
         MyDishID = new DishID(b.getString("FoodName"), -1, ctx);
@@ -59,7 +59,7 @@ public class Meal implements Serializable{
 
     }
 
-    public boolean updateInDatabase(Context ctx){
+    public boolean updateInDatabase(){
 
         return mydbhandler.updateHistoryEntry(MyDishID.getInternalFoodName(), TimeConsumed, ServingAmt, FoodImg, RowID);
     }

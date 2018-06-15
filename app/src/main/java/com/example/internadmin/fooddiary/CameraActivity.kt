@@ -107,11 +107,16 @@ class CameraActivity : AppCompatActivity() {
         permissionsGranted = permissionsDelegate.hasCameraPermission()
 
         if (permissionsGranted) {
+            startCamera()
             fullscreen_content.visibility = View.VISIBLE
         } else {
             permissionsDelegate.requestCameraPermission()
         }
 
+
+    }
+
+    private fun startCamera(){
         fotoapparat = Fotoapparat(
                 context = this,
                 view = fullscreen_content,
@@ -122,8 +127,6 @@ class CameraActivity : AppCompatActivity() {
 
         fotoapparat.start()
         adjustViewsVisibility()
-
-
     }
 
     private val LOGGING_TAG = "Fotoapparat"
@@ -137,6 +140,7 @@ class CameraActivity : AppCompatActivity() {
         val photoResult = fotoapparat
                 .autoFocus()
                 .takePicture()
+        
         if(isChecked) {
             toggleFlash(false)
         }
@@ -302,15 +306,7 @@ class CameraActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
             permissionsGranted = true
-            fotoapparat = Fotoapparat(
-                    context = this,
-                    view = fullscreen_content,
-                    lensPosition = activeCamera.lensPosition,
-                    cameraConfiguration = activeCamera.configuration,
-                    cameraErrorCallback = {Log.e(LOGGING_TAG, "Camera error;", it)}
-            )
-            fotoapparat.start()
-            adjustViewsVisibility()
+            startCamera()
             fullscreen_content.visibility = View.VISIBLE
         }
     }

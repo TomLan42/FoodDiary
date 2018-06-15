@@ -252,7 +252,7 @@ public class Summary extends Fragment {
         for(int i = 0; i < mealdata.size(); i++){
             Long id = mealdata.get(i);
             Meal meal = new Meal(getContext());
-            meal.populateFromDatabase(id, getContext());
+            meal.populateFromDatabase(id);
             foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
         }
         FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
@@ -304,7 +304,7 @@ public class Summary extends Fragment {
         for(int i = 0; i < mealdata.size(); i++){
             Long id = mealdata.get(i);
             Meal meal = new Meal(getContext());
-            meal.populateFromDatabase(id, getContext());
+            meal.populateFromDatabase(id);
             foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
         }
         //foodlist.add(new FoodItem("thosai", "yummy"));
@@ -356,7 +356,7 @@ public class Summary extends Fragment {
         for(int i = 0; i < mealdata.size(); i++){
             Long id = mealdata.get(i);
             Meal meal = new Meal(getContext());
-            meal.populateFromDatabase(id, getContext());
+            meal.populateFromDatabase(id);
             foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy"));
         }
         FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);

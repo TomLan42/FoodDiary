@@ -40,11 +40,12 @@ class MealActivity : AppCompatActivity() {
 
         if(intent.hasExtra("Meal")){
             val mymealID = intent.getLongExtra("Meal", -1)
-            //mymeal = Meal()
-            mymeal.populateFromDatabase(mymealID, this)
+            mymeal = Meal(this)
+            mymeal.populateFromDatabase(mymealID)
             totalserving = mymeal.servingAmt
             servingcounter = Math.round(totalserving - 0.5).toInt()
             servingslice = totalserving - servingcounter.toFloat()
+            executeOnMealInitialized(mypizzaslicer, true)
         }else if(intent.hasExtra("DishID")){
             val mydishid = DishID(intent.getStringExtra("DishID"), intent.getIntExtra("Version", -1), this)
             totalserving = 1.8f
@@ -54,7 +55,7 @@ class MealActivity : AppCompatActivity() {
                 Log.i("Serving Slice", servingslice.toString())
                 mymeal = Meal(mydishid, this, Date(), totalserving)
                 mymeal.setFoodImg(intent.getSerializableExtra("FoodImg") as File)
-                executeOnMealInitialized(mypizzaslicer)
+                executeOnMealInitialized(mypizzaslicer, false)
             }
             mydishid.execute()
 
@@ -68,13 +69,17 @@ class MealActivity : AppCompatActivity() {
 
     }
 
-    private fun executeOnMealInitialized(mypizzaslicer: miniPizzaView){
+    private fun executeOnMealInitialized(mypizzaslicer: miniPizzaView, Update: Boolean){
 
         if(::mymeal.isInitialized){
             img_mealpic.setImageBitmap(mymeal.foodImg)
 
             btn_saveentry.setOnClickListener {
-                mymeal.saveToDatabase()
+                if(Update){
+                    mymeal.updateInDatabase()
+                }else{
+                    mymeal.saveToDatabase()
+                }
                 Toast.makeText(this, "Saved Entry!", Toast.LENGTH_LONG).show()
                 val myintent = Intent(this, MainActivity::class.java)
                 startActivity(myintent)
@@ -258,7 +263,12 @@ class MealActivity : AppCompatActivity() {
             mystring.append(myseparator).append(ingredient)
         }
 
-        text_ingredients.text = mystring.substring(0, mystring.length- 2).toString()
+        var finalstring = mystring.substring(0, mystring.length- 2).toString()
+
+        if(finalstring.isEmpty())
+            finalstring = "No Description"
+
+        text_ingredients.text = finalstring
 
     }
 
