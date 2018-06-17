@@ -18,7 +18,7 @@ public class Meal implements Serializable{
     private Date TimeConsumed;
     private float ServingAmt;
     private File FoodImg;
-    private long RowID;
+    private Long RowID;
 
     public Meal(DishID MyDishID, Date TimeConsumed, float ServingAmt){
 
@@ -94,6 +94,22 @@ public class Meal implements Serializable{
         return MyDishID;
     }
 
+    public boolean deleteFoodImg(){
+
+        return this.FoodImg == null || this.FoodImg.delete();
+
+    }
+
+    public boolean deleteMeal(Context context){
+        if(deleteFoodImg()) {
+            if (RowID == null) {
+                return true;
+            } else {
+                DBHandler handler = new DBHandler(context);
+                return handler.deleteHistoryEntry(RowID);
+            }
+        }
+        return false;
+    }
 
 }
-

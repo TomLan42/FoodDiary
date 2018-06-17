@@ -30,6 +30,7 @@ class MealActivity : AppCompatActivity() {
     private var servingslice: Float = 0f
 
     private lateinit var mymeal: Meal
+    private var clearCache = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +81,10 @@ class MealActivity : AppCompatActivity() {
                     Toast.makeText(this, "Updated Entry!", Toast.LENGTH_LONG).show()
                 }else{
                     mymeal.saveToDatabase(this)
+                    clearCache = !mymeal.deleteFoodImg()
+                    //deleteFoodImg() in here is to delete the cached Food image.
+                    //Copied Image in DBhandler not deleted.
+                    //If deleteFoodImg() is unsuccessful, returns false. Set to clear Cache.
                     Toast.makeText(this, "Saved Entry!", Toast.LENGTH_LONG).show()
                 }
 
@@ -87,6 +92,17 @@ class MealActivity : AppCompatActivity() {
                 startActivity(myintent)
             }
 
+            btn_deleteMeal.setOnClickListener{
+                if(mymeal.deleteMeal(this)){
+                    Toast.makeText(this, "Entry Deleted.", Toast.LENGTH_LONG).show()
+                }else{
+                    Toast.makeText(this, "Could not delete Entry.", Toast.LENGTH_LONG).show()
+                }
+
+                val myintent = Intent(this, MainActivity::class.java)
+                startActivity(myintent)
+
+            }
 
             servingsviewgroup(mypizzaslicer)
             datetimeviewgroup(mymeal.timeConsumed)
@@ -293,6 +309,46 @@ class MealActivity : AppCompatActivity() {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(clearCache){
+            try {
+                trimCache(applicationContext) //if trimCache is static
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+    }
+
+    fun trimCache(context: Context) {
+        try {
+            val dir = context.cacheDir
+            if (dir != null && dir.isDirectory) {
+                deleteDir(dir)
+                Log.i("Cache", "Cache Deleted")
+            }
+        } catch (e: Exception) {
+            // TODO: handle exception
+        }
+
+    }
+
+    fun deleteDir(dir: File?): Boolean {
+        if (dir != null && dir.isDirectory) {
+            val children = dir.list()
+            for (i in children!!.indices) {
+                val success = deleteDir(File(dir, children[i]))
+                if (!success) {
+                    return false
+                }
+            }
+        }
+
+        // The directory is now empty so delete it
+        return dir!!.delete()
     }
 
 }

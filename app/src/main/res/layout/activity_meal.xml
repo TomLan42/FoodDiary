@@ -26,8 +26,21 @@
         android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <ImageButton
+        android:id="@+id/btn_deleteMeal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="33dp"
+        android:layout_marginTop="33dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:translationZ="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_error_outline_black" />
+        app:srcCompat="@drawable/ic_delete_white_24dp" />
 
     <View
         android:id="@+id/dividerline"
