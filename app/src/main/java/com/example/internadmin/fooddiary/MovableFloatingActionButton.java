@@ -1,5 +1,7 @@
 package com.example.internadmin.fooddiary;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -42,6 +44,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
             dX = view.getX() - downRawX;
             dY = view.getY() - downRawY;
 
+
             return true; // Consumed
 
         }
@@ -68,6 +71,8 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                     .setDuration(0)
                     .start();
 
+            saveBtnPosition(newX, newY);
+
             return true; // Consumed
 
         }
@@ -91,6 +96,14 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
             return super.onTouchEvent(motionEvent);
         }
 
+    }
+
+    private void saveBtnPosition(float X, float Y){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putFloat("fabX", X);
+        editor.putFloat("fabY", Y);
+        editor.apply();
     }
 
 }

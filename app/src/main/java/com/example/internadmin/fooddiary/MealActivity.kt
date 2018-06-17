@@ -99,6 +99,9 @@ class MealActivity : AppCompatActivity() {
     private fun servingsviewgroup(mypizzaslicer: miniPizzaView){
 
         pizzacounternumber.text = servingcounter.toString()
+
+        text_totalservings.text = String.format("%.2f", mymeal.servingAmt)
+
         if(servingcounter > 0)
             pizzacounter.visibility = View.VISIBLE
         mypizzaslicer.setServingSlice(servingslice)
@@ -111,6 +114,7 @@ class MealActivity : AppCompatActivity() {
                 pizzacounter.visibility = View.VISIBLE
             }
             mymeal.servingAmt = servingcounter + servingslice
+            text_totalservings.text = String.format("%.2f", mymeal.servingAmt)
         }
 
         btn_minuspizzacount.setOnClickListener{
@@ -121,6 +125,7 @@ class MealActivity : AppCompatActivity() {
             }
             pizzacounternumber.text = servingcounter.toString()
             mymeal.servingAmt = servingcounter + servingslice
+            text_totalservings.text = String.format("%.2f", mymeal.servingAmt)
         }
 
         view_servings.setOnClickListener{
@@ -128,6 +133,7 @@ class MealActivity : AppCompatActivity() {
                 servingslice = it
                 mypizzaslicer.setServingSlice(servingslice)
                 mymeal.servingAmt = servingcounter + servingslice
+                text_totalservings.text = String.format("%.2f", mymeal.servingAmt)
             })
             cdd.show()
         }
@@ -200,6 +206,9 @@ class MealActivity : AppCompatActivity() {
         btn_expandnutritionfacts.setOnClickListener{
             nutrition_expandable.toggle()
         }
+
+        txt_servingsizelarge.text = getString(R.string.serving_size) + ": " +
+                getnutritionstr(nutrition, "Serving Size", "1 plate")
 
         text_servingsize.text =
                 getnutritionstr(nutrition, "Serving Size", "1 plate")

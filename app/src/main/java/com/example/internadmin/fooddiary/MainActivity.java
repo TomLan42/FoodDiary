@@ -1,7 +1,9 @@
 package com.example.internadmin.fooddiary;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
@@ -13,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -27,11 +30,16 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity{
     MaterialSearchView searchView;
     Toolbar toolbar;
     int prevpos = 0;
-
+    Summary summary;
+    FragmentManager manager;
+    Boolean allowRefresh = false;
+    LinearLayout ll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -110,13 +118,19 @@ public class MainActivity extends AppCompatActivity{
         }
         //main.setOrientation(LinearLayout.VERTICAL);
         MovableFloatingActionButton fab = new MovableFloatingActionButton(MainActivity.this);
+        fab.setImageResource(R.drawable.ic_camera_white_24dp);
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                allowRefresh = true;
                 Intent camera = new Intent(MainActivity.this, CameraActivity.class);
                 startActivity(camera);
             }
         });
+        fab.setX(prefs.getFloat("fabX", display.getWidth()-250f));
+        fab.setY(prefs.getFloat("fabY", display.getHeight()-500f));
+
         FrameLayout.LayoutParams fabparams = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         fabparams.width = (int)(size.x*0.16);
         fabparams.height = (int)(size.x*0.16);
@@ -125,7 +139,7 @@ public class MainActivity extends AppCompatActivity{
         main.setId(894);
         //main.addView(toolbar);
         //main.addView(searchView);
-        final LinearLayout ll = new LinearLayout(MainActivity.this);
+        ll = new LinearLayout(MainActivity.this);
         ll.setId(895);
         ll.setOrientation(LinearLayout.VERTICAL);
         FrameLayout.LayoutParams fragparams = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -141,8 +155,8 @@ public class MainActivity extends AppCompatActivity{
         navparams.gravity = Gravity.BOTTOM;
         main.addView(bottomNavigation);
         main.addView(ll);
-        final Summary summary = new Summary();
-        final FragmentManager manager = getSupportFragmentManager();
+        summary = new Summary();
+        manager = getSupportFragmentManager();
         manager.beginTransaction().replace(ll.getId(), summary).commit();
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Summary", R.drawable.ic_camera_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Camera", R.drawable.ic_arrow_back_white, R.color.colorPrimary);
@@ -189,6 +203,55 @@ public class MainActivity extends AppCompatActivity{
         main.addView(fab);
         setContentView(main);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (allowRefresh)
+        {
+            allowRefresh = false;
+            manager.beginTransaction().replace(ll.getId(), summary).commit();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            trimCache(getApplicationContext()); //if trimCache is static
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void trimCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            if (dir != null && dir.isDirectory()) {
+                deleteDir(dir);
+                Log.i("Cache", "Cache Deleted");
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+
+        // The directory is now empty so delete it
+        return dir.delete();
+    }
+
+
 
     private int fetchColor(@ColorRes int color) {
         return ContextCompat.getColor(this, color);

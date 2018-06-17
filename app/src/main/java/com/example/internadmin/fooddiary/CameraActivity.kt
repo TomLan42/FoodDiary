@@ -21,6 +21,10 @@ import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import android.app.Activity
+import android.provider.MediaStore
+
+
 
 
 /**
@@ -68,6 +72,8 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var fotoapparat: Fotoapparat
     private var isChecked: Boolean = false
 
+    private val SELECT_IMAGE = 100
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -102,6 +108,17 @@ class CameraActivity : AppCompatActivity() {
 
         btn_switchcam.setOnClickListener{
             changeCamera()
+        }
+
+        btn_gallery.setOnClickListener {
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT//
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE)
+        }
+
+        btn_back.setOnClickListener{
+            finish()
         }
 
         permissionsGranted = permissionsDelegate.hasCameraPermission()
@@ -153,37 +170,8 @@ class CameraActivity : AppCompatActivity() {
                                 Log.i(LOGGING_TAG, "New photo captured. Bitmap length: ${it.bitmap.byteCount}")
                                 Toast.makeText(this, "Photo captured", Toast.LENGTH_LONG).show()
 
-                                val postTaskListener = PostTaskListener<Bundle> { result ->
-                                    if (result.getString(ImageUploadTask.Result).equals(ImageUploadTask.Success)) {
+                                uploadBitmap(it.bitmap)
 
-                                        result.remove(ImageUploadTask.Result)
-
-                                        try {
-                                            val myfile = File.createTempFile("tempfoodimg", "jpg", this.getCacheDir())
-                                            myfile.deleteOnExit()
-                                            val outStream = FileOutputStream(myfile)
-                                            it.bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
-                                            outStream.close()
-                                            result.putSerializable("FoodImg", myfile)
-                                        } catch (e: IOException) {
-                                            Log.e("Meal Caching", "Cannot create Cached Image: " + e.message)
-                                        }
-
-                                        val myintent = Intent(this, PredictionActivity::class.java)
-                                        myintent.putExtras(result)
-                                        startActivity(myintent)
-                                        //Toast.makeText(this, "There are " + result.getInt("NoOfPredictions").toString(), Toast.LENGTH_LONG).show()
-
-                                    } else {
-                                        Toast.makeText(this, result.getString(DownloadDishIDTask.Result),
-                                                Toast.LENGTH_LONG).show()
-
-                                        val myintent = Intent(this, MainActivity::class.java)
-                                        startActivity(myintent)
-                                    }
-                                }
-
-                                ImageUploadTask(postTaskListener, it.bitmap, this).execute()
 
                             }
                             ?: Log.e(LOGGING_TAG, "Couldn't capture photo.")
@@ -311,6 +299,62 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SELECT_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    try {
+
+                        val bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.data)
+                        uploadBitmap(bitmap)
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun uploadBitmap(bitmap: Bitmap){
+
+        val postTaskListener = PostTaskListener<Bundle> { result ->
+            if (result.getString(ImageUploadTask.Result).equals(ImageUploadTask.Success)) {
+
+                result.remove(ImageUploadTask.Result)
+
+                try {
+                    val myfile = File.createTempFile("tempfoodimg", "jpg", this.getCacheDir())
+                    myfile.deleteOnExit()
+                    val outStream = FileOutputStream(myfile)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
+                    outStream.close()
+                    result.putSerializable("FoodImg", myfile)
+                } catch (e: IOException) {
+                    Log.e("Meal Caching", "Cannot create Cached Image: " + e.message)
+                }
+
+                val myintent = Intent(this, PredictionActivity::class.java)
+                myintent.putExtras(result)
+                startActivity(myintent)
+                //Toast.makeText(this, "There are " + result.getInt("NoOfPredictions").toString(), Toast.LENGTH_LONG).show()
+
+            } else {
+                Toast.makeText(this, result.getString(DownloadDishIDTask.Result),
+                        Toast.LENGTH_LONG).show()
+
+                val myintent = Intent(this, MainActivity::class.java)
+                startActivity(myintent)
+            }
+        }
+
+        ImageUploadTask(postTaskListener, bitmap, this).execute()
+    }
 
     companion object {
         /**
