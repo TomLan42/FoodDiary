@@ -111,10 +111,16 @@ class CameraActivity : AppCompatActivity() {
         }
 
         btn_gallery.setOnClickListener {
-            val intent = Intent()
-            intent.type = "image/*"
-            intent.action = Intent.ACTION_GET_CONTENT//
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE)
+            val getIntent = Intent(Intent.ACTION_GET_CONTENT)
+            getIntent.type = "image/*"
+
+            val pickIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickIntent.type = "image/*"
+
+            val chooserIntent = Intent.createChooser(getIntent, "Select Image")
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(pickIntent))
+
+            startActivityForResult(chooserIntent, SELECT_IMAGE)
         }
 
         btn_back.setOnClickListener{

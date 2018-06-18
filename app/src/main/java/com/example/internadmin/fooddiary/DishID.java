@@ -166,7 +166,7 @@ public class DishID implements PostTaskListener<Bundle> {
         if(FoodImg != null){
             FoodImg.delete();
         }
-        
+
         DBHandler handler = new DBHandler(ctx);
         return handler.deleteDishIDEntry(FoodName);
 

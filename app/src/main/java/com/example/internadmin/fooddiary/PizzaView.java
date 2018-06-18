@@ -32,7 +32,7 @@ public class PizzaView extends View {
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextSize(48);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
-        mTextPaint.setColor(0x000000);
+        mTextPaint.setColor(0xFF000000);
         mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
         w2 = getWidth() / 2f;
         h2 = getHeight() / 2f;
