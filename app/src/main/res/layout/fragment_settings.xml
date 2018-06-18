@@ -13,70 +13,193 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="GENERAL SETTINGS"
+        android:textAlignment="center"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:textAlignment="center"
 
         />
-    <TextView
-        android:id="@+id/breakfaststart"
-        android:layout_width="match_parent"
-        android:layout_height="37dp"
-        android:layout_marginTop="5dp"
-        android:textStyle="bold"
-        android:paddingLeft="15dp"
-        android:background="?attr/selectableItemBackground"
-        android:text="Breakfast Starttime"
-        android:textSize="19sp" />
 
-    <TextView
-        android:id="@+id/breakfastend"
+    <LinearLayout
+        android:id="@+id/breakstartlin"
         android:layout_width="match_parent"
-        android:layout_height="37dp"
-        android:paddingLeft="15dp"
-        android:textStyle="bold"
-        android:background="?attr/selectableItemBackground"
-        android:text="Breakfast Endtime"
-        android:textSize="19sp" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/lunchstart"
-        android:layout_width="match_parent"
-        android:layout_height="37dp"
-        android:paddingLeft="15dp"
-        android:textStyle="bold"
-        android:background="?attr/selectableItemBackground"
-        android:text="Lunch Starttime"
-        android:textSize="19sp" />
+        <TextView
+            android:id="@+id/breakfaststart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="Breakfast Starttime"
+            android:textSize="19sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/lunchend"
-        android:layout_width="match_parent"
-        android:layout_height="37dp"
-        android:textStyle="bold"
-        android:paddingLeft="15dp"
-        android:background="?attr/selectableItemBackground"
-        android:text="Lunch EndTime"
-        android:textSize="19sp" />
+        <TextView
+            android:id="@+id/breakfaststarttime"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="0dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="None"
+            android:textSize="16sp"
+            android:textStyle="italic" />
 
-    <TextView
-        android:id="@+id/dinnerstart"
-        android:layout_width="match_parent"
-        android:layout_height="37dp"
-        android:paddingLeft="15dp"
-        android:background="?attr/selectableItemBackground"
-        android:textStyle="bold"
-        android:text="Dinner Starttime"
-        android:textSize="19sp" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/dinnerend"
+    <LinearLayout
+        android:id="@+id/breakendlin"
         android:layout_width="match_parent"
-        android:layout_height="37dp"
-        android:background="?attr/selectableItemBackground"
-        android:paddingLeft="15dp"
-        android:text="Dinner Endtime"
-        android:textSize="19sp"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/breakfastend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="Breakfast Endtime"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/breakfastendtime"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="0dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="None"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lunchstartlin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lunchstart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="Lunch Starttime"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/lunchstarttime"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="0dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="None"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lunchendlin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lunchend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="Lunch Endtime"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/lunchendtime"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="0dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="None"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dinnerstartlin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dinnerstart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="Dinner Starttime"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dinnerstarttime"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="0dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="None"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dinnerendlin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dinnerend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="Dinner Endtime"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dinnerendtime"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="0dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="15dp"
+            android:text="None"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+
+
 
 </LinearLayout>
