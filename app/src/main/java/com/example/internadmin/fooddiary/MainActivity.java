@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity{
 
 
         // working with the app intro
+        // THE NEXT FEW LINES SET A SHARED PREFERENCE IF IT IS NOT ALREADY DONE, SO IF IT IS NOT ALREADY DONE THEN INTRO
+        // ACTIVITY NEEDS TO BE SHOWN (SINCE APP IS OPENED FOR THE FIRST TIME)
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
         if(!previouslyStarted) {
@@ -57,17 +59,14 @@ public class MainActivity extends AppCompatActivity{
             startActivity(intro);
         }
 
-
-
-
-
-
-        // main scrollview for MainActivity
+        // CODE TO GET THE SCREEN DISPLAY SIZE
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
+        // MAIN LAYOUT OF THE ACTIVITY, FRAMELAYOUT
         FrameLayout main = new FrameLayout(MainActivity.this);
-        // HANDLING THE TOOLBAR
+
+        // CODE FOR CREATING SEARCHVIEW.. COMMENTED FOR NOW IN CASE NEEDED SOMEWHERE
         //toolbar = new Toolbar(MainActivity.this);
         //searchView = new MaterialSearchView(MainActivity.this);
         /*
@@ -108,15 +107,16 @@ public class MainActivity extends AppCompatActivity{
         });*/
         //searchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
 
-        // HANDLING THE TOOLBAR
-        // ACTIONBAR HEIGHT
+        // GETTING THE ACTION BAR HEIGHT
         int actionBarHeight = 0;
         TypedValue tv = new TypedValue();
         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
         {
             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
         }
-        //main.setOrientation(LinearLayout.VERTICAL);
+
+
+        // NEXT FEW LINES SET THE PROPERTIES FOR THE MOVABLE FLOATING ACTION BAR USED FOR GOING TO CAMERA ACTIVITY
         MovableFloatingActionButton fab = new MovableFloatingActionButton(MainActivity.this);
         fab.setImageResource(R.drawable.ic_camera_white_24dp);
         fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
@@ -131,6 +131,8 @@ public class MainActivity extends AppCompatActivity{
         fab.setX(prefs.getFloat("fabX", display.getWidth()-250f));
         fab.setY(prefs.getFloat("fabY", display.getHeight()-500f));
 
+
+        // SETTING LAYOUT PARAMETERS FOR THE MAIN FRAMELAYOUT
         FrameLayout.LayoutParams fabparams = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         fabparams.width = (int)(size.x*0.16);
         fabparams.height = (int)(size.x*0.16);
@@ -139,7 +141,13 @@ public class MainActivity extends AppCompatActivity{
         main.setId(894);
         //main.addView(toolbar);
         //main.addView(searchView);
+
+
+        // LINEAR LAYOUT AS A LAYOUT PLACEHOLDER FOR FRAGMENTS TO COME
         ll = new LinearLayout(MainActivity.this);
+
+
+        // SETTING LAYOUT PARAMETERS FOR THE LINEAR LAYOUT
         ll.setId(895);
         ll.setOrientation(LinearLayout.VERTICAL);
         FrameLayout.LayoutParams fragparams = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -147,7 +155,13 @@ public class MainActivity extends AppCompatActivity{
         fragparams.height = (int)(size.y - size.y*0.14);
         fragparams.width = (int)(size.x*1);
         ll.setLayoutParams(fragparams);
+
+
+        // INITIALIZING THE BOTTOM NAVIGATION BAR
         AHBottomNavigation bottomNavigation = new AHBottomNavigation(MainActivity.this);
+
+
+        // SETTING THE LAYOUT PARAMETERS FOR THE BOTTOM NAVIGATION BAR
         bottomNavigation.setId(1196);
         FrameLayout.LayoutParams navparams = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         navparams.height = (int)((size.y)*0.1);
@@ -156,8 +170,14 @@ public class MainActivity extends AppCompatActivity{
         main.addView(bottomNavigation);
         main.addView(ll);
         summary = new Summary();
+
+        // FRAGMENT MANAGER
         manager = getSupportFragmentManager();
+
+        // SETTING SUMMARY AS THE INITIAL FRAGMENT
         manager.beginTransaction().replace(ll.getId(), summary).commit();
+
+        // SETTING ITEMS FOR THE BOTTOM NAVIFATION BAR
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Summary", R.drawable.ic_camera_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Camera", R.drawable.ic_arrow_back_white, R.color.colorPrimary);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem("Query Food", R.drawable.ic_arrow_forward_white, R.color.colorPrimary);
@@ -166,15 +186,22 @@ public class MainActivity extends AppCompatActivity{
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
         bottomNavigation.addItem(item4);
-        //ONLINE CODE
+
+
+        // DESIGN PARAMETERS FOR THE BOTTOM NAVIGATION BAR
         bottomNavigation.setDefaultBackgroundColor(Color.WHITE);
         bottomNavigation.setAccentColor(fetchColor(R.color.colorPrimary));
         bottomNavigation.setInactiveColor(fetchColor(R.color.grey));
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+
+
+        // CREATING ON CLICK LISTENER FOR BOTTOM NAVIGATION BAR
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
                 FragmentTransaction transaction = manager.beginTransaction();
+                // THIS IS TO CHECK THAT TRANSITION ANIMATION IS TO BE DONE FROM LEFT TO RIGHT
+                // OR RIGHT TO LEFT
                 if(prevpos <= position){
                     transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                     prevpos = position;
@@ -182,6 +209,8 @@ public class MainActivity extends AppCompatActivity{
                     transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
                     prevpos = position;
                 }
+                // IF THE CLICKED POSITION WAS NOT ALREADY SELECTED THEN CHANGE FRAGMENT ACCORDING
+                // TO THE CLICKED POSITION
                 if(!wasSelected){
                     if(position == 0){
                         transaction.replace(ll.getId(), summary);
@@ -194,9 +223,13 @@ public class MainActivity extends AppCompatActivity{
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }
+                    if(position == 2){
+                        Settings settings = new Settings();
+                        transaction.replace(ll.getId(), settings);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
                 }
-                //manager.beginTransaction().replace(summary.getId(), test).commit();
-
                 return true;
             }
         });

@@ -62,26 +62,37 @@ public class Summary extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // initializing main scrollview
+        // THE MAIN SCROLLVIEW FOR THE WHOLE FRAGMENT
         sv = new ScrollView(getContext());
+
+        // LINEAR LAYOUT TO CONTAIN OTHER VIEWS (SINCE SCROLLVIEW CAN HAVE ONLY ONE VIEW APPENDED IN IT)
         LinearLayout ll = new LinearLayout(getContext());
         ll.setOrientation(LinearLayout.VERTICAL);
         sv.addView(ll);
+
+        // DATABASE HANDLER OBJECT
         handler = new DBHandler(getContext());
-        // get display size of phone
+
+        // GETTING THE SCREEN SIZE OF THE DEVICE
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
+
+        // THE ARRAY TO BE PASSED INTO THE BARCHART FUNCTION TO CREATE BAR CHART
         int[][] vals = new int[2][7];
         vals[0] = new int[]{1, 2, 3, 4, 5, 6, 7};
         vals[1] = new int[]{100, 20, 33, 46, 25, 65, 107};
+
+        // FUNCTION TO CREATE BARCHART CARD
         CardView barcard = createChart(vals);
         ll.addView(barcard);
-        // checking whether breakfast lunch and dinner are required or not
-        // check for breakfast
+
+        // GETTING THE LIST OF FOOD ITEMS IN BREAKFAST LUNCH AND DINNER
         List<Long> breakfastlist = handler.getHistoryEntries(getBreakFastStart(), getBreakFastEnd());
         List<Long> lunchlist = handler.getHistoryEntries(getLunchStart(), getLunchEnd());
         List<Long> dinnerlist = handler.getHistoryEntries(getDinnerStart(), getDinnerEnd());
+
+        // IF THE LIST CONTAINS NON ZERO NUMBER OF ITEMS THEN CARD FOR THAT MEAL IS CREATED
         if(breakfastlist.size() > 0){
             CardView breakfastcard = createBreakfast(breakfastlist);
             ll.addView(breakfastcard);
@@ -100,6 +111,9 @@ public class Summary extends Fragment {
         return sv;
     }
 
+    //------------------------------------------------
+    //     FUNCTION TO GET BREAKFAST STARTTIME       |
+    //------------------------------------------------
     public Date getBreakFastStart(){
         Calendar mealtime = new GregorianCalendar();
         mealtime.setTime(new Date());
@@ -108,6 +122,10 @@ public class Summary extends Fragment {
         mealtime.set(Calendar.SECOND, 0);
         return mealtime.getTime();
     }
+
+    //------------------------------------------------
+    //     FUNCTION TO GET BREAKFAST ENDTIME       |
+    //------------------------------------------------
     public Date getBreakFastEnd(){
         Calendar mealtime = new GregorianCalendar();
         mealtime.setTime(new Date());
@@ -117,6 +135,10 @@ public class Summary extends Fragment {
         return mealtime.getTime();
     }
 
+
+    //------------------------------------------------
+    //     FUNCTION TO GET LUNCH STARTTIME       |
+    //------------------------------------------------
     public Date getLunchStart(){
         Calendar mealtime = new GregorianCalendar();
         mealtime.setTime(new Date());
@@ -125,6 +147,10 @@ public class Summary extends Fragment {
         mealtime.set(Calendar.SECOND, 0);
         return mealtime.getTime();
     }
+
+    //------------------------------------------------
+    //     FUNCTION TO GET LUNCH ENDTIME       |
+    //------------------------------------------------
     public Date getLunchEnd(){
         Calendar mealtime = new GregorianCalendar();
         mealtime.setTime(new Date());
@@ -134,6 +160,10 @@ public class Summary extends Fragment {
         return mealtime.getTime();
     }
 
+
+    //------------------------------------------------
+    //     FUNCTION TO GET DINNER STARTTIME       |
+    //------------------------------------------------
     public Date getDinnerStart(){
         Calendar mealtime = new GregorianCalendar();
         mealtime.setTime(new Date());
@@ -142,6 +172,11 @@ public class Summary extends Fragment {
         mealtime.set(Calendar.SECOND, 0);
         return mealtime.getTime();
     }
+
+
+    //------------------------------------------------
+    //     FUNCTION TO GET DINNER ENDTIME       |
+    //------------------------------------------------
     public Date getDinnerEnd(){
         Calendar mealtime = new GregorianCalendar();
         mealtime.setTime(new Date());
@@ -158,20 +193,29 @@ public class Summary extends Fragment {
         Takes input a 2D array containing co-ordinates of top points of bars. (x(vals[0]), y(vals[1]))
         Returns a CardView object.
         */
+
+        // CREATING THE CARD FOR CONTAINING BARCHART
         barcard = new CardView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
+
+        // SETTING MARGINS TO THE CARD
         int marginx = (int)(size.x*0.027);
         int marginy = (int)(size.x*0.027);
         params.setMargins(marginx, marginy, marginx, marginy);
+        // SETTING OTHER LAYOUT PARAMETERS FOR THE CARD
         barcard.setLayoutParams(params);
         barcard.setRadius(0);
         barcard.setCardBackgroundColor(Color.parseColor("#FFC6D6C3"));
         barcard.setMaxCardElevation(15);
         barcard.setCardElevation(9);
+
+        // BARCHART OBJECT FOR CREATING BARCHART
         chart = new BarChart(getContext());
+
+        // ARRAY LIST OF DATASET POINTS
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
         for(int i = 0; i < 7; i++){
@@ -181,6 +225,9 @@ public class Summary extends Fragment {
         set1.setColor(R.color.grey);
         dataSets.add(set1);
         BarData data = new BarData(dataSets);
+
+
+        // SETTING CHART PARAMETERS SO THAT AXIS AND GRID AND LABELS ARE NOT VISIBLE
         chart.setData(data);
         chart.setMinimumHeight((int) (size.y*0.4));
         chart.animateY(1000);
@@ -188,9 +235,6 @@ public class Summary extends Fragment {
         chart.getAxisRight().setDrawGridLines(false);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.getLegend().setEnabled(false);
-        Description description = new Description();
-        description.setText("");
-        chart.setDescription(description);
         YAxis leftAxis = chart.getAxisLeft();
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -198,6 +242,10 @@ public class Summary extends Fragment {
         chart.setDrawBorders(false);
         chart.setTouchEnabled(false);
         chart.setMinimumWidth((int) (size.x*0.96));
+        // SETTING DESCRIPTION TO NULL
+        Description description = new Description();
+        description.setText("");
+        chart.setDescription(description);
         barcard.addView(chart);
         return barcard;
     }
