@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -29,12 +30,17 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.google.gson.JsonObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class Summary extends Fragment {
     ScrollView sv;
@@ -79,12 +85,9 @@ public class Summary extends Fragment {
         display.getSize(size);
 
         // THE ARRAY TO BE PASSED INTO THE BARCHART FUNCTION TO CREATE BAR CHART
-        int[][] vals = new int[2][7];
-        vals[0] = new int[]{1, 2, 3, 4, 5, 6, 7};
-        vals[1] = new int[]{100, 20, 33, 46, 25, 65, 107};
-
+        float[] val = getcaloriearray();
         // FUNCTION TO CREATE BARCHART CARD
-        CardView barcard = createChart(vals);
+        CardView barcard = createChart(val);
         ll.addView(barcard);
 
         // GETTING THE LIST OF FOOD ITEMS IN BREAKFAST LUNCH AND DINNER
@@ -110,6 +113,75 @@ public class Summary extends Fragment {
         sv.smoothScrollTo(0, 0);
         return sv;
     }
+    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+        if (cal1 == null || cal2 == null) {
+            throw new IllegalArgumentException("The dates must not be null");
+        }
+        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+    }
+
+    public float[] getcaloriearray(){
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        float[] val = {0, 0, 0, 0, 0, 0, 0};
+        Calendar today = new GregorianCalendar();
+        today.setTime(new Date());
+        if(cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+            Calendar tom = new GregorianCalendar();
+            tom = (Calendar) cal.clone();
+            tom.add(Calendar.DATE, 1);
+            HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
+            Iterator it = servings.entrySet().iterator();
+            float tot = 0;
+            while(it.hasNext()){
+                Map.Entry pair = (Map.Entry)it.next();
+                DishID id = new DishID((String) pair.getKey(), -1, getContext());
+                id.execute();
+                JsonObject nutrition = id.getNutrition();
+                float calorie = nutrition.get("Calories").getAsFloat();
+                tot += calorie*(float)pair.getValue();
+            }
+            val[0] = tot;
+        }
+        else{
+            cal.add( Calendar.DAY_OF_WEEK, -(cal.get(Calendar.DAY_OF_WEEK)-1));
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            Calendar tom = new GregorianCalendar();
+            int counter = 0;
+            while (true){
+                tom = (Calendar) cal.clone();
+                tom.add(Calendar.DATE, 1);
+                HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
+                Iterator it = servings.entrySet().iterator();
+                float tot = 0;
+                while(it.hasNext()){
+                    Map.Entry pair = (Map.Entry)it.next();
+                    DishID id = new DishID((String) pair.getKey(), -1, getContext());
+                    id.execute();
+                    JsonObject nutrition = id.getNutrition();
+                    Log.d("jsoncheck", nutrition.toString());
+                    float calorie = nutrition.get("Energy").getAsFloat();
+                    tot += calorie*(float)pair.getValue();
+                }
+                val[counter] = tot;
+                counter += 1;
+                Log.d("Time solver", format.format(cal.getTime()));
+                Log.d("Time solver 2", format.format(today.getTime()));
+                if(isSameDay(cal, today)) break;
+                cal.add(Calendar.DATE, 1);
+            }
+        }
+        return val;
+    }
+
 
     //------------------------------------------------
     //     FUNCTION TO GET BREAKFAST STARTTIME       |
@@ -117,7 +189,7 @@ public class Summary extends Fragment {
     public Date getBreakFastStart(){
         Calendar mealtime = new GregorianCalendar();
         mealtime.setTime(new Date());
-        mealtime.set(Calendar.HOUR_OF_DAY, 7);
+        mealtime.set(Calendar.HOUR_OF_DAY, 0);
         mealtime.set(Calendar.MINUTE, 0);
         mealtime.set(Calendar.SECOND, 0);
         return mealtime.getTime();
@@ -142,7 +214,7 @@ public class Summary extends Fragment {
     public Date getLunchStart(){
         Calendar mealtime = new GregorianCalendar();
         mealtime.setTime(new Date());
-        mealtime.set(Calendar.HOUR_OF_DAY, 12);
+        mealtime.set(Calendar.HOUR_OF_DAY, 11);
         mealtime.set(Calendar.MINUTE, 0);
         mealtime.set(Calendar.SECOND, 0);
         return mealtime.getTime();
@@ -154,7 +226,7 @@ public class Summary extends Fragment {
     public Date getLunchEnd(){
         Calendar mealtime = new GregorianCalendar();
         mealtime.setTime(new Date());
-        mealtime.set(Calendar.HOUR_OF_DAY, 16);
+        mealtime.set(Calendar.HOUR_OF_DAY, 20);
         mealtime.set(Calendar.MINUTE, 0);
         mealtime.set(Calendar.SECOND, 0);
         return mealtime.getTime();
@@ -187,7 +259,7 @@ public class Summary extends Fragment {
     }
 
 
-    public CardView createChart(int[][] vals){
+    public CardView createChart(float[] val){
         /*
         function to create the card view for the barchart and integrate barchart with it.
         Takes input a 2D array containing co-ordinates of top points of bars. (x(vals[0]), y(vals[1]))
@@ -219,7 +291,7 @@ public class Summary extends Fragment {
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
         for(int i = 0; i < 7; i++){
-            yVals.add(new BarEntry(vals[0][i], vals[1][i]));
+            yVals.add(new BarEntry(i+1, val[i]));
         }
         BarDataSet set1 = new BarDataSet(yVals, "label");
         set1.setColor(R.color.grey);

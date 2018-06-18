@@ -46,6 +46,10 @@
             android:text="None"
             android:textSize="16sp"
             android:textStyle="italic" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#000000"/>
 
     </LinearLayout>
 
@@ -76,6 +80,10 @@
             android:text="None"
             android:textSize="16sp"
             android:textStyle="italic" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#000000"/>
 
     </LinearLayout>
 
@@ -106,6 +114,10 @@
             android:text="None"
             android:textSize="16sp"
             android:textStyle="italic" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#000000"/>
 
     </LinearLayout>
 
@@ -136,7 +148,10 @@
             android:text="None"
             android:textSize="16sp"
             android:textStyle="italic" />
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#000000"/>
     </LinearLayout>
 
     <LinearLayout
@@ -166,6 +181,10 @@
             android:text="None"
             android:textSize="16sp"
             android:textStyle="italic" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#000000"/>
 
     </LinearLayout>
 
@@ -196,6 +215,10 @@
             android:text="None"
             android:textSize="16sp"
             android:textStyle="italic" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#000000"/>
 
     </LinearLayout>
 
