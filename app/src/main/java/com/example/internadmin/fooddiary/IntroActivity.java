@@ -98,6 +98,7 @@ public class IntroActivity extends AppIntro2 {
 
         SharedPreferences.Editor edit = prefs.edit();
         edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+        edit.apply();
 
         finish();
         // Do something when users tap on Done button.
