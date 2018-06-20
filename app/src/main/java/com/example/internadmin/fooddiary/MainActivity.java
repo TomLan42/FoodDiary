@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity{
 
         if(!previouslyStarted) {
             SharedPreferences.Editor edit = prefs.edit();
-            edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
-            edit.commit();
+            //edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+
             edit.putInt(getString(R.string.breakfast_start_hour), 0);
             edit.putInt(getString(R.string.breakfast_start_min), 0);
             edit.putInt(getString(R.string.breakfast_end_hour), 11);
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity{
             edit.putInt(getString(R.string.dinner_start_min), 0);
             edit.putInt(getString(R.string.dinner_end_hour), 23);
             edit.putInt(getString(R.string.dinner_end_min), 59);
-            edit.commit();
+            edit.apply();
             Intent intro = new Intent(MainActivity.this, IntroActivity.class);
             startActivity(intro);
         }

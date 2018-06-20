@@ -23,6 +23,9 @@
     <string name="notedv">*Percent Daily Values are based on a 2,000 calorie diet. Your Daily Values may be higher or lower depending on your calorie needs.</string>
     <string name="settime">Set Time</string>
     <string name="ingredients">Ingredients</string>
+    <string name="starttime">Start Time: </string>
+    <string name="endtime">End Time: </string>
+    <string name="getmealfragmentdescription">Please provide us with the time range which you will have this meal.</string>
     <string name="breakfast_start_hour">breakfast_start_hour</string>
     <string name="breakfast_start_min">breakfast_start_min</string>
     <string name = "breakfast_end_hour">breakfast_end_hour</string>

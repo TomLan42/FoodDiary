@@ -1,18 +1,17 @@
 package com.example.internadmin.fooddiary;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Window;
 import android.widget.Toast;
 
-import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntro2;
-import com.github.paolorotolo.appintro.AppIntroFragment;
+import com.github.paolorotolo.appintro.AppIntro2Fragment;
 
-public class IntroActivity extends AppIntro {
+public class IntroActivity extends AppIntro2 {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,18 +27,51 @@ public class IntroActivity extends AppIntro {
 
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest.
-        String title = "Hello World!";
+        String title = "Welcome!";
         String description = "Please provide us some information we need to make your experience better";
         int color = Color.parseColor("#3F51B5");
-        addSlide(AppIntroFragment.newInstance(title, description, R.drawable.ic_launcher_foreground, color));
-        String title2 = "Hello Again!";
-        String description2 = "This is another sample slide";
-        addSlide(AppIntroFragment.newInstance(title2, description2, R.drawable.ic_launcher_foreground, color));
-        IntroHello hello = new IntroHello();
-        addSlide(hello);
+        addSlide(AppIntro2Fragment.newInstance(title, description, R.drawable.ic_launcher_foreground, color));
+
+        color = Color.parseColor("#82CAFA");
+        int[] breakfasttime = {5, 0, 11, 0};
+        String[] pref_breakfasttime = {getString(R.string.breakfast_start_hour),
+                getString(R.string.breakfast_start_min),
+                getString(R.string.breakfast_end_hour),
+                getString(R.string.breakfast_end_min)};
+        GetMealTimeFragment breakfast = GetMealTimeFragment.newInstance(R.drawable.sun, color,
+                "Breakfast", breakfasttime, pref_breakfasttime);
+
+        addSlide(breakfast);
+
+        color = Color.parseColor("#4CC417");
+        int[] lunchtime = {11, 0, 16, 0};
+        String[] pref_lunchtime = {getString(R.string.lunch_start_hour),
+                getString(R.string.lunch_start_min),
+                getString(R.string.lunch_end_hour),
+                getString(R.string.lunch_end_min)};
+        GetMealTimeFragment lunch = GetMealTimeFragment.newInstance(R.drawable.fullsun, color,
+                "Lunch", lunchtime, pref_lunchtime);
+
+        addSlide(lunch);
+
+        color = Color.parseColor("#C24641");
+        int[] dinnertime = {17, 0, 22, 0};
+        String[] pref_dinnertime = {getString(R.string.dinner_start_hour),
+                getString(R.string.dinner_start_min),
+                getString(R.string.dinner_end_hour),
+                getString(R.string.dinner_end_min)};
+        GetMealTimeFragment dinner = GetMealTimeFragment.newInstance(R.drawable.moon, color,
+                "Dinner", dinnertime, pref_dinnertime);
+
+        addSlide(dinner);
+
+
+
+
+
         // OPTIONAL METHODS
         // Override bar/separator color.
-        setBarColor(color);
+        //setBarColor(color);
         //setSeparatorColor(Color.parseColor("#2196F3"));
 
         // Hide Skip/Done button.
@@ -61,6 +93,12 @@ public class IntroActivity extends AppIntro {
     @Override
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+
         finish();
         // Do something when users tap on Done button.
     }
@@ -69,7 +107,7 @@ public class IntroActivity extends AppIntro {
     public void onSlideChanged(@Nullable Fragment oldFragment, @Nullable Fragment newFragment) {
         super.onSlideChanged(oldFragment, newFragment);
         // Do something when the slide changes.
-        if(newFragment instanceof IntroHello){
+        if(newFragment instanceof GetMealTimeFragment){
             Toast.makeText(this, "Slide changed", Toast.LENGTH_SHORT).show();
         }
     }
