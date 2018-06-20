@@ -24,11 +24,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.gson.JsonObject;
 
@@ -286,7 +290,7 @@ public class Summary extends Fragment {
 
         // BARCHART OBJECT FOR CREATING BARCHART
         chart = new BarChart(getContext());
-
+        final ArrayList<String> xLabel = getXAxisValues();
         // ARRAY LIST OF DATASET POINTS
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
@@ -303,14 +307,30 @@ public class Summary extends Fragment {
         chart.setData(data);
         chart.setMinimumHeight((int) (size.y*0.4));
         chart.animateY(1000);
-        chart.getXAxis().setEnabled(false);
+        //chart.getXAxis().setEnabled(false);
         chart.getAxisRight().setDrawGridLines(false);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.getLegend().setEnabled(false);
+        //chart.centerViewTo(1, 1);
         YAxis leftAxis = chart.getAxisLeft();
         YAxis rightAxis = chart.getAxisRight();
+        leftAxis.setAxisMinimum(0);
+        leftAxis.setAxisMaximum(2500);
+        LimitLine l = new LimitLine(2200, "Max calories (2200)");
+        leftAxis.addLimitLine(l);
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        //xAxis.setAxisMinimum(0);
+        leftAxis.setDrawLabels(false);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                int index = (int)value;
+                return xLabel.get(index);
+            }
+        });
         rightAxis.setEnabled(false);
-        leftAxis.setEnabled(false);
+        //leftAxis.setEnabled(false);
         chart.setDrawBorders(false);
         chart.setTouchEnabled(false);
         chart.setMinimumWidth((int) (size.x*0.96));
@@ -321,7 +341,18 @@ public class Summary extends Fragment {
         barcard.addView(chart);
         return barcard;
     }
-
+    private ArrayList<String> getXAxisValues() {
+        ArrayList<String> xAxis = new ArrayList<>();
+        xAxis.add("Sun");
+        xAxis.add("Sun");
+        xAxis.add("Mon");
+        xAxis.add("Tue");
+        xAxis.add("Wed");
+        xAxis.add("Thu");
+        xAxis.add("Fri");
+        xAxis.add("Sat");
+        return xAxis;
+    }
 
     public CardView createBreakfast(List<Long> mealdata){
         /*
