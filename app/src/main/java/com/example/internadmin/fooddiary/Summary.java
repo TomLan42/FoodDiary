@@ -7,6 +7,10 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -17,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -46,10 +51,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import io.fotoapparat.preview.Frame;
+
 public class Summary extends Fragment {
     ScrollView sv;
     CardView barcard;
     DBHandler handler;
+    private static final int NUM_PAGES = 2;
+    ViewPager viewPager;
+    PagerAdapter pagerAdapter;
     BarChart chart;
     NonScrollListView breakfastlist;
     NonScrollListView lunchlist;
@@ -89,9 +99,8 @@ public class Summary extends Fragment {
         display.getSize(size);
 
         // THE ARRAY TO BE PASSED INTO THE BARCHART FUNCTION TO CREATE BAR CHART
-        float[] val = getcaloriearray();
         // FUNCTION TO CREATE BARCHART CARD
-        CardView barcard = createChart(val);
+        CardView barcard = createChart();
         ll.addView(barcard);
 
         // GETTING THE LIST OF FOOD ITEMS IN BREAKFAST LUNCH AND DINNER
@@ -117,76 +126,6 @@ public class Summary extends Fragment {
         sv.smoothScrollTo(0, 0);
         return sv;
     }
-    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
-        if (cal1 == null || cal2 == null) {
-            throw new IllegalArgumentException("The dates must not be null");
-        }
-        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
-                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
-    }
-
-    public float[] getcaloriearray(){
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-        Calendar cal = new GregorianCalendar();
-        cal.setTime(new Date());
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        float[] val = {0, 0, 0, 0, 0, 0, 0};
-        Calendar today = new GregorianCalendar();
-        today.setTime(new Date());
-        if(cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
-            Calendar tom = new GregorianCalendar();
-            tom = (Calendar) cal.clone();
-            tom.add(Calendar.DATE, 1);
-            HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
-            Iterator it = servings.entrySet().iterator();
-            float tot = 0;
-            while(it.hasNext()){
-                Map.Entry pair = (Map.Entry)it.next();
-                DishID id = new DishID((String) pair.getKey(), -1, getContext());
-                id.execute();
-                JsonObject nutrition = id.getNutrition();
-                float calorie = nutrition.get("Calories").getAsFloat();
-                tot += calorie*(float)pair.getValue();
-            }
-            val[0] = tot;
-        }
-        else{
-            cal.add( Calendar.DAY_OF_WEEK, -(cal.get(Calendar.DAY_OF_WEEK)-1));
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            Calendar tom = new GregorianCalendar();
-            int counter = 0;
-            while (true){
-                tom = (Calendar) cal.clone();
-                tom.add(Calendar.DATE, 1);
-                HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
-                Iterator it = servings.entrySet().iterator();
-                float tot = 0;
-                while(it.hasNext()){
-                    Map.Entry pair = (Map.Entry)it.next();
-                    DishID id = new DishID((String) pair.getKey(), -1, getContext());
-                    id.execute();
-                    JsonObject nutrition = id.getNutrition();
-                    Log.d("jsoncheck", nutrition.toString());
-                    float calorie = nutrition.get("Energy").getAsFloat();
-                    tot += calorie*(float)pair.getValue();
-                }
-                val[counter] = tot;
-                counter += 1;
-                Log.d("Time solver", format.format(cal.getTime()));
-                Log.d("Time solver 2", format.format(today.getTime()));
-                if(isSameDay(cal, today)) break;
-                cal.add(Calendar.DATE, 1);
-            }
-        }
-        return val;
-    }
-
-
     //------------------------------------------------
     //     FUNCTION TO GET BREAKFAST STARTTIME       |
     //------------------------------------------------
@@ -263,7 +202,7 @@ public class Summary extends Fragment {
     }
 
 
-    public CardView createChart(float[] val){
+    public CardView createChart(){
         /*
         function to create the card view for the barchart and integrate barchart with it.
         Takes input a 2D array containing co-ordinates of top points of bars. (x(vals[0]), y(vals[1]))
@@ -277,6 +216,15 @@ public class Summary extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
+        viewPager = new ViewPager(getContext());
+        viewPager.setId(1111);
+        FrameLayout.LayoutParams viewpagerparams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        viewpagerparams.height = (int)(size.y*0.45);
+        viewPager.setLayoutParams(viewpagerparams);
+        pagerAdapter = new ScreenSlidePagerAdapter(getActivity().getSupportFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setMinimumHeight(5000);
+
         // SETTING MARGINS TO THE CARD
         int marginx = (int)(size.x*0.027);
         int marginy = (int)(size.x*0.027);
@@ -287,71 +235,9 @@ public class Summary extends Fragment {
         barcard.setCardBackgroundColor(Color.parseColor("#FFC6D6C3"));
         barcard.setMaxCardElevation(15);
         barcard.setCardElevation(9);
-
-        // BARCHART OBJECT FOR CREATING BARCHART
-        chart = new BarChart(getContext());
-        final ArrayList<String> xLabel = getXAxisValues();
-        // ARRAY LIST OF DATASET POINTS
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
-        for(int i = 0; i < 7; i++){
-            yVals.add(new BarEntry(i+1, val[i]));
-        }
-        BarDataSet set1 = new BarDataSet(yVals, "label");
-        set1.setColor(R.color.grey);
-        dataSets.add(set1);
-        BarData data = new BarData(dataSets);
-
-
-        // SETTING CHART PARAMETERS SO THAT AXIS AND GRID AND LABELS ARE NOT VISIBLE
-        chart.setData(data);
-        chart.setMinimumHeight((int) (size.y*0.4));
-        chart.animateY(1000);
-        //chart.getXAxis().setEnabled(false);
-        chart.getAxisRight().setDrawGridLines(false);
-        chart.getAxisLeft().setDrawGridLines(false);
-        chart.getLegend().setEnabled(false);
-        //chart.centerViewTo(1, 1);
-        YAxis leftAxis = chart.getAxisLeft();
-        YAxis rightAxis = chart.getAxisRight();
-        leftAxis.setAxisMinimum(0);
-        leftAxis.setAxisMaximum(2500);
-        LimitLine l = new LimitLine(2200, "Max calories (2200)");
-        leftAxis.addLimitLine(l);
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        //xAxis.setAxisMinimum(0);
-        leftAxis.setDrawLabels(false);
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                int index = (int)value;
-                return xLabel.get(index);
-            }
-        });
-        rightAxis.setEnabled(false);
-        //leftAxis.setEnabled(false);
-        chart.setDrawBorders(false);
-        chart.setTouchEnabled(false);
-        chart.setMinimumWidth((int) (size.x*0.96));
-        // SETTING DESCRIPTION TO NULL
-        Description description = new Description();
-        description.setText("");
-        chart.setDescription(description);
-        barcard.addView(chart);
+        barcard.addView(viewPager);
+        //barcard.addView(chart);
         return barcard;
-    }
-    private ArrayList<String> getXAxisValues() {
-        ArrayList<String> xAxis = new ArrayList<>();
-        xAxis.add("Sun");
-        xAxis.add("Sun");
-        xAxis.add("Mon");
-        xAxis.add("Tue");
-        xAxis.add("Wed");
-        xAxis.add("Thu");
-        xAxis.add("Fri");
-        xAxis.add("Sat");
-        return xAxis;
     }
 
     public CardView createBreakfast(List<Long> mealdata){
@@ -543,5 +429,26 @@ public class Summary extends Fragment {
         dinnerlayout.addView(dinnerlist);
         return dinnercard;
     }
+
+
+
+
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if(position == 1)return new Barchart();
+            return new SummaryFront();
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
+    }
+
 
 }

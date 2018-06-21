@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -63,7 +64,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
 
             float newY = motionEvent.getRawY() + dY;
             newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
-            newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
+            newY = Math.min((int)(parentHeight*0.9) - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
 
             view.animate()
                     .x(newX)

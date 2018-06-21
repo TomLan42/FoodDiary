@@ -25,15 +25,15 @@
     <string name="ingredients">Ingredients</string>
     <string name="breakfast_start_hour">breakfast_start_hour</string>
     <string name="breakfast_start_min">breakfast_start_min</string>
-    <string name = "breakfast_end_hour">breakfast_end_hour</string>
-    <string name = "breakfast_end_min">breakfast_end_min</string>
-    <string name = "lunch_start_hour">lunch_start_hour</string>
-    <string name = "lunch_start_min">lunch_start_min</string>
-    <string name = "lunch_end_hour">lunch_end_hour</string>
-    <string name = "lunch_end_min">lunch_end_min</string>
-    <string name = "dinner_start_hour">dinner_start_hour</string>
-    <string name = "dinner_start_min">dinner_start_min</string>
-    <string name = "dinner_end_hour">dinner_end_hour</string>
-    <string name = "dinner_end_min">dinner_end_min</string>
+    <string name="breakfast_end_hour">breakfast_end_hour</string>
+    <string name="breakfast_end_min">breakfast_end_min</string>
+    <string name="lunch_start_hour">lunch_start_hour</string>
+    <string name="lunch_start_min">lunch_start_min</string>
+    <string name="lunch_end_hour">lunch_end_hour</string>
+    <string name="lunch_end_min">lunch_end_min</string>
+    <string name="dinner_start_hour">dinner_start_hour</string>
+    <string name="dinner_start_min">dinner_start_min</string>
+    <string name="dinner_end_hour">dinner_end_hour</string>
+    <string name="dinner_end_min">dinner_end_min</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
