@@ -1,10 +1,11 @@
-package com.example.internadmin.fooddiary
+package com.example.internadmin.fooddiary.Views
 
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import com.example.internadmin.fooddiary.R
 
 class miniPizzaView : View {
 

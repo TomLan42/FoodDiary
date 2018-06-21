@@ -1,4 +1,4 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Views;
 
 
 import android.app.TimePickerDialog;
@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
+import com.example.internadmin.fooddiary.R;
 import com.github.paolorotolo.appintro.ISlideBackgroundColorHolder;
 import com.github.paolorotolo.appintro.ISlideSelectionListener;
 

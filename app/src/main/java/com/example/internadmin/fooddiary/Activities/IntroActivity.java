@@ -1,4 +1,4 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Activities;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.internadmin.fooddiary.R;
+import com.example.internadmin.fooddiary.Views.GetMealTimeFragment;
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntro2Fragment;
 
@@ -65,6 +67,8 @@ public class IntroActivity extends AppIntro2 {
 
         addSlide(dinner);
 
+        //TODO: Add slide to check type of nutrition to track
+
 
 
 
@@ -93,6 +97,8 @@ public class IntroActivity extends AppIntro2 {
     @Override
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
+
+        //TODO: Check if time range overlaps before set.
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 

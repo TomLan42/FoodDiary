@@ -1,19 +1,22 @@
-package com.example.internadmin.fooddiary
+package com.example.internadmin.fooddiary.Activities
 
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.internadmin.fooddiary.Interfaces.ServingSliceListener
+import com.example.internadmin.fooddiary.Models.DishID
+import com.example.internadmin.fooddiary.Models.Meal
+import com.example.internadmin.fooddiary.R
+import com.example.internadmin.fooddiary.Views.PieSliderDialog
+import com.example.internadmin.fooddiary.Views.miniPizzaView
 import kotlinx.android.synthetic.main.activity_meal.*
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
-import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.nutritionfactlabel.*

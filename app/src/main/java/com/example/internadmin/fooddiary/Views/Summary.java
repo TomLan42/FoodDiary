@@ -1,11 +1,10 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Views;
 
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -14,15 +13,19 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.internadmin.fooddiary.DBHandler;
+import com.example.internadmin.fooddiary.Activities.MealActivity;
+import com.example.internadmin.fooddiary.Models.DishID;
+import com.example.internadmin.fooddiary.Models.FoodItem;
+import com.example.internadmin.fooddiary.Models.Meal;
+import com.example.internadmin.fooddiary.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;

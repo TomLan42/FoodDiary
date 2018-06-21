@@ -1,14 +1,13 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Models;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
+
+import com.example.internadmin.fooddiary.DBHandler;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 

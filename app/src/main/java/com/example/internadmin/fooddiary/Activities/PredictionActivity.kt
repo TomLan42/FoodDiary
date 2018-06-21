@@ -1,10 +1,9 @@
-package com.example.internadmin.fooddiary
+package com.example.internadmin.fooddiary.Activities
 
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
@@ -15,9 +14,12 @@ import com.example.internadmin.fooddiary.R.color.grey
 import kotlinx.android.synthetic.main.activity_prediction.*
 import java.io.File
 import android.content.DialogInterface
-import android.os.Build
 import android.support.v7.app.AlertDialog
-import android.util.Log
+import com.example.internadmin.fooddiary.AsyncTasks.ImageUploadTask
+import com.example.internadmin.fooddiary.Models.DishID
+import com.example.internadmin.fooddiary.Models.Prediction
+import com.example.internadmin.fooddiary.R
+import com.example.internadmin.fooddiary.Views.PredictListViewAdapter
 
 
 class PredictionActivity : AppCompatActivity() {

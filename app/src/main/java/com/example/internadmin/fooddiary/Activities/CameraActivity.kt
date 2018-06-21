@@ -1,15 +1,12 @@
-package com.example.internadmin.fooddiary
+package com.example.internadmin.fooddiary.Activities
 
 import android.content.Intent
 import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.support.design.widget.FloatingActionButton
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.CompoundButton
 import android.widget.Toast
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
@@ -23,8 +20,10 @@ import java.io.FileOutputStream
 import java.io.IOException
 import android.app.Activity
 import android.provider.MediaStore
-
-
+import com.example.internadmin.fooddiary.AsyncTasks.DownloadDishIDTask
+import com.example.internadmin.fooddiary.AsyncTasks.ImageUploadTask
+import com.example.internadmin.fooddiary.Interfaces.PostTaskListener
+import com.example.internadmin.fooddiary.R
 
 
 /**

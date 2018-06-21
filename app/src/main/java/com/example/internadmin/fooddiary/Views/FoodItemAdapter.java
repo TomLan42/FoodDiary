@@ -1,4 +1,4 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Views;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.example.internadmin.fooddiary.Models.FoodItem;
+import com.example.internadmin.fooddiary.R;
 
 import java.util.ArrayList;
 

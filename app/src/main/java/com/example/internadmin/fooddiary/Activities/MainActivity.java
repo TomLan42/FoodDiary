@@ -1,13 +1,10 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -15,12 +12,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -28,9 +22,12 @@ import android.support.v7.widget.Toolbar;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.example.internadmin.fooddiary.R;
+import com.example.internadmin.fooddiary.Views.Test;
+import com.example.internadmin.fooddiary.Views.MovableFloatingActionButton;
+import com.example.internadmin.fooddiary.Views.Settings;
+import com.example.internadmin.fooddiary.Views.Summary;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity{
     MaterialSearchView searchView;
