@@ -150,6 +150,7 @@ public class GetMealTimeFragment extends Fragment implements ISlideSelectionList
         meal.setImageResource(drawable);
         starttime.setText(int2time(starthr, startmin));
         endtime.setText(int2time(endhr, endmin));
+        final SharedPreferences.Editor edit = prefs.edit();
 
         btn_starttime.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -160,6 +161,9 @@ public class GetMealTimeFragment extends Fragment implements ISlideSelectionList
                         starthr = hour;
                         startmin = min;
                         starttime.setText(int2time(starthr, startmin));
+                        edit.putInt(pref_starthr, starthr);
+                        edit.putInt(pref_startmin, startmin);
+                        edit.apply();
                     }
                 }, starthr, startmin, true);
                 timePickerDialog.show();
@@ -175,6 +179,9 @@ public class GetMealTimeFragment extends Fragment implements ISlideSelectionList
                         endhr = hour;
                         endmin = min;
                         endtime.setText(int2time(endhr, endmin));
+                        edit.putInt(pref_endhr, endhr);
+                        edit.putInt(pref_endmin, endmin);
+                        edit.apply();
                     }
                 }, endhr, endmin, true);
                 timePickerDialog.show();
@@ -191,7 +198,7 @@ public class GetMealTimeFragment extends Fragment implements ISlideSelectionList
         }else if(hr == 12){
             return String.format("%02d:%02d p.m.", hr, min);
         }else if(hr == 0){
-            return "12:" + Integer.toString(min) + " a.m.";
+            return String.format("12:%02d a.m.", min);
         }else{
             return String.format("%02d:%02d a.m.", hr, min);
         }
@@ -204,12 +211,6 @@ public class GetMealTimeFragment extends Fragment implements ISlideSelectionList
 
     @Override
     public void onSlideDeselected() {
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.putInt(pref_starthr, starthr);
-        edit.putInt(pref_startmin, startmin);
-        edit.putInt(pref_endhr, endhr);
-        edit.putInt(pref_endmin, endmin);
-        edit.apply();
 
     }
 

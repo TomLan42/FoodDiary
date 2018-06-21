@@ -263,7 +263,7 @@ class MealActivity : AppCompatActivity() {
 
     private fun getnutritionfloat(nutrition: JsonObject,
                                   memberstr: String, unit: String): String{
-        var myobj: JsonElement? = nutrition.get(memberstr)
+        val myobj: JsonElement? = nutrition.get(memberstr)
         if(myobj == null)
             return "-"
         else
@@ -272,7 +272,7 @@ class MealActivity : AppCompatActivity() {
 
     private fun getdailyval(nutrition: JsonObject,
                             memberstr: String, recommendedintake: Float): String{
-        var myobj: JsonElement? = nutrition.get(memberstr)
+        val myobj: JsonElement? = nutrition.get(memberstr)
         if(myobj == null)
             return "0%"
         else
