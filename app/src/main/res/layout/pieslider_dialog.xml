@@ -14,7 +14,7 @@
         android:textSize="20sp"
         android:textStyle="bold"/>
 
-    <com.example.internadmin.fooddiary.PizzaView
+    <com.example.internadmin.fooddiary.Views.PizzaView
         android:id="@+id/ViewPizza"
         android:layout_width="200dp"
         android:layout_height="200dp"

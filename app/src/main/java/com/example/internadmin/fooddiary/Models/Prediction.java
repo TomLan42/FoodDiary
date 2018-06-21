@@ -1,4 +1,4 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Models;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ public class Prediction implements Serializable {
     private String FoodName;
     private int ver;
 
-    Prediction(String FoodName, int ver){
+    public Prediction(String FoodName, int ver){
         this.FoodName = FoodName;
         this.ver = ver;
     }

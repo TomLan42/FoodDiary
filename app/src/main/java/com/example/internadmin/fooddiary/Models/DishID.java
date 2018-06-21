@@ -1,14 +1,17 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Models;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.internadmin.fooddiary.DBHandler;
+import com.example.internadmin.fooddiary.Interfaces.DishIDPopulatedListener;
+import com.example.internadmin.fooddiary.AsyncTasks.DownloadDishIDTask;
+import com.example.internadmin.fooddiary.Interfaces.PostTaskListener;
+import com.example.internadmin.fooddiary.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -18,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;

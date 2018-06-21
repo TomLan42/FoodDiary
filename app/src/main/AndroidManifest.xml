@@ -12,21 +12,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IntroActivity" />
+        <activity android:name=".Activities.IntroActivity" />
         <activity
-            android:name=".CameraActivity"
+            android:name=".Activities.CameraActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_camera"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".PredictionActivity" />
-        <activity android:name=".MealActivity"></activity>
+        <activity android:name=".Activities.PredictionActivity" />
+        <activity android:name=".Activities.MealActivity"></activity>
     </application>
 
 </manifest>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MealActivity">
+    tools:context=".Activities.MealActivity">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_saveentry"
@@ -116,7 +116,7 @@
 
                 </FrameLayout>
 
-                <com.example.internadmin.fooddiary.miniPizzaView
+                <com.example.internadmin.fooddiary.Views.miniPizzaView
                     android:id="@+id/pizzaslicer"
                     android:layout_width="40dp"
                     android:layout_height="40dp"

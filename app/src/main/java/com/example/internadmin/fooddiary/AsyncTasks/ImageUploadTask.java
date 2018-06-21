@@ -1,4 +1,4 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.AsyncTasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,6 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.internadmin.fooddiary.Config;
+import com.example.internadmin.fooddiary.Interfaces.PostTaskListener;
+import com.example.internadmin.fooddiary.Models.Prediction;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -40,8 +43,8 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
     public static final String noofpredictions = "NoOfPredictions";
 
 
-    ImageUploadTask(PostTaskListener<Bundle> postTaskListener, Bitmap bmp, Context ctx) {
-        this.dstURL = URLAddress.getpredictionAddress;
+    public ImageUploadTask(PostTaskListener<Bundle> postTaskListener, Bitmap bmp, Context ctx) {
+        this.dstURL = Config.getpredictionAddress;
         this.bmp = bmp;
         this.postTaskListener = postTaskListener;
         weakContext = new WeakReference<>(ctx);

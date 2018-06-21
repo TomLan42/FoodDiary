@@ -1,4 +1,4 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Views;
 
 import android.content.Context;
 import android.util.AttributeSet;

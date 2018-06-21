@@ -1,4 +1,4 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.AsyncTasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,31 +8,25 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
+
+import com.example.internadmin.fooddiary.Config;
+import com.example.internadmin.fooddiary.Interfaces.PostTaskListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
-import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.text.ParseException;
-import java.util.Iterator;
 
 
 public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
@@ -47,8 +41,8 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
     private PostTaskListener<Bundle> ptl;
 
 
-    DownloadDishIDTask(PostTaskListener<Bundle> ptl, Context context, String FoodName) {
-        this.dstURL = URLAddress.getinfoAddress;
+    public DownloadDishIDTask(PostTaskListener<Bundle> ptl, Context context, String FoodName) {
+        this.dstURL = Config.getinfoAddress;
         weakContext = new WeakReference<>(context);
         this.FoodName = FoodName;
         this.ptl = ptl;
