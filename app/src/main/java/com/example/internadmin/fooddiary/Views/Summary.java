@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+
+import com.example.internadmin.fooddiary.Barchart;
 import com.example.internadmin.fooddiary.DBHandler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,8 @@ import android.widget.TextView;
 import com.example.internadmin.fooddiary.Activities.MealActivity;
 import com.example.internadmin.fooddiary.Models.FoodItem;
 import com.example.internadmin.fooddiary.Models.Meal;
+import com.example.internadmin.fooddiary.R;
+import com.example.internadmin.fooddiary.SummaryFront;
 import com.example.internadmin.fooddiary.Views.FoodItemAdapter;
 import com.example.internadmin.fooddiary.Views.NonScrollListView;
 import com.github.mikephil.charting.charts.BarChart;
@@ -446,6 +450,7 @@ public class Summary extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
+            if(position == 0) return new SummaryFront();
             if(position == 1)return new Barchart();
             return new SummaryFront();
         }

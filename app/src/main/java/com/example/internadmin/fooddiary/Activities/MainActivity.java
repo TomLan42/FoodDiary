@@ -224,20 +224,21 @@ public class MainActivity extends AppCompatActivity{
                 // TO THE CLICKED POSITION
                 if(!wasSelected){
                     if(position == 0){
-                        transaction.replace(ll.getId(), summary);
-                        transaction.addToBackStack(null);
+                        Summary sum = new Summary();
+                        transaction.replace(ll.getId(), sum);
+                        //transaction.addToBackStack(null);
                         transaction.commit();
                     }
                     if(position == 1){
                         Test test = new Test();
                         transaction.replace(ll.getId(), test);
-                        transaction.addToBackStack(null);
+                        //transaction.addToBackStack(null);
                         transaction.commit();
                     }
                     if(position == 2){
                         Settings settings = new Settings();
                         transaction.replace(ll.getId(), settings);
-                        transaction.addToBackStack(null);
+                        //transaction.addToBackStack(null);
                         transaction.commit();
                     }
                 }

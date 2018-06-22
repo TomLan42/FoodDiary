@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.internadmin.fooddiary.Models.DishID;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -164,7 +165,7 @@ public class Barchart extends Fragment {
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
-            Calendar tom = new GregorianCalendar();
+            Calendar tom;
             int counter = 0;
             while (true){
                 tom = (Calendar) cal.clone();
@@ -183,8 +184,8 @@ public class Barchart extends Fragment {
                 }
                 val[counter] = tot;
                 counter += 1;
-                Log.d("Time solver", format.format(cal.getTime()));
-                Log.d("Time solver 2", format.format(today.getTime()));
+                //Log.d("Time solver", format.format(cal.getTime()));
+                //Log.d("Time solver 2", format.format(today.getTime()));
                 if(isSameDay(cal, today)) break;
                 cal.add(Calendar.DATE, 1);
             }
