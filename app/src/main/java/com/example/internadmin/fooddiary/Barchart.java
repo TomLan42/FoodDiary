@@ -155,7 +155,7 @@ public class Barchart extends Fragment {
                 DishID id = new DishID((String) pair.getKey(), -1, getContext());
                 id.execute();
                 JsonObject nutrition = id.getNutrition();
-                float calorie = nutrition.get("Calories").getAsFloat();
+                float calorie = nutrition.get("Energy").getAsFloat();
                 tot += calorie*(float)pair.getValue();
             }
             val[0] = tot;

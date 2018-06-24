@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="11dp"
         android:text="front"
         android:textSize="24sp" />
 
@@ -23,7 +23,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="74dp"
+        android:layout_marginTop="72dp"
         android:text="amount left"
         android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/record"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="-28dp"
+        android:layout_marginStart="25dp"
+        android:text="TextView" />
 </RelativeLayout>
