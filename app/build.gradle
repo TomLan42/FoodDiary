@@ -49,4 +49,5 @@ dependencies {
     }
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.github.florent37:singledateandtimepicker:2.0.4'
+    implementation 'devlight.io:arcprogressstackview:1.0.4'
 }

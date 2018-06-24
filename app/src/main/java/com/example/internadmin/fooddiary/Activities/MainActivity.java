@@ -47,28 +47,6 @@ public class MainActivity extends AppCompatActivity{
         // THE NEXT FEW LINES SET A SHARED PREFERENCE IF IT IS NOT ALREADY DONE, SO IF IT IS NOT ALREADY DONE THEN INTRO
         // ACTIVITY NEEDS TO BE SHOWN (SINCE APP IS OPENED FOR THE FIRST TIME)
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
-
-        if(!previouslyStarted) {
-            SharedPreferences.Editor edit = prefs.edit();
-            //edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
-
-            edit.putInt(getString(R.string.breakfast_start_hour), 0);
-            edit.putInt(getString(R.string.breakfast_start_min), 0);
-            edit.putInt(getString(R.string.breakfast_end_hour), 11);
-            edit.putInt(getString(R.string.breakfast_end_min), 0);
-            edit.putInt(getString(R.string.lunch_start_hour), 11);
-            edit.putInt(getString(R.string.lunch_start_min), 0);
-            edit.putInt(getString(R.string.lunch_end_hour), 17);
-            edit.putInt(getString(R.string.lunch_end_min), 0);
-            edit.putInt(getString(R.string.dinner_start_hour), 18);
-            edit.putInt(getString(R.string.dinner_start_min), 0);
-            edit.putInt(getString(R.string.dinner_end_hour), 23);
-            edit.putInt(getString(R.string.dinner_end_min), 59);
-            edit.apply();
-            Intent intro = new Intent(MainActivity.this, IntroActivity.class);
-            startActivity(intro);
-        }
 
         // CODE TO GET THE SCREEN DISPLAY SIZE
         Display display = getWindowManager().getDefaultDisplay();

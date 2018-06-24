@@ -1,6 +1,7 @@
 package com.example.internadmin.fooddiary.Activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
@@ -95,10 +96,6 @@ public class IntroActivity extends AppIntro2 {
         addSlide(prefFragment);
 
 
-
-
-
-
         // OPTIONAL METHODS
         // Override bar/separator color.
         //setBarColor(color);
@@ -156,11 +153,29 @@ public class IntroActivity extends AppIntro2 {
 
             AlertDialog alert11 = builder1.create();
             alert11.show();
+        }else if(prefs.getFloat(getString(R.string.tracking_nutrition_limit), -1f) < 0f ){
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+            builder1.setMessage("Nutrition Value cannot be empty!");
+            builder1.setCancelable(true);
+
+            builder1.setNegativeButton(
+                    "Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
         } else {
             SharedPreferences.Editor edit = prefs.edit();
             edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
             edit.apply();
             Toast.makeText(this, getString(R.string.settingcomplete), Toast.LENGTH_LONG).show();
+
+            Intent myintent = new Intent(this, MainActivity.class);
+            startActivity(myintent);
             finish();
         }
 

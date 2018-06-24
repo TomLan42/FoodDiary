@@ -104,6 +104,7 @@ class MealActivity : AppCompatActivity() {
 
                 val myintent = Intent(this, MainActivity::class.java)
                 startActivity(myintent)
+                finish()
 
             }
 
@@ -309,6 +310,7 @@ class MealActivity : AppCompatActivity() {
                 .setNegativeButton(android.R.string.ok, DialogInterface.OnClickListener { dialog, which ->
                     val myintent = Intent(ctx, MainActivity::class.java)
                     startActivity(myintent)
+                    finish()
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()

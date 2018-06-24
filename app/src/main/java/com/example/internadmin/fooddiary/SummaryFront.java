@@ -2,6 +2,7 @@ package com.example.internadmin.fooddiary;
 
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.example.internadmin.fooddiary.Models.DishID;
 import com.google.gson.JsonObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -24,11 +26,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import devlight.io.library.ArcProgressStackView;
+
 public class SummaryFront extends Fragment {
     DBHandler handler;
     TextView dateselect;
     TextView left;
     Calendar myCalendar;
+    ArcProgressStackView arcProgressStackView;
+    ArrayList<ArcProgressStackView.Model> models;
     public SummaryFront() {
         // Required empty public constructor
     }
@@ -51,12 +57,20 @@ public class SummaryFront extends Fragment {
         TextView record = getView().findViewById(R.id.record);
         left = getView().findViewById(R.id.amount);
         handler = new DBHandler(getContext());
-        float consumed = getdaycalories();
-        left.setText(String.valueOf(2200-consumed));
+        myCalendar = Calendar.getInstance();
+        //float consumed = getdaycalories();
+        //left.setText(String.valueOf(2200-consumed));
         record.setText("Recording Calories");
         dateselect = getView().findViewById(R.id.date);
         setDate();
         setDateListener();
+
+        arcProgressStackView = view.findViewById(R.id.apsv);
+
+        updateLabel();
+
+
+
     }
     public void setDateListener(){
         myCalendar = new GregorianCalendar();
@@ -83,7 +97,14 @@ public class SummaryFront extends Fragment {
     private void updateLabel(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         dateselect.setText(sdf.format(myCalendar.getTime()));
-        left.setText(String.valueOf(2200-getdaycalories(myCalendar)));
+        float consumed = getdaycalories(myCalendar);
+        left.setText(String.valueOf(Math.round(2200-consumed)) + "/2200\nCalories");
+
+        models = new ArrayList<>();
+        models.add(new ArcProgressStackView.Model("Calories", Math.round(consumed/22)
+                , Color.parseColor("#90ee90"), Color.parseColor("#228B22")));
+        arcProgressStackView.setModels(models);
+
     }
     public void setDate(){
         SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
@@ -112,6 +133,13 @@ public class SummaryFront extends Fragment {
         }
         return tot;
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        arcProgressStackView.animateProgress();
+    }
+    /*
     public float getdaycalories() {
         Calendar cal = new GregorianCalendar();
         cal.setTime(new Date());
@@ -133,5 +161,5 @@ public class SummaryFront extends Fragment {
             tot += calorie*(float)pair.getValue();
         }
         return tot;
-    }
+    }*/
 }
