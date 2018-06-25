@@ -33,6 +33,7 @@ public class SummaryFront extends Fragment {
     TextView dateselect;
     TextView left;
     Calendar myCalendar;
+    public int totalheight;
     ArcProgressStackView arcProgressStackView;
     ArrayList<ArcProgressStackView.Model> models;
     public SummaryFront() {
@@ -66,7 +67,7 @@ public class SummaryFront extends Fragment {
         setDateListener();
 
         arcProgressStackView = view.findViewById(R.id.apsv);
-
+        totalheight = dateselect.getHeight()*3 + arcProgressStackView.getHeight() + record.getHeight()*3;
         updateLabel();
 
 
