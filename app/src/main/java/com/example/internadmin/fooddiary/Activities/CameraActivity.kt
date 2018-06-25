@@ -90,6 +90,8 @@ class CameraActivity : AppCompatActivity() {
         btn_capture.setOnTouchListener(mDelayHideTouchListener)
 
         btn_capture.setOnClickListener{
+            fabPCCapture.show()
+            enableAllButtons(false)
             takePicture()
         }
 
@@ -110,16 +112,15 @@ class CameraActivity : AppCompatActivity() {
         }
 
         btn_gallery.setOnClickListener {
-            val getIntent = Intent(Intent.ACTION_GET_CONTENT)
-            getIntent.type = "image/*"
 
-            val pickIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            pickIntent.type = "image/*"
+            fabPCGallery.show()
 
-            val chooserIntent = Intent.createChooser(getIntent, "Select Image")
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(pickIntent))
+            val i = Intent(
+                    Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
-            startActivityForResult(chooserIntent, SELECT_IMAGE)
+            startActivityForResult(i, SELECT_IMAGE)
+
         }
 
         btn_back.setOnClickListener{
@@ -175,7 +176,7 @@ class CameraActivity : AppCompatActivity() {
                                 Log.i(LOGGING_TAG, "New photo captured. Bitmap length: ${it.bitmap.byteCount}")
                                 Toast.makeText(this, "Photo captured", Toast.LENGTH_LONG).show()
 
-                                uploadBitmap(it.bitmap)
+                                uploadBitmap(it.bitmap, true)
 
 
                             }
@@ -280,6 +281,11 @@ class CameraActivity : AppCompatActivity() {
         mHideHandler.postDelayed(mHideRunnable, delayMillis.toLong())
     }
 
+    override fun onResume() {
+        super.onResume()
+        enableAllButtons(true)
+    }
+
     override fun onStart() {
         super.onStart()
         if (permissionsGranted) {
@@ -313,7 +319,8 @@ class CameraActivity : AppCompatActivity() {
                     try {
 
                         val bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.data)
-                        uploadBitmap(bitmap)
+                        enableAllButtons(false)
+                        uploadBitmap(bitmap, false)
 
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -321,35 +328,43 @@ class CameraActivity : AppCompatActivity() {
 
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
+                fabPCGallery.hide()
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun uploadBitmap(bitmap: Bitmap){
+    private fun uploadBitmap(bitmap: Bitmap, isCamera: Boolean){
 
         val postTaskListener = PostTaskListener<Bundle> { result ->
+
+            enableAllButtons(true)
+
             if (result.getString(ImageUploadTask.Result).equals(ImageUploadTask.Success)) {
 
                 result.remove(ImageUploadTask.Result)
 
-                try {
-                    val myfile = File.createTempFile("tempfoodimg", "jpg", this.getCacheDir())
-                    myfile.deleteOnExit()
-                    val outStream = FileOutputStream(myfile)
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
-                    outStream.close()
-                    result.putSerializable("FoodImg", myfile)
-                } catch (e: IOException) {
-                    Log.e("Meal Caching", "Cannot create Cached Image: " + e.message)
+                if(isCamera){
+                    fabPCCapture.attachListener {
+                        goToPredictionActivity(result, bitmap)
+                    }
+                    fabPCCapture.beginFinalAnimation()
+                } else{
+                    fabPCGallery.attachListener {
+                        goToPredictionActivity(result, bitmap)
+                    }
+                    fabPCGallery.beginFinalAnimation()
                 }
 
-                val myintent = Intent(this, PredictionActivity::class.java)
-                myintent.putExtras(result)
-                startActivity(myintent)
                 //Toast.makeText(this, "There are " + result.getInt("NoOfPredictions").toString(), Toast.LENGTH_LONG).show()
 
             } else {
+
+                if(isCamera)
+                    fabPCCapture.hide()
+                else
+                    fabPCGallery.hide()
+
                 Toast.makeText(this, result.getString(DownloadDishIDTask.Result),
                         Toast.LENGTH_LONG).show()
 
@@ -359,6 +374,31 @@ class CameraActivity : AppCompatActivity() {
         }
 
         ImageUploadTask(postTaskListener, bitmap, this).execute()
+    }
+
+    fun enableAllButtons(enable :Boolean){
+        btn_back.isEnabled = enable
+        btn_gallery.isEnabled = enable
+        btn_flash.isEnabled = enable
+        btn_capture.isEnabled = enable
+        btn_switchcam.isEnabled = enable
+    }
+
+    fun goToPredictionActivity(result: Bundle, bitmap: Bitmap){
+        try {
+            val myfile = File.createTempFile("tempfoodimg", "jpg", this.getCacheDir())
+            myfile.deleteOnExit()
+            val outStream = FileOutputStream(myfile)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
+            outStream.close()
+            result.putSerializable("FoodImg", myfile)
+        } catch (e: IOException) {
+            Log.e("Meal Caching", "Cannot create Cached Image: " + e.message)
+        }
+
+        val myintent = Intent(this, PredictionActivity::class.java)
+        myintent.putExtras(result)
+        startActivity(myintent)
     }
 
     companion object {
