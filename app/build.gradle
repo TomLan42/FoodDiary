@@ -50,4 +50,5 @@ dependencies {
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.github.florent37:singledateandtimepicker:2.0.4'
     implementation project(':arcprogressstackview')
+    implementation 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
 }
