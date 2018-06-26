@@ -62,6 +62,7 @@ public class SummaryFront extends Fragment {
         //left.setText(String.valueOf(2200-consumed));
         record.setText("Recording Calories");
         dateselect = getView().findViewById(R.id.date);
+        //dateselect.setBackgroundResource(R.color.colorAccent);
         setDate();
         setDateListener();
 
