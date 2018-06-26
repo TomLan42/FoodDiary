@@ -2,8 +2,10 @@ package com.example.internadmin.fooddiary;
 
 
 import android.app.DatePickerDialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,9 +33,12 @@ import devlight.io.library.ArcProgressStackView;
 public class SummaryFront extends Fragment {
     DBHandler handler;
     TextView dateselect;
+    String tracking;
+    int limit;
     TextView left;
     Calendar myCalendar;
     public int totalheight;
+    SharedPreferences prefs;
     ArcProgressStackView arcProgressStackView;
     ArrayList<ArcProgressStackView.Model> models;
     public SummaryFront() {
@@ -55,13 +60,16 @@ public class SummaryFront extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+        tracking = prefs.getString(getString(R.string.nutrition_to_track), "Energy");
+        limit = prefs.getInt(getString(R.string.tracking_nutrition_limit), 0);
         TextView record = getView().findViewById(R.id.record);
         left = getView().findViewById(R.id.amount);
         handler = new DBHandler(getContext());
         myCalendar = Calendar.getInstance();
         //float consumed = getdaycalories();
         //left.setText(String.valueOf(2200-consumed));
-        record.setText("Recording Calories");
+        record.setText("Recording " + tracking);
         dateselect = getView().findViewById(R.id.date);
         setDate();
         setDateListener();
@@ -99,10 +107,10 @@ public class SummaryFront extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         dateselect.setText(sdf.format(myCalendar.getTime()));
         float consumed = getdaycalories(myCalendar);
-        left.setText(String.valueOf(Math.round(2200-consumed)) + "/2200\nCalories Left");
+        left.setText(String.valueOf(Math.round(2200-consumed)) + "/2200\n"+tracking + " Left");
 
         models = new ArrayList<>();
-        models.add(new ArcProgressStackView.Model("Calories", Math.round(consumed/22)
+        models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
                 , Color.parseColor("#90ee90"), Color.parseColor("#228B22")));
 
         arcProgressStackView.setModels(models);
@@ -131,7 +139,7 @@ public class SummaryFront extends Fragment {
             id.execute();
             JsonObject nutrition = id.getNutrition();
             Log.d("jsoncheck", nutrition.toString());
-            float calorie = nutrition.get("Energy").getAsFloat();
+            float calorie = nutrition.get(tracking).getAsFloat();
             tot += calorie*(float)pair.getValue();
         }
         return tot;
