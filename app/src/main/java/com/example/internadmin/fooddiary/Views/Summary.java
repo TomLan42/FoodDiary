@@ -229,7 +229,9 @@ public class Summary extends Fragment {
         viewPager = new ViewPager(getContext());
         viewPager.setId(1111);
         FrameLayout.LayoutParams viewpagerparams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        viewpagerparams.height = (int)(size.y*0.45);
+        SummaryFront s = new SummaryFront();
+        Log.d("HEIGHT", String.valueOf(s.totalheight));
+        viewpagerparams.height = (int)(size.y*0.5);
         viewPager.setLayoutParams(viewpagerparams);
         pagerAdapter = new ScreenSlidePagerAdapter(getActivity().getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);

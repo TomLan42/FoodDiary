@@ -33,7 +33,7 @@ import java.net.URL;
 
 public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
     private WeakReference<Context> weakContext;
-    private ProgressDialog progDialog;
+    //private ProgressDialog progDialog;
 
     private Bitmap bmp;
     private String dstURL;
@@ -48,17 +48,18 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
         this.bmp = bmp;
         this.postTaskListener = postTaskListener;
         weakContext = new WeakReference<>(ctx);
-        this.progDialog = new ProgressDialog(weakContext.get());
+        //this.progDialog = new ProgressDialog(weakContext.get());
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        /*
         progDialog.setMessage("Predicting...");
         progDialog.setIndeterminate(false);
         progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progDialog.setCancelable(true);
-        progDialog.show();
+        progDialog.show();*/
     }
 
     @Override
@@ -165,9 +166,9 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
         super.onPostExecute(result);
         if(result != null && postTaskListener != null){
             postTaskListener.onPostTask(result);
-        }
+        }/*
         if (progDialog.isShowing()) {
             progDialog.dismiss();
-        }
+        }*/
     }
 }

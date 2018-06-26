@@ -33,6 +33,7 @@ public class SummaryFront extends Fragment {
     TextView dateselect;
     TextView left;
     Calendar myCalendar;
+    public int totalheight;
     ArcProgressStackView arcProgressStackView;
     ArrayList<ArcProgressStackView.Model> models;
     public SummaryFront() {
@@ -67,7 +68,7 @@ public class SummaryFront extends Fragment {
         setDateListener();
 
         arcProgressStackView = view.findViewById(R.id.apsv);
-
+        totalheight = dateselect.getHeight()*3 + arcProgressStackView.getHeight() + record.getHeight()*3;
         updateLabel();
 
 
@@ -99,12 +100,14 @@ public class SummaryFront extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         dateselect.setText(sdf.format(myCalendar.getTime()));
         float consumed = getdaycalories(myCalendar);
-        left.setText(String.valueOf(Math.round(2200-consumed)) + "/2200\nCalories");
+        left.setText(String.valueOf(Math.round(2200-consumed)) + "/2200\nCalories Left");
 
         models = new ArrayList<>();
         models.add(new ArcProgressStackView.Model("Calories", Math.round(consumed/22)
                 , Color.parseColor("#90ee90"), Color.parseColor("#228B22")));
+
         arcProgressStackView.setModels(models);
+        arcProgressStackView.animateProgress();
 
     }
     public void setDate(){
