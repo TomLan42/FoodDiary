@@ -225,11 +225,23 @@ class MealActivity : AppCompatActivity() {
         calendar.time = mydate
         val mytime = intArrayOf(calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE))
-
-        //TODO: check time setting from default preferences
-        val breakfast: IntArray = intArrayOf(7, 30, 12, 30)
-        val lunch: IntArray = intArrayOf(13, 0, 15, 30)
-        val dinner: IntArray = intArrayOf(17, 45, 20, 30)
+        
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val breakfast: IntArray = intArrayOf(
+                prefs.getInt(getString(R.string.breakfast_start_hour), 0),
+                prefs.getInt(getString(R.string.breakfast_start_min), 0),
+                prefs.getInt(getString(R.string.breakfast_end_hour), 12),
+                prefs.getInt(getString(R.string.breakfast_end_min), 0))
+        val lunch: IntArray = intArrayOf(
+                prefs.getInt(getString(R.string.lunch_start_hour), 13),
+                prefs.getInt(getString(R.string.lunch_start_min), 0),
+                prefs.getInt(getString(R.string.lunch_end_hour), 16),
+                prefs.getInt(getString(R.string.lunch_end_min), 0))
+        val dinner: IntArray = intArrayOf(
+                prefs.getInt(getString(R.string.dinner_start_hour), 17),
+                prefs.getInt(getString(R.string.dinner_start_min), 45),
+                prefs.getInt(getString(R.string.dinner_end_hour), 20),
+                prefs.getInt(getString(R.string.dinner_end_min), 30))
 
         if(inTimeRange(mytime, breakfast))
             return "Breakfast"

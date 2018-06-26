@@ -271,16 +271,6 @@ public class Summary extends Fragment {
         mytabdots = new TabLayout(getContext(), tlattr);
         mytabdots.setLayoutParams(mytabdotsParams);
         mytabdots.setupWithViewPager(viewPager, true);
-        Field field;
-        try {
-            field = mytabdots.getClass().getDeclaredField("mTabBackgroundResId");
-            field.setAccessible(true);
-            field.set(mytabdots, R.drawable.tab_selector);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
         mytabdots.setId(1112);
         mytabdots.setClickable(false);
         mytabdots.setFocusable(false);
