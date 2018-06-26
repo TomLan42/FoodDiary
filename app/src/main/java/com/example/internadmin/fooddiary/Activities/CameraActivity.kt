@@ -73,6 +73,8 @@ class CameraActivity : AppCompatActivity() {
 
     private val SELECT_IMAGE = 100
 
+    private lateinit var imguploadtask :ImageUploadTask
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -299,6 +301,10 @@ class CameraActivity : AppCompatActivity() {
         if (permissionsGranted) {
             fotoapparat.stop()
         }
+
+        if(::imguploadtask.isInitialized && !imguploadtask.isCancelled){
+            imguploadtask.cancel(true)
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -373,7 +379,8 @@ class CameraActivity : AppCompatActivity() {
             }
         }
 
-        ImageUploadTask(postTaskListener, bitmap, this).execute()
+        imguploadtask = ImageUploadTask(postTaskListener, bitmap, this)
+        imguploadtask.execute()
     }
 
     fun enableAllButtons(enable :Boolean){

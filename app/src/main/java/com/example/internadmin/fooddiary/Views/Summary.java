@@ -8,16 +8,23 @@ import android.os.Bundle;
 
 import com.example.internadmin.fooddiary.Barchart;
 import com.example.internadmin.fooddiary.DBHandler;
+
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.util.Xml;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.internadmin.fooddiary.Activities.MealActivity;
@@ -51,6 +59,9 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.gson.JsonObject;
 
+import org.xmlpull.v1.XmlPullParser;
+
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,6 +80,7 @@ public class Summary extends Fragment {
     DBHandler handler;
     private static final int NUM_PAGES = 2;
     ViewPager viewPager;
+    TabLayout mytabdots;
     PagerAdapter pagerAdapter;
     BarChart chart;
     NonScrollListView breakfastlist;
@@ -222,20 +234,57 @@ public class Summary extends Fragment {
         // CREATING THE CARD FOR CONTAINING BARCHART
         barcard = new CardView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
         viewPager = new ViewPager(getContext());
         viewPager.setId(1111);
-        FrameLayout.LayoutParams viewpagerparams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        XmlPullParser parser = getResources().getXml(R.xml.createchartviewpager);
+        try {
+            parser.next();
+            parser.nextTag();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        AttributeSet vpattr = Xml.asAttributeSet(parser);
+        ViewPager.LayoutParams viewpagerparams = new ViewPager.LayoutParams(getContext(), vpattr);
         SummaryFront s = new SummaryFront();
         Log.d("HEIGHT", String.valueOf(s.totalheight));
-        viewpagerparams.height = (int)(size.y*0.5);
+        //viewpagerparams.height =
         viewPager.setLayoutParams(viewpagerparams);
         pagerAdapter = new ScreenSlidePagerAdapter(getActivity().getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setMinimumHeight(5000);
+
+        //Adding tabdots to bottom of view.
+        TabLayout.LayoutParams mytabdotsParams = new TabLayout.LayoutParams(TabLayout.LayoutParams.MATCH_PARENT
+                , TabLayout.LayoutParams.WRAP_CONTENT);
+        XmlPullParser tlparser = getResources().getXml(R.xml.createcharttabdots);
+        try {
+            tlparser.next();
+            tlparser.nextTag();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        AttributeSet tlattr = Xml.asAttributeSet(tlparser);
+        mytabdots = new TabLayout(getContext(), tlattr);
+        mytabdots.setLayoutParams(mytabdotsParams);
+        mytabdots.setupWithViewPager(viewPager, true);
+        Field field;
+        try {
+            field = mytabdots.getClass().getDeclaredField("mTabBackgroundResId");
+            field.setAccessible(true);
+            field.set(mytabdots, R.drawable.tab_selector);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        mytabdots.setId(1112);
+        mytabdots.setClickable(false);
+        mytabdots.setFocusable(false);
+
 
         // SETTING MARGINS TO THE CARD
         int marginx = (int)(size.x*0.027);
@@ -247,7 +296,28 @@ public class Summary extends Fragment {
         barcard.setCardBackgroundColor(Color.parseColor("#FFC6D6C3"));
         barcard.setMaxCardElevation(15);
         barcard.setCardElevation(9);
-        barcard.addView(viewPager);
+
+        RelativeLayout.LayoutParams tabdotsRLParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        //tabdotsRLParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        tabdotsRLParams.addRule(RelativeLayout.ALIGN_BOTTOM, viewPager.getId());
+
+
+        RelativeLayout.LayoutParams viewpagerRLParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        viewpagerRLParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+        viewpagerRLParams.height = (int)(size.y*0.5);
+        tabdotsRLParams.height = (int)(size.y*0.05);
+
+        RelativeLayout myRL = new RelativeLayout(getContext());
+        myRL.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT));
+
+        myRL.addView(viewPager, viewpagerRLParams);
+        myRL.addView(mytabdots, tabdotsRLParams);
+        barcard.addView(myRL);
+
         //barcard.addView(chart);
         return barcard;
     }

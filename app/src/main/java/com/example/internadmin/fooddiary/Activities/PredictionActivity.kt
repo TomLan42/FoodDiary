@@ -28,7 +28,7 @@ class PredictionActivity : AppCompatActivity() {
     private lateinit var  predictionlistview: ListView
     private lateinit var predictAdapter: PredictListViewAdapter
     private var mypos = -1
-    private lateinit var FoodImgFile: File
+    private lateinit var foodImgFile: File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class PredictionActivity : AppCompatActivity() {
             btn_mealActivity.isEnabled = true
             btn_mealActivity.backgroundTintList = ColorStateList.valueOf(resources.getColor(android.R.color.holo_blue_dark))
             mypos = position
-            Toast.makeText(this, "Found as " + position.toString(), Toast.LENGTH_LONG).show()
+            //Toast.makeText(this, "Found as " + position.toString(), Toast.LENGTH_LONG).show()
         }
 
         btn_mealActivity.setOnClickListener{
@@ -58,7 +58,7 @@ class PredictionActivity : AppCompatActivity() {
             mydishid.setDishIDPopulatedListener { dataAdded ->
                 if(dataAdded){
                     val b = Bundle()
-                    b.putSerializable("FoodImg", FoodImgFile)
+                    b.putSerializable("FoodImg", foodImgFile)
                     b.putString("DishID", mydishid.internalFoodName)
                     b.putInt("Version", mydishid.ver)
                     val intent = Intent(this, MealActivity::class.java)
@@ -84,8 +84,8 @@ class PredictionActivity : AppCompatActivity() {
             }
 
             val imgview = findViewById<ImageView>(R.id.img_takenpic)
-            FoodImgFile = intent.getSerializableExtra("FoodImg") as File
-            val imgpath = FoodImgFile.absolutePath
+            foodImgFile = intent.getSerializableExtra("FoodImg") as File
+            val imgpath = foodImgFile.absolutePath
             imgview.setImageBitmap(BitmapFactory.decodeFile(imgpath))
 
             btn_mealActivity.isEnabled = false

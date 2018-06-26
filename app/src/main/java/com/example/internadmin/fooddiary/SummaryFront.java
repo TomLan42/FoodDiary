@@ -72,7 +72,7 @@ public class SummaryFront extends Fragment {
         record.setText("Recording " + tracking);
         dateselect = getView().findViewById(R.id.date);
         //dateselect.setBackgroundResource(R.color.colorAccent);
-        setDate();
+
         setDateListener();
 
         arcProgressStackView = view.findViewById(R.id.apsv);
@@ -118,11 +118,7 @@ public class SummaryFront extends Fragment {
         arcProgressStackView.animateProgress();
 
     }
-    public void setDate(){
-        SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-        String today = fmt.format(new Date());
-        dateselect.setText(today);
-    }
+
     public float getdaycalories(Calendar cal){
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);

@@ -51,49 +51,61 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_undo_black_24dp" />
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="35dp"
+            android:layout_marginTop="35dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
         <com.github.jorgecastilloprz.FABProgressCircle
             android:id="@+id/fabPCGallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="37dp"
-            android:layout_marginTop="37dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             >
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
+            android:layout_margin="5dp"
             android:background="@null"
             app:backgroundTint="@color/grey"
             app:srcCompat="@drawable/ic_photo_library_black_24dp" />
 
         </com.github.jorgecastilloprz.FABProgressCircle>
 
-        <com.github.jorgecastilloprz.FABProgressCircle
-            android:id="@+id/fabPCCapture"
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="37dp"
+            android:layout_marginBottom="35dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             >
 
+        <com.github.jorgecastilloprz.FABProgressCircle
+            android:id="@+id/fabPCCapture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_capture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
+            android:layout_margin="5dp"
             android:clickable="true"
             android:focusable="true"
             app:backgroundTint="@color/grey"
             app:srcCompat="@drawable/ic_camera_black_24dp" />
 
         </com.github.jorgecastilloprz.FABProgressCircle>
+        </RelativeLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_flash"

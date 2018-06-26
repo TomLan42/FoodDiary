@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
         Point size = new Point();
         display.getSize(size);
         // MAIN LAYOUT OF THE ACTIVITY, FRAMELAYOUT
-        FrameLayout main = new FrameLayout(MainActivity.this);
+        FrameLayout main = new FrameLayout(this);
 
         // CODE FOR CREATING SEARCHVIEW.. COMMENTED FOR NOW IN CASE NEEDED SOMEWHERE
         //toolbar = new Toolbar(MainActivity.this);
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         // SETTING LAYOUT PARAMETERS FOR THE MAIN FRAMELAYOUT
-        FrameLayout.LayoutParams fabparams = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams fabparams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         fabparams.width = (int)(size.x*0.16);
         fabparams.height = (int)(size.x*0.16);
         fab.setId(899);
@@ -223,6 +224,7 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
+
         main.addView(fab);
         setContentView(main);
     }

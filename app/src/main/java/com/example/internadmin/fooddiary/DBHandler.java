@@ -343,11 +343,13 @@ public class DBHandler extends SQLiteOpenHelper {
             b.putFloat("ServingAmt", cursor.getFloat(2));
             try{
                 b.putSerializable("TimeConsumed", dateFormat.parse(cursor.getString(1)));
-                b.putSerializable("FoodImg", new File(cursor.getString(3)));
             }catch (ParseException e){
                 Log.e("getMeal", "Parse Error: " + e.getMessage());
-            }catch(NullPointerException e){
-                e.getStackTrace();
+            }
+
+            File file = new File(cursor.getString(3));
+            if(file.exists()){
+                b.putSerializable("FoodImg", file);
             }
 
         }

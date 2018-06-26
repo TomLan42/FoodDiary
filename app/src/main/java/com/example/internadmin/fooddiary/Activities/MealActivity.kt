@@ -3,8 +3,10 @@ package com.example.internadmin.fooddiary.Activities
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
@@ -34,13 +36,15 @@ class MealActivity : AppCompatActivity() {
 
     private lateinit var mymeal: Meal
     private var clearCache = false
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meal)
 
-        val totalserving: Float
+        var totalserving: Float
         val mypizzaslicer = findViewById<miniPizzaView>(R.id.pizzaslicer)
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         if(intent.hasExtra("Meal")){
             val mymealID = intent.getLongExtra("Meal", -1)
@@ -52,15 +56,19 @@ class MealActivity : AppCompatActivity() {
             executeOnMealInitialized(mypizzaslicer, true)
         }else if(intent.hasExtra("DishID")){
             val mydishid = DishID(intent.getStringExtra("DishID"), intent.getIntExtra("Version", -1), this)
-            totalserving = 1.8f
-            mydishid.setDishIDPopulatedListener({
+
+            mydishid.setDishIDPopulatedListener{
+                totalserving = getPrevServingAmt(mydishid)
                 servingcounter = Math.round(totalserving - 0.5).toInt()
                 servingslice = totalserving - servingcounter.toFloat()
                 Log.i("Serving Slice", servingslice.toString())
                 mymeal = Meal(mydishid, Date(), totalserving)
-                mymeal.setFoodImg(intent.getSerializableExtra("FoodImg") as File)
+                val myfoodimg = intent.getSerializableExtra("FoodImg")
+                if(myfoodimg != null){
+                    mymeal.setFoodImg(myfoodimg as File)
+                }
                 executeOnMealInitialized(mypizzaslicer, false)
-            })
+            }
             mydishid.execute()
 
         }else{
@@ -79,6 +87,9 @@ class MealActivity : AppCompatActivity() {
             img_mealpic.setImageBitmap(mymeal.foodImg)
 
             btn_saveentry.setOnClickListener {
+
+                setDefaultServingAmt(mymeal)
+
                 if(toUpdate){
                     mymeal.updateInDatabase(this)
                     Toast.makeText(this, "Updated Entry!", Toast.LENGTH_LONG).show()
@@ -112,8 +123,36 @@ class MealActivity : AppCompatActivity() {
             datetimeviewgroup(mymeal.timeConsumed)
             nutritionfactsviewgroup(mymeal.dishID.nutrition)
             ingredientsviewgroup(mymeal.dishID.ingredients)
+        }else{
+            RedirectToMainOnError("Meal was not properly initialized.", this)
         }
 
+    }
+
+    private fun getPrevServingAmt(mydishid: DishID):Float{
+        val servingamt = prefs.getFloat(mydishid.internalFoodName, -1f)
+
+        if(servingamt < 0){
+            return getdefaultservings(mydishid.nutrition)
+        }
+        return servingamt
+    }
+
+    private fun getdefaultservings(nutrition: JsonObject): Float{
+        val myobj: JsonElement? = nutrition.get("Default Serving")
+        if(myobj == null)
+            return 1.5f
+        else
+            return myobj.asFloat
+    }
+
+    private fun setDefaultServingAmt(mymeal: Meal){
+        val FoodName = mymeal.dishID.internalFoodName
+        val defaultserving = mymeal.servingAmt
+
+        val edit = prefs.edit()
+        edit.putFloat(FoodName, defaultserving)
+        edit.apply()
     }
 
     private fun servingsviewgroup(mypizzaslicer: miniPizzaView){
