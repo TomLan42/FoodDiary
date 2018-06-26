@@ -62,7 +62,7 @@ public class SummaryFront extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
         tracking = prefs.getString(getString(R.string.nutrition_to_track), "Energy");
-        limit = prefs.getInt(getString(R.string.tracking_nutrition_limit), 0);
+        limit = (int)prefs.getFloat(getString(R.string.tracking_nutrition_limit), 0);
         TextView record = getView().findViewById(R.id.record);
         left = getView().findViewById(R.id.amount);
         handler = new DBHandler(getContext());
@@ -108,7 +108,7 @@ public class SummaryFront extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         dateselect.setText(sdf.format(myCalendar.getTime()));
         float consumed = getdaycalories(myCalendar);
-        left.setText(String.valueOf(Math.round(2200-consumed)) + "/2200\n"+tracking + " Left");
+        left.setText(String.valueOf(Math.round(limit-consumed)) +"/" +String.valueOf(limit) +"\n"+tracking + " Left");
 
         models = new ArrayList<>();
         models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
