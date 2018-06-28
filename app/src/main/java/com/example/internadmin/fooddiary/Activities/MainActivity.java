@@ -235,6 +235,7 @@ public class MainActivity extends AppCompatActivity{
         if (allowRefresh)
         {
             allowRefresh = false;
+            Summary summary = new Summary();
             manager.beginTransaction().replace(ll.getId(), summary).commit();
         }
     }

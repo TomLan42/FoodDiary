@@ -1,6 +1,7 @@
 package com.example.internadmin.fooddiary.Views;
 
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import com.example.internadmin.fooddiary.Barchart;
 import com.example.internadmin.fooddiary.DBHandler;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -31,6 +34,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +48,7 @@ import com.example.internadmin.fooddiary.Models.FoodItem;
 import com.example.internadmin.fooddiary.Models.Meal;
 import com.example.internadmin.fooddiary.R;
 import com.example.internadmin.fooddiary.SummaryFront;
+import com.example.internadmin.fooddiary.SummarySugar;
 import com.example.internadmin.fooddiary.Views.FoodItemAdapter;
 import com.example.internadmin.fooddiary.Views.NonScrollListView;
 import com.github.mikephil.charting.charts.BarChart;
@@ -72,19 +77,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import devlight.io.library.ArcProgressStackView;
 import io.fotoapparat.preview.Frame;
 
 public class Summary extends Fragment {
     ScrollView sv;
     CardView barcard;
     DBHandler handler;
-    private static final int NUM_PAGES = 2;
+    TextView dateselect;
+    Calendar myCalendar;
+    private static final int NUM_PAGES = 3;
     ViewPager viewPager;
     TabLayout mytabdots;
     PagerAdapter pagerAdapter;
     BarChart chart;
     NonScrollListView breakfastlist;
     NonScrollListView lunchlist;
+    LinearLayout meal_ll;
+    SummaryFront caloriesfrag;
+    SummarySugar sugarfrag;
+    LinearLayout ll;
     NonScrollListView dinnerlist;
     Point size;
     public Summary() {
@@ -106,9 +118,12 @@ public class Summary extends Fragment {
                              Bundle savedInstanceState) {
         // THE MAIN SCROLLVIEW FOR THE WHOLE FRAGMENT
         sv = new ScrollView(getContext());
-
+        caloriesfrag = new SummaryFront();
+        sugarfrag = new SummarySugar();
         // LINEAR LAYOUT TO CONTAIN OTHER VIEWS (SINCE SCROLLVIEW CAN HAVE ONLY ONE VIEW APPENDED IN IT)
-        LinearLayout ll = new LinearLayout(getContext());
+        ll = new LinearLayout(getContext());
+        meal_ll = new LinearLayout(getContext());
+        meal_ll.setOrientation(LinearLayout.VERTICAL);
         ll.setOrientation(LinearLayout.VERTICAL);
         sv.addView(ll);
 
@@ -122,38 +137,81 @@ public class Summary extends Fragment {
 
         // THE ARRAY TO BE PASSED INTO THE BARCHART FUNCTION TO CREATE BAR CHART
         // FUNCTION TO CREATE BARCHART CARD
+        dateselect = new TextView(getContext());
+        dateselect.setPadding(50, 50, 50, 50);
+        dateselect.setText("TextView");
+        dateselect.setBackground(getResources().getDrawable(R.drawable.rounded_corner));
+        LinearLayout.LayoutParams dateparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        dateparams.setMargins(10, 10, 10, 10);
+        dateselect.setLayoutParams(dateparams);
         CardView barcard = createChart();
         ll.addView(barcard);
-
+        ll.addView(meal_ll);
         // GETTING THE LIST OF FOOD ITEMS IN BREAKFAST LUNCH AND DINNER
-        List<Long> breakfastlist = handler.getHistoryEntries(getBreakFastStart(), getBreakFastEnd());
-        List<Long> lunchlist = handler.getHistoryEntries(getLunchStart(), getLunchEnd());
-        List<Long> dinnerlist = handler.getHistoryEntries(getDinnerStart(), getDinnerEnd());
-
-        // IF THE LIST CONTAINS NON ZERO NUMBER OF ITEMS THEN CARD FOR THAT MEAL IS CREATED
-        if(breakfastlist.size() > 0){
-            CardView breakfastcard = createBreakfast(breakfastlist);
-            ll.addView(breakfastcard);
-        }
-        if(lunchlist.size() > 0){
-            CardView lunchcard = createLunch(lunchlist);
-            ll.addView(lunchcard);
-        }
-        if(dinnerlist.size() > 0){
-            CardView dinnercard = createDinner(dinnerlist);
-            ll.addView(dinnercard);
-        }
-
+        GregorianCalendar calen = new GregorianCalendar();
+        calen.setTime(new Date());
+        addAllCards(calen);
+        myCalendar = new GregorianCalendar();
+        setDateListener();
+        updateLabel(0);
         //sv.addView(fab);
         sv.smoothScrollTo(0, 0);
         return sv;
     }
+    public void addAllCards(GregorianCalendar calen){
+        meal_ll.removeAllViews();
+        List<Long> breakfastlist = handler.getHistoryEntries(getBreakFastStart(calen), getBreakFastEnd(calen));
+        List<Long> lunchlist = handler.getHistoryEntries(getLunchStart(calen), getLunchEnd(calen));
+        List<Long> dinnerlist = handler.getHistoryEntries(getDinnerStart(calen), getDinnerEnd(calen));
+
+        // IF THE LIST CONTAINS NON ZERO NUMBER OF ITEMS THEN CARD FOR THAT MEAL IS CREATED
+        //if(breakfastlist.size() > 0){
+        CardView breakfastcard = createBreakfast(breakfastlist);
+        meal_ll.addView(breakfastcard);
+        //}
+        //if(lunchlist.size() > 0){
+        CardView lunchcard = createLunch(lunchlist);
+        meal_ll.addView(lunchcard);
+        //}
+        //if(dinnerlist.size() > 0){
+        CardView dinnercard = createDinner(dinnerlist);
+        meal_ll.addView(dinnercard);
+        //}
+    }
+    public void setDateListener(){
+        myCalendar = new GregorianCalendar();
+
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(1);
+                addAllCards((GregorianCalendar) myCalendar);
+            }
+        };
+        dateselect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(), date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+    }
+    private void updateLabel(int i){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        dateselect.setText(sdf.format(myCalendar.getTime()));
+        if(i==1){
+            caloriesfrag.updateLabel(myCalendar);
+            sugarfrag.updateLabel(myCalendar);
+        }
+    }
     //------------------------------------------------
     //     FUNCTION TO GET BREAKFAST STARTTIME       |
     //------------------------------------------------
-    public Date getBreakFastStart(){
-        Calendar mealtime = new GregorianCalendar();
-        mealtime.setTime(new Date());
+    public Date getBreakFastStart(GregorianCalendar mealtime){
         mealtime.set(Calendar.HOUR_OF_DAY, 0);
         mealtime.set(Calendar.MINUTE, 0);
         mealtime.set(Calendar.SECOND, 0);
@@ -163,9 +221,7 @@ public class Summary extends Fragment {
     //------------------------------------------------
     //     FUNCTION TO GET BREAKFAST ENDTIME       |
     //------------------------------------------------
-    public Date getBreakFastEnd(){
-        Calendar mealtime = new GregorianCalendar();
-        mealtime.setTime(new Date());
+    public Date getBreakFastEnd(GregorianCalendar mealtime){
         mealtime.set(Calendar.HOUR_OF_DAY, 11);
         mealtime.set(Calendar.MINUTE, 0);
         mealtime.set(Calendar.SECOND, 0);
@@ -176,9 +232,7 @@ public class Summary extends Fragment {
     //------------------------------------------------
     //     FUNCTION TO GET LUNCH STARTTIME       |
     //------------------------------------------------
-    public Date getLunchStart(){
-        Calendar mealtime = new GregorianCalendar();
-        mealtime.setTime(new Date());
+    public Date getLunchStart(GregorianCalendar mealtime){
         mealtime.set(Calendar.HOUR_OF_DAY, 11);
         mealtime.set(Calendar.MINUTE, 0);
         mealtime.set(Calendar.SECOND, 0);
@@ -188,9 +242,7 @@ public class Summary extends Fragment {
     //------------------------------------------------
     //     FUNCTION TO GET LUNCH ENDTIME       |
     //------------------------------------------------
-    public Date getLunchEnd(){
-        Calendar mealtime = new GregorianCalendar();
-        mealtime.setTime(new Date());
+    public Date getLunchEnd(GregorianCalendar mealtime){
         mealtime.set(Calendar.HOUR_OF_DAY, 20);
         mealtime.set(Calendar.MINUTE, 0);
         mealtime.set(Calendar.SECOND, 0);
@@ -201,9 +253,7 @@ public class Summary extends Fragment {
     //------------------------------------------------
     //     FUNCTION TO GET DINNER STARTTIME       |
     //------------------------------------------------
-    public Date getDinnerStart(){
-        Calendar mealtime = new GregorianCalendar();
-        mealtime.setTime(new Date());
+    public Date getDinnerStart(GregorianCalendar mealtime){
         mealtime.set(Calendar.HOUR_OF_DAY, 20);
         mealtime.set(Calendar.MINUTE, 0);
         mealtime.set(Calendar.SECOND, 0);
@@ -214,9 +264,7 @@ public class Summary extends Fragment {
     //------------------------------------------------
     //     FUNCTION TO GET DINNER ENDTIME       |
     //------------------------------------------------
-    public Date getDinnerEnd(){
-        Calendar mealtime = new GregorianCalendar();
-        mealtime.setTime(new Date());
+    public Date getDinnerEnd(GregorianCalendar mealtime){
         mealtime.set(Calendar.HOUR_OF_DAY, 23);
         mealtime.set(Calendar.MINUTE, 0);
         mealtime.set(Calendar.SECOND, 0);
@@ -232,7 +280,11 @@ public class Summary extends Fragment {
         */
 
         // CREATING THE CARD FOR CONTAINING BARCHART
+        LinearLayout ll = new LinearLayout(getContext());
+        ll.setOrientation(LinearLayout.VERTICAL);
         barcard = new CardView(getContext());
+        barcard.addView(ll);
+        ll.addView(dateselect);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -249,8 +301,6 @@ public class Summary extends Fragment {
         }
         AttributeSet vpattr = Xml.asAttributeSet(parser);
         ViewPager.LayoutParams viewpagerparams = new ViewPager.LayoutParams(getContext(), vpattr);
-        SummaryFront s = new SummaryFront();
-        Log.d("HEIGHT", String.valueOf(s.totalheight));
         //viewpagerparams.height =
         viewPager.setLayoutParams(viewpagerparams);
         pagerAdapter = new ScreenSlidePagerAdapter(getActivity().getSupportFragmentManager());
@@ -306,7 +356,7 @@ public class Summary extends Fragment {
 
         myRL.addView(viewPager, viewpagerRLParams);
         myRL.addView(mytabdots, tabdotsRLParams);
-        barcard.addView(myRL);
+        ll.addView(myRL);
 
         //barcard.addView(chart);
         return barcard;
@@ -512,9 +562,11 @@ public class Summary extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            if(position == 0) return new SummaryFront();
-            if(position == 1)return new Barchart();
-            return new SummaryFront();
+            //caloriesfrag = new SummaryFront();
+            if(position == 0) return caloriesfrag;
+            if(position == 1) return sugarfrag;
+            if(position == 2) return new Barchart();
+            return caloriesfrag;
         }
 
         @Override

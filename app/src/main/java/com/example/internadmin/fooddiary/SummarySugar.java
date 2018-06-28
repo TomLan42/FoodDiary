@@ -30,7 +30,7 @@ import java.util.Map;
 
 import devlight.io.library.ArcProgressStackView;
 
-public class SummaryFront extends Fragment {
+public class SummarySugar extends Fragment {
     DBHandler handler;
     //TextView dateselect;
     String tracking;
@@ -41,7 +41,7 @@ public class SummaryFront extends Fragment {
     SharedPreferences prefs;
     ArcProgressStackView arcProgressStackView;
     ArrayList<ArcProgressStackView.Model> models;
-    public SummaryFront() {
+    public SummarySugar() {
         // Required empty public constructor
     }
 
@@ -55,17 +55,17 @@ public class SummaryFront extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         handler = new DBHandler(getContext());
-        return inflater.inflate(R.layout.fragment_summary_front, container, false);
+        return inflater.inflate(R.layout.fragment_summary_sugar, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
-        tracking = "Energy";
+        tracking = "Sodium";
         limit = (int)prefs.getFloat(getString(R.string.tracking_nutrition_limit), 0);
         //TextView record = getView().findViewById(R.id.record);
-        left = getView().findViewById(R.id.amount);
+        left = getView().findViewById(R.id.amount2);
         handler = new DBHandler(getContext());
         myCalendar = Calendar.getInstance();
         //float consumed = getdaycalories();
@@ -76,7 +76,7 @@ public class SummaryFront extends Fragment {
 
         //setDateListener();
 
-        arcProgressStackView = view.findViewById(R.id.apsv);
+        arcProgressStackView = view.findViewById(R.id.apsv2);
         //totalheight = dateselect.getHeight()*3 + arcProgressStackView.getHeight() + record.getHeight()*3;
         updateLabel(myCalendar);
 

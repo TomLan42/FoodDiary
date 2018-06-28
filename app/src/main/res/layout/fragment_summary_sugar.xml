@@ -2,14 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".SummaryFront">
+    tools:context=".SummarySugar">
 
     <!-- TODO: Update blank fragment layout -->
-
     <devlight.io.library.ArcProgressStackView
-        android:id="@+id/apsv"
+        android:id="@+id/apsv2"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
@@ -34,17 +33,16 @@
         app:apsv_typeface="fonts/agency.ttf" />
 
     <TextView
-        android:id="@+id/amount"
+        android:id="@+id/amount2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/apsv"
-        android:layout_alignStart="@id/apsv"
-        android:layout_alignEnd="@id/apsv"
-        android:layout_alignTop="@id/apsv"
+        android:layout_alignBottom="@id/apsv2"
+        android:layout_alignStart="@id/apsv2"
+        android:layout_alignEnd="@id/apsv2"
+        android:layout_alignTop="@id/apsv2"
         android:gravity="center"
         android:layout_margin="1dp"
         android:text="amount left"
         android:textSize="18sp" />
-
 
 </RelativeLayout>
