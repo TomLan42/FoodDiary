@@ -405,8 +405,27 @@ public class Summary extends Fragment {
         rl.addView(breakfasthead, breakfastparams);
         rl.addView(sunrise, sunriseparams);
 
-        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
+        ArrayList<FoodItem> foodlist = new ArrayList<>();
+        for(int i = 0; i < mealdata.size(); i++){
+            Long id = mealdata.get(i);
+            Meal meal = new Meal();
+            meal.populateFromDatabase(id, getContext());
+            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
+        }
         breakfastlist = new SwipeMenuListView(getContext());
+        final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
+        breakfastlist.setAdapter(adapter);
+        breakfastlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Long myitem = adapter.getItem(position).getId();
+                Intent myintent = new Intent(getContext(), MealActivity.class);
+                myintent.putExtra("Meal", myitem);
+                startActivity(myintent);
+            }
+        });
+
+        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
         SwipeMenuCreator creator = new SwipeMenuCreator() {
             @Override
             public void create(SwipeMenu menu) {
@@ -446,7 +465,10 @@ public class Summary extends Fragment {
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
-                        // open
+                        Long myitem = adapter.getItem(position).getId();
+                        Intent myintent = new Intent(getContext(), MealActivity.class);
+                        myintent.putExtra("Meal", myitem);
+                        startActivity(myintent);
                         break;
                     case 1:
                         // delete
@@ -470,24 +492,7 @@ public class Summary extends Fragment {
         });
         breakfastlist.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
         //  ---------------------------------------------------- SWIPE MENU LIST VIEW
-        ArrayList<FoodItem> foodlist = new ArrayList<>();
-        for(int i = 0; i < mealdata.size(); i++){
-            Long id = mealdata.get(i);
-            Meal meal = new Meal();
-            meal.populateFromDatabase(id, getContext());
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
-        }
-        final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
-        breakfastlist.setAdapter(adapter);
-        breakfastlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Long myitem = adapter.getItem(position).getId();
-                Intent myintent = new Intent(getContext(), MealActivity.class);
-                myintent.putExtra("Meal", myitem);
-                startActivity(myintent);
-            }
-        });
+
         breakfastlayout.addView(breakfastlist);
         return breakfastcard;
     }
