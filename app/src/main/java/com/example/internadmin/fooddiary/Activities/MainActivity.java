@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;

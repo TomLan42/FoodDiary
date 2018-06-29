@@ -146,7 +146,9 @@ public class Barchart extends Fragment {
         if(cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
             Calendar tom = new GregorianCalendar();
             tom = (Calendar) cal.clone();
-            tom.add(Calendar.DATE, 1);
+            tom.set(Calendar.HOUR_OF_DAY, 23);
+            tom.set(Calendar.MINUTE, 59);
+            tom.set(Calendar.SECOND, 59);
             HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
             Iterator it = servings.entrySet().iterator();
             float tot = 0;
@@ -169,7 +171,9 @@ public class Barchart extends Fragment {
             int counter = 0;
             while (true){
                 tom = (Calendar) cal.clone();
-                tom.add(Calendar.DATE, 1);
+                tom.set(Calendar.HOUR_OF_DAY, 23);
+                tom.set(Calendar.MINUTE, 59);
+                tom.set(Calendar.SECOND, 59);
                 HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
                 Iterator it = servings.entrySet().iterator();
                 float tot = 0;

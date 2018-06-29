@@ -3,15 +3,18 @@ package com.example.internadmin.fooddiary.Views;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.gesture.Gesture;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.internadmin.fooddiary.Barchart;
 import com.example.internadmin.fooddiary.DBHandler;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -27,6 +30,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.util.Xml;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,20 +53,11 @@ import com.example.internadmin.fooddiary.Models.Meal;
 import com.example.internadmin.fooddiary.R;
 import com.example.internadmin.fooddiary.SummaryFront;
 import com.example.internadmin.fooddiary.SummarySugar;
-import com.example.internadmin.fooddiary.Views.FoodItemAdapter;
-import com.example.internadmin.fooddiary.Views.NonScrollListView;
+import com.example.internadmin.fooddiary.SwipeList.SwipeMenu;
+import com.example.internadmin.fooddiary.SwipeList.SwipeMenuCreator;
+import com.example.internadmin.fooddiary.SwipeList.SwipeMenuItem;
+import com.example.internadmin.fooddiary.SwipeList.SwipeMenuListView;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.google.gson.JsonObject;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -72,13 +67,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import devlight.io.library.ArcProgressStackView;
-import io.fotoapparat.preview.Frame;
 
 public class Summary extends Fragment {
     ScrollView sv;
@@ -91,7 +80,7 @@ public class Summary extends Fragment {
     TabLayout mytabdots;
     PagerAdapter pagerAdapter;
     BarChart chart;
-    NonScrollListView breakfastlist;
+    SwipeMenuListView breakfastlist;
     NonScrollListView lunchlist;
     LinearLayout meal_ll;
     SummaryFront caloriesfrag;
@@ -113,11 +102,13 @@ public class Summary extends Fragment {
         //setContentView(sv);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // THE MAIN SCROLLVIEW FOR THE WHOLE FRAGMENT
         sv = new ScrollView(getContext());
+
         caloriesfrag = new SummaryFront();
         sugarfrag = new SummarySugar();
         // LINEAR LAYOUT TO CONTAIN OTHER VIEWS (SINCE SCROLLVIEW CAN HAVE ONLY ONE VIEW APPENDED IN IT)
@@ -156,6 +147,12 @@ public class Summary extends Fragment {
         updateLabel(0);
         //sv.addView(fab);
         sv.smoothScrollTo(0, 0);
+        sv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                breakfastlist.smoothCloseMenu();
+            }
+        });
         return sv;
     }
     public void addAllCards(GregorianCalendar calen){
@@ -407,7 +404,72 @@ public class Summary extends Fragment {
         sunriseparams.setMargins((int)(size.x*0.25), (int)(size.y*0.02), 0,(int)(size.x*0.04));
         rl.addView(breakfasthead, breakfastparams);
         rl.addView(sunrise, sunriseparams);
-        breakfastlist = new NonScrollListView(getContext());
+
+        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
+        breakfastlist = new SwipeMenuListView(getContext());
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+                SwipeMenuItem openItem = new SwipeMenuItem(
+                        getContext());
+                // set item background
+                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+                        0xCE)));
+                // set item width
+                openItem.setWidth(dp2px(90));
+                // set item title
+                openItem.setTitle("Open");
+                // set item title fontsize
+                openItem.setTitleSize(18);
+                // set item title font color
+                openItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(openItem);
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(dp2px(90));
+                // set a icon
+                //deleteItem.setIcon(R.drawable.search_icon);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+        breakfastlist.setMenuCreator(creator);
+        breakfastlist.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        // open
+                        break;
+                    case 1:
+                        // delete
+                        break;
+                }
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
+        breakfastlist.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+            }
+        });
+        breakfastlist.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
         ArrayList<FoodItem> foodlist = new ArrayList<>();
         for(int i = 0; i < mealdata.size(); i++){
             Long id = mealdata.get(i);
@@ -428,6 +490,11 @@ public class Summary extends Fragment {
         });
         breakfastlayout.addView(breakfastlist);
         return breakfastcard;
+    }
+
+    public int dp2px(float dips)
+    {
+        return (int) (dips * getActivity().getResources().getDisplayMetrics().density + 0.5f);
     }
     public CardView createLunch(List<Long> mealdata){
         /*
