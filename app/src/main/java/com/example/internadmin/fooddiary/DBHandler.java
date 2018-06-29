@@ -286,15 +286,55 @@ public class DBHandler extends SQLiteOpenHelper {
     /*
     ------------------------------------------------------------------------
 
+    getHistoryEntriesOnDay(): Gives a list of IDs from mealhistory that are within a given day.
+
+    Expects the date and TimePeriod(optional).
+
+    Returns a List of Long.
+
+    -------------------------------------------------------------------------
+    */
+
+    public List<Long> getHistoryEntriesOnDay(Date dateOnly, TimePeriod timePeriod) {
+        List<Long> list = new ArrayList<>();
+
+        String sqlquery = "select " + HISTORY_COLUMN_ID +  " from " + HISTORY_TABLE_NAME +
+                " where " + HISTORY_COLUMN_DATE + " <= '" + dateFormat.format(dateOnly) + "'";;
+
+        if(timePeriod != null)
+            sqlquery += " and " + HISTORY_COLUMN_PERIOD + " = " + timePeriod.ordinal();
+
+        sqlquery += " order by " + HISTORY_COLUMN_DATE + " desc";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(sqlquery, null );
+        res.moveToFirst();
+
+        while(!res.isAfterLast()){
+            list.add(Long.valueOf(res.getInt(res.getColumnIndex(HISTORY_COLUMN_ID))));
+            res.moveToNext();
+        }
+        res.close();
+        return list;
+    }
+
+    /*
+    ------------------------------------------------------------------------
+
     getAllServingsTimePeriod(): Sums the number of servings within a time period for each FoodName.
 
     Expects the starting time and ending time.
 
     Returns a Hashmap of the FoodName and the corresponding sum of servings.
 
+    @deprecated Database no longer stores time of meal, only date. </br>
+                Will be removed in the next version. </br>
+                use {@link getServingsOnDay()}
+
     -------------------------------------------------------------------------
     */
 
+    @Deprecated
     public HashMap<String, Float> getAllServingsTimePeriod(Date startdate, Date enddate) {
         HashMap<String, Float> hmap = new HashMap<>();
 
@@ -303,6 +343,39 @@ public class DBHandler extends SQLiteOpenHelper {
                 HISTORY_TABLE_NAME + " where " + HISTORY_COLUMN_DATE + " between '" +
                 dateFormat.format(startdate) + "" + "' and '" + dateFormat.format(enddate) +
                 "' group by " + HISTORY_COLUMN_FOODNAME, null);
+        res.moveToFirst();
+        while(!res.isAfterLast()){
+            hmap.put(res.getString(0), res.getFloat(1));
+            res.moveToNext();
+        }
+        res.close();
+
+        return hmap;
+    }
+
+    /*
+    ------------------------------------------------------------------------
+
+    getAllServingsOnDay(): Sums the number of servings within a single day.
+
+    Expects a date and a TimePeriod(optional).
+
+    Returns a Hashmap of the FoodName and the corresponding sum of servings.
+
+    -------------------------------------------------------------------------
+    */
+
+    public HashMap<String, Float> getAllServingsOnDay(Date dateOnly, TimePeriod timePeriod) {
+        HashMap<String, Float> hmap = new HashMap<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String myquery = "select " + HISTORY_COLUMN_FOODNAME + " , sum("+ HISTORY_COLUMN_SERVINGS +") from " +
+                HISTORY_TABLE_NAME + " where " + HISTORY_COLUMN_DATE + " = '" +
+                dateFormat.format(dateOnly) + "'";
+        if(timePeriod != null)
+            myquery += " and " + HISTORY_COLUMN_PERIOD + " = " + timePeriod.ordinal();
+        Cursor res = db.rawQuery( myquery + " group by " + HISTORY_COLUMN_FOODNAME,
+                null);
         res.moveToFirst();
         while(!res.isAfterLast()){
             hmap.put(res.getString(0), res.getFloat(1));

@@ -185,7 +185,7 @@ public class Meal{
 
         }else if (timerange[2] == giventime[0]){
 
-            return (timerange[3] >= giventime[1]);
+            return (timerange[3] > giventime[1]);
 
         }
         return false;
