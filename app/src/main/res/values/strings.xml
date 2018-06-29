@@ -42,6 +42,24 @@
     <string name="dinner_start_min">dinner_start_min</string>
     <string name="dinner_end_hour">dinner_end_hour</string>
     <string name="dinner_end_min">dinner_end_min</string>
+
+    <string name="morning_start_hour">morning_start_hour</string>
+    <string name="morning_start_min">morning_start_min</string>
+    <string name="morning_end_hour">morning_end_hour</string>
+    <string name="morning_end_min">morning_end_min</string>
+    <string name="afternoon_start_hour">afternoon_start_hour</string>
+    <string name="afternoon_start_min">afternoon_start_min</string>
+    <string name="afternoon_end_hour">afternoon_end_hour</string>
+    <string name="afternoon_end_min">afternoon_end_min</string>
+    <string name="evening_start_hour">evening_start_hour</string>
+    <string name="evening_start_min">evening_start_min</string>
+    <string name="evening_end_hour">evening_end_hour</string>
+    <string name="evening_end_min">evening_end_min</string>
+    <string name="night_start_hour">night_start_hour</string>
+    <string name="night_start_min">night_start_min</string>
+    <string name="night_end_hour">night_end_hour</string>
+    <string name="night_end_min">night_end_min</string>
+
     <string name="nutrition_to_track">nut2track</string>
     <string name="tracking_nutrition_limit">tracknutlim</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

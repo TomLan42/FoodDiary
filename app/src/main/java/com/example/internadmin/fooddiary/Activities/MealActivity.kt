@@ -62,7 +62,7 @@ class MealActivity : AppCompatActivity() {
                 servingcounter = Math.round(totalserving - 0.5).toInt()
                 servingslice = totalserving - servingcounter.toFloat()
                 Log.i("Serving Slice", servingslice.toString())
-                mymeal = Meal(mydishid, Date(), totalserving)
+                mymeal = Meal(mydishid, Date(), totalserving, this)
                 val myfoodimg = intent.getSerializableExtra("FoodImg")
                 if(myfoodimg != null){
                     mymeal.setFoodImg(myfoodimg as File)
@@ -225,7 +225,7 @@ class MealActivity : AppCompatActivity() {
         calendar.time = mydate
         val mytime = intArrayOf(calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE))
-        
+
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val breakfast: IntArray = intArrayOf(
                 prefs.getInt(getString(R.string.breakfast_start_hour), 0),

@@ -7,16 +7,13 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.LongSparseArray;
 
-import com.google.gson.JsonObject;
+import com.example.internadmin.fooddiary.Models.TimePeriod;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -26,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class DBHandler extends SQLiteOpenHelper {
@@ -36,10 +32,11 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String HISTORY_TABLE_NAME = "mealshistory";
     private static final String HISTORY_COLUMN_ID = "id";
     private static final String HISTORY_COLUMN_FOODNAME = "foodname";
-    private static final String HISTORY_COLUMN_TIME = "time";
+    private static final String HISTORY_COLUMN_DATE = "mydate";
     private static final String HISTORY_COLUMN_SERVINGS = "servingamt";
+    private static final String HISTORY_COLUMN_PERIOD = "period";
     private static final String HISTORY_COLUMN_IMGPATH = "imgpath";
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private static final String DISHID_TABLE_NAME = "DishID";
     private static final String DISHID_COLUMN_FOODNAME = "foodname";
@@ -89,7 +86,8 @@ public class DBHandler extends SQLiteOpenHelper {
         String CREATE_TABLE_MEALSHISTORY = "create table " + HISTORY_TABLE_NAME +
                 " (" + HISTORY_COLUMN_ID + " integer primary key autoincrement, " +
                 HISTORY_COLUMN_FOODNAME + " text, " +
-                HISTORY_COLUMN_TIME + " datetime default current_timestamp, " +
+                HISTORY_COLUMN_DATE + " date default current_timestamp, " +
+                HISTORY_COLUMN_PERIOD + " integer, " +
                 HISTORY_COLUMN_IMGPATH + " text default null, " +
                 HISTORY_COLUMN_SERVINGS + " real);";
 
@@ -128,11 +126,12 @@ public class DBHandler extends SQLiteOpenHelper {
     -------------------------------------------------------------------------
     */
 
-    public boolean insertMealEntry (String FoodName, Date TimeConsumed, float ServingAmt, File FoodImg) {
+    public boolean insertMealEntry (String FoodName, Date TimeConsumed, TimePeriod timePeriod, float ServingAmt, File FoodImg) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(HISTORY_COLUMN_FOODNAME, FoodName);
-        contentValues.put(HISTORY_COLUMN_TIME, dateFormat.format(TimeConsumed));
+        contentValues.put(HISTORY_COLUMN_DATE, dateFormat.format(TimeConsumed));
+        contentValues.put(HISTORY_COLUMN_PERIOD, timePeriod.ordinal());
         contentValues.put(HISTORY_COLUMN_SERVINGS, ServingAmt);
 
         long rowID = db.insert(HISTORY_TABLE_NAME, null, contentValues);
@@ -207,11 +206,12 @@ public class DBHandler extends SQLiteOpenHelper {
     -------------------------------------------------------------------------
     */
 
-    public boolean updateHistoryEntry (String FoodName, Date TimeConsumed, float ServingAmt, Long RowID)  {
+    public boolean updateHistoryEntry (String FoodName, Date TimeConsumed, TimePeriod timePeriod, float ServingAmt, Long RowID)  {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(HISTORY_COLUMN_FOODNAME, FoodName);
-        cv.put(HISTORY_COLUMN_TIME, dateFormat.format(TimeConsumed));
+        cv.put(HISTORY_COLUMN_DATE, dateFormat.format(TimeConsumed));
+        cv.put(HISTORY_COLUMN_PERIOD, timePeriod.ordinal());
         cv.put(HISTORY_COLUMN_SERVINGS, ServingAmt);
 
         int updated = db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_ID + "=" + RowID, null);
@@ -258,18 +258,18 @@ public class DBHandler extends SQLiteOpenHelper {
 
         if(startdate == null){
             if(enddate != null){
-                sqlquery += " where " + HISTORY_COLUMN_TIME + " <= '" + dateFormat.format(enddate) + "'";
+                sqlquery += " where " + HISTORY_COLUMN_DATE + " <= '" + dateFormat.format(enddate) + "'";
             }
         }else{
             if (enddate == null){
-                sqlquery += " where " + HISTORY_COLUMN_TIME + " >= '" + dateFormat.format(startdate) + "'";
+                sqlquery += " where " + HISTORY_COLUMN_DATE + " >= '" + dateFormat.format(startdate) + "'";
             }else{
-                sqlquery += " where " + HISTORY_COLUMN_TIME + " >= '" + dateFormat.format(startdate) + "' and " +
-                HISTORY_COLUMN_TIME + " <= '" + dateFormat.format(enddate) + "'";
+                sqlquery += " where " + HISTORY_COLUMN_DATE + " >= '" + dateFormat.format(startdate) + "' and " +
+                        HISTORY_COLUMN_DATE + " <= '" + dateFormat.format(enddate) + "'";
             }
         }
 
-        sqlquery += " order by " + HISTORY_COLUMN_TIME + " desc";
+        sqlquery += " order by " + HISTORY_COLUMN_DATE + " desc";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(sqlquery, null );
@@ -300,7 +300,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select " + HISTORY_COLUMN_FOODNAME + " , sum("+ HISTORY_COLUMN_SERVINGS +") from " +
-                HISTORY_TABLE_NAME + " where " + HISTORY_COLUMN_TIME + " between '" +
+                HISTORY_TABLE_NAME + " where " + HISTORY_COLUMN_DATE + " between '" +
                 dateFormat.format(startdate) + "" + "' and '" + dateFormat.format(enddate) +
                 "' group by " + HISTORY_COLUMN_FOODNAME, null);
         res.moveToFirst();
@@ -331,8 +331,8 @@ public class DBHandler extends SQLiteOpenHelper {
         Bundle b = new Bundle();
 
         String selection = HISTORY_COLUMN_ID + " = ? ";
-        String[] columns = {HISTORY_COLUMN_FOODNAME, HISTORY_COLUMN_TIME, HISTORY_COLUMN_SERVINGS,
-        HISTORY_COLUMN_IMGPATH};
+        String[] columns = {HISTORY_COLUMN_FOODNAME, HISTORY_COLUMN_DATE, HISTORY_COLUMN_SERVINGS,
+        HISTORY_COLUMN_IMGPATH, HISTORY_COLUMN_PERIOD};
         String[] selectionArgs = {  Long.toString(mealID)  };
 
         Cursor cursor = db.query(HISTORY_TABLE_NAME, columns, selection, selectionArgs,
@@ -341,6 +341,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             b.putString("FoodName", cursor.getString(0));
             b.putFloat("ServingAmt", cursor.getFloat(2));
+            b.putInt("TimePeriod", cursor.getInt(4));
             try{
                 b.putSerializable("TimeConsumed", dateFormat.parse(cursor.getString(1)));
             }catch (ParseException e){
