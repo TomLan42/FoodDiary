@@ -14,6 +14,7 @@ import android.widget.Toast
 import com.example.internadmin.fooddiary.Interfaces.ServingSliceListener
 import com.example.internadmin.fooddiary.Models.DishID
 import com.example.internadmin.fooddiary.Models.Meal
+import com.example.internadmin.fooddiary.Models.TimePeriod
 import com.example.internadmin.fooddiary.R
 import com.example.internadmin.fooddiary.Views.PieSliderDialog
 import com.example.internadmin.fooddiary.Views.miniPizzaView
@@ -203,8 +204,17 @@ class MealActivity : AppCompatActivity() {
     private fun datetimeviewgroup(defaultdate: Date){
 
         val dateFormat = SimpleDateFormat("E, d MMM y, hh:mm")
-        setdatetime.text = dateFormat.format(defaultdate)
+        if(intent.hasExtra("mealdate")){
+            var mealdate = intent.getLongExtra("mealdate", -1)
+            // Complete this portion
 
+        }else{
+            setdatetime.text = dateFormat.format(defaultdate)
+        }
+        if(intent.hasExtra("mealtime")){
+            var mealtime = intent.getSerializableExtra("mealtime")
+            // complete this portion
+        }
         setmealofday.text = getMealType(defaultdate)
 
         btn_datetimepicker.setOnClickListener {

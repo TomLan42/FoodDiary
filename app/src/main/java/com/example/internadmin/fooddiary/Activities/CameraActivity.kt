@@ -23,6 +23,8 @@ import android.provider.MediaStore
 import com.example.internadmin.fooddiary.AsyncTasks.DownloadDishIDTask
 import com.example.internadmin.fooddiary.AsyncTasks.ImageUploadTask
 import com.example.internadmin.fooddiary.Interfaces.PostTaskListener
+import com.example.internadmin.fooddiary.Models.Prediction
+import com.example.internadmin.fooddiary.Models.TimePeriod
 import com.example.internadmin.fooddiary.R
 
 
@@ -402,10 +404,20 @@ class CameraActivity : AppCompatActivity() {
         } catch (e: IOException) {
             Log.e("Meal Caching", "Cannot create Cached Image: " + e.message)
         }
-
-        val myintent = Intent(this, PredictionActivity::class.java)
-        myintent.putExtras(result)
-        startActivity(myintent)
+        if(intent.hasExtra("mealtime")){
+            var mealtime = intent.getSerializableExtra("mealtime")
+            var date = intent.getLongExtra("mealdate", -1)
+            val myintent = Intent(this, PredictionActivity::class.java)
+            myintent.putExtra("mealtime", mealtime)
+            myintent.putExtra("mealdate", date)
+            myintent.putExtras(result)
+            startActivity(myintent)
+        }
+        else{
+            val myintent = Intent(this, PredictionActivity::class.java)
+            myintent.putExtras(result)
+            startActivity(myintent)
+        }
     }
 
     companion object {

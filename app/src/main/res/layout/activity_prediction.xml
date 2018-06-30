@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/predictionlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.PredictionActivity">
@@ -10,12 +11,12 @@
         android:id="@+id/img_takenpic"
         android:layout_width="match_parent"
         android:layout_height="250dp"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_error_outline_black"
-        android:scaleType="fitXY"/>
+        app:srcCompat="@drawable/ic_error_outline_black" />
 
     <View
         android:id="@+id/dividerline"

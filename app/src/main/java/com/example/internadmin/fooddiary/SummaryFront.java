@@ -82,28 +82,8 @@ public class SummaryFront extends Fragment {
 
 
 
-    }/*
-    public void setDateListener(){
-        myCalendar = new GregorianCalendar();
+    }
 
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
-            }
-        };
-        dateselect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(getContext(), date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-    }*/
     public void updateLabel(Calendar myCalendar){
         //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         //dateselect.setText(sdf.format(myCalendar.getTime()));
@@ -126,7 +106,7 @@ public class SummaryFront extends Fragment {
         tom.set(Calendar.HOUR_OF_DAY, 23);
         tom.set(Calendar.MINUTE, 59);
         tom.set(Calendar.SECOND, 59);
-        HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
+        HashMap<String, Float> servings = handler.getAllServingsOnDay(cal.getTime(), null);
         Iterator it = servings.entrySet().iterator();
         float tot = 0;
         while (it.hasNext()){

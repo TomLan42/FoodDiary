@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.example.internadmin.fooddiary.Activities.CameraActivity;
 import com.example.internadmin.fooddiary.Barchart;
 import com.example.internadmin.fooddiary.DBHandler;
 import android.support.annotation.NonNull;
@@ -50,6 +51,7 @@ import android.widget.TextView;
 import com.example.internadmin.fooddiary.Activities.MealActivity;
 import com.example.internadmin.fooddiary.Models.FoodItem;
 import com.example.internadmin.fooddiary.Models.Meal;
+import com.example.internadmin.fooddiary.Models.TimePeriod;
 import com.example.internadmin.fooddiary.R;
 import com.example.internadmin.fooddiary.SummaryFront;
 import com.example.internadmin.fooddiary.SummarySugar;
@@ -59,6 +61,7 @@ import com.example.internadmin.fooddiary.SwipeList.SwipeMenuItem;
 import com.example.internadmin.fooddiary.SwipeList.SwipeMenuListView;
 import com.github.mikephil.charting.charts.BarChart;
 
+import org.w3c.dom.Text;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Field;
@@ -81,12 +84,12 @@ public class Summary extends Fragment {
     PagerAdapter pagerAdapter;
     BarChart chart;
     SwipeMenuListView breakfastlist;
-    NonScrollListView lunchlist;
+    SwipeMenuListView lunchlist;
     LinearLayout meal_ll;
     SummaryFront caloriesfrag;
     SummarySugar sugarfrag;
     LinearLayout ll;
-    NonScrollListView dinnerlist;
+    SwipeMenuListView dinnerlist;
     Point size;
     public Summary() {
         // Required empty public constructor
@@ -151,15 +154,17 @@ public class Summary extends Fragment {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 breakfastlist.smoothCloseMenu();
+                lunchlist.smoothCloseMenu();
+                dinnerlist.smoothCloseMenu();
             }
         });
         return sv;
     }
     public void addAllCards(GregorianCalendar calen){
         meal_ll.removeAllViews();
-        List<Long> breakfastlist = handler.getHistoryEntries(getBreakFastStart(calen), getBreakFastEnd(calen));
-        List<Long> lunchlist = handler.getHistoryEntries(getLunchStart(calen), getLunchEnd(calen));
-        List<Long> dinnerlist = handler.getHistoryEntries(getDinnerStart(calen), getDinnerEnd(calen));
+        List<Long> breakfastlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.MORNING);
+        List<Long> lunchlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.AFTERNOON);
+        List<Long> dinnerlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.NIGHT);
 
         // IF THE LIST CONTAINS NON ZERO NUMBER OF ITEMS THEN CARD FOR THAT MEAL IS CREATED
         //if(breakfastlist.size() > 0){
@@ -205,69 +210,6 @@ public class Summary extends Fragment {
             sugarfrag.updateLabel(myCalendar);
         }
     }
-    //------------------------------------------------
-    //     FUNCTION TO GET BREAKFAST STARTTIME       |
-    //------------------------------------------------
-    public Date getBreakFastStart(GregorianCalendar mealtime){
-        mealtime.set(Calendar.HOUR_OF_DAY, 0);
-        mealtime.set(Calendar.MINUTE, 0);
-        mealtime.set(Calendar.SECOND, 0);
-        return mealtime.getTime();
-    }
-
-    //------------------------------------------------
-    //     FUNCTION TO GET BREAKFAST ENDTIME       |
-    //------------------------------------------------
-    public Date getBreakFastEnd(GregorianCalendar mealtime){
-        mealtime.set(Calendar.HOUR_OF_DAY, 11);
-        mealtime.set(Calendar.MINUTE, 0);
-        mealtime.set(Calendar.SECOND, 0);
-        return mealtime.getTime();
-    }
-
-
-    //------------------------------------------------
-    //     FUNCTION TO GET LUNCH STARTTIME       |
-    //------------------------------------------------
-    public Date getLunchStart(GregorianCalendar mealtime){
-        mealtime.set(Calendar.HOUR_OF_DAY, 11);
-        mealtime.set(Calendar.MINUTE, 0);
-        mealtime.set(Calendar.SECOND, 0);
-        return mealtime.getTime();
-    }
-
-    //------------------------------------------------
-    //     FUNCTION TO GET LUNCH ENDTIME       |
-    //------------------------------------------------
-    public Date getLunchEnd(GregorianCalendar mealtime){
-        mealtime.set(Calendar.HOUR_OF_DAY, 20);
-        mealtime.set(Calendar.MINUTE, 0);
-        mealtime.set(Calendar.SECOND, 0);
-        return mealtime.getTime();
-    }
-
-
-    //------------------------------------------------
-    //     FUNCTION TO GET DINNER STARTTIME       |
-    //------------------------------------------------
-    public Date getDinnerStart(GregorianCalendar mealtime){
-        mealtime.set(Calendar.HOUR_OF_DAY, 20);
-        mealtime.set(Calendar.MINUTE, 0);
-        mealtime.set(Calendar.SECOND, 0);
-        return mealtime.getTime();
-    }
-
-
-    //------------------------------------------------
-    //     FUNCTION TO GET DINNER ENDTIME       |
-    //------------------------------------------------
-    public Date getDinnerEnd(GregorianCalendar mealtime){
-        mealtime.set(Calendar.HOUR_OF_DAY, 23);
-        mealtime.set(Calendar.MINUTE, 0);
-        mealtime.set(Calendar.SECOND, 0);
-        return mealtime.getTime();
-    }
-
 
     public CardView createChart(){
         /*
@@ -494,6 +436,29 @@ public class Summary extends Fragment {
         //  ---------------------------------------------------- SWIPE MENU LIST VIEW
 
         breakfastlayout.addView(breakfastlist);
+        LinearLayout addlayout = new LinearLayout(getContext());
+        addlayout.setOrientation(LinearLayout.HORIZONTAL);
+        ImageView plus = new ImageView(getContext());
+        plus.setId(11112);
+        plus.setImageResource(R.drawable.add);
+        plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
+        addlayout.addView(plus);
+        TextView additem = new TextView(getContext());
+        additem.setText("Add Item");
+        additem.setId(11111);
+        additem.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
+        addlayout.addView(additem);
+        addlayout.setBackgroundColor(getResources().getColor(R.color.whitecolor));
+        additem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CameraActivity.class);
+                intent.putExtra("mealtime", TimePeriod.MORNING);
+                intent.putExtra("mealdate", myCalendar.getTime());
+                startActivity(intent);
+            }
+        });
+        breakfastlayout.addView(addlayout);
         return breakfastcard;
     }
 
@@ -538,7 +503,7 @@ public class Summary extends Fragment {
         suncompparams.setMargins((int)(size.x*0.375), (int)(size.y*0.02), 0,(int)(size.x*0.04));
         rl.addView(lunchhead, lunchparams);
         rl.addView(suncomp, suncompparams);
-        lunchlist = new NonScrollListView(getContext());
+        lunchlist = new SwipeMenuListView(getContext());
         ArrayList<FoodItem> foodlist = new ArrayList<>();
 
         // adding data from lunchlist to the cardlist
@@ -562,7 +527,97 @@ public class Summary extends Fragment {
                 startActivity(myintent);
             }
         });
+        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+                SwipeMenuItem openItem = new SwipeMenuItem(
+                        getContext());
+                // set item background
+                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+                        0xCE)));
+                // set item width
+                openItem.setWidth(dp2px(90));
+                // set item title
+                openItem.setTitle("Open");
+                // set item title fontsize
+                openItem.setTitleSize(18);
+                // set item title font color
+                openItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(openItem);
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(dp2px(90));
+                // set a icon
+                //deleteItem.setIcon(R.drawable.search_icon);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+        lunchlist.setMenuCreator(creator);
+        lunchlist.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        Long myitem = adapter.getItem(position).getId();
+                        Intent myintent = new Intent(getContext(), MealActivity.class);
+                        myintent.putExtra("Meal", myitem);
+                        startActivity(myintent);
+                        break;
+                    case 1:
+                        // delete
+                        break;
+                }
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
+        lunchlist.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+            }
+        });
+        lunchlist.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
+        LinearLayout addlayout = new LinearLayout(getContext());
+        addlayout.setOrientation(LinearLayout.HORIZONTAL);
+        ImageView plus = new ImageView(getContext());
+        plus.setId(11112);
+        plus.setImageResource(R.drawable.add);
+        plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
+        addlayout.addView(plus);
+        TextView additem = new TextView(getContext());
+        additem.setText("Add Item");
+        additem.setId(11111);
+        additem.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
+        addlayout.addView(additem);
+        addlayout.setBackgroundColor(getResources().getColor(R.color.whitecolor));
+        additem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CameraActivity.class);
+                intent.putExtra("mealtime", TimePeriod.AFTERNOON);
+                intent.putExtra("mealdate", myCalendar.getTime());
+                startActivity(intent);
+            }
+        });
         lunchlayout.addView(lunchlist);
+        lunchlayout.addView(addlayout);
         return lunchcard;
     }
     public CardView createDinner(List<Long> mealdata){
@@ -601,7 +656,7 @@ public class Summary extends Fragment {
         moonparams.setMargins((int)(size.x*0.365), (int)(size.y*0.02), 0,(int)(size.x*0.04));
         rl.addView(dinnerhead, dinnerparams);
         rl.addView(moon, moonparams);
-        dinnerlist = new NonScrollListView(getContext());
+        dinnerlist = new SwipeMenuListView(getContext());
         ArrayList<FoodItem> foodlist = new ArrayList<>();
         for(int i = 0; i < mealdata.size(); i++){
             Long id = mealdata.get(i);
@@ -620,7 +675,98 @@ public class Summary extends Fragment {
                 startActivity(myintent);
             }
         });
+        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+                SwipeMenuItem openItem = new SwipeMenuItem(
+                        getContext());
+                // set item background
+                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+                        0xCE)));
+                // set item width
+                openItem.setWidth(dp2px(90));
+                // set item title
+                openItem.setTitle("Open");
+                // set item title fontsize
+                openItem.setTitleSize(18);
+                // set item title font color
+                openItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(openItem);
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(dp2px(90));
+                // set a icon
+                //deleteItem.setIcon(R.drawable.search_icon);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+        dinnerlist.setMenuCreator(creator);
+        dinnerlist.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        Long myitem = adapter.getItem(position).getId();
+                        Intent myintent = new Intent(getContext(), MealActivity.class);
+                        myintent.putExtra("Meal", myitem);
+                        startActivity(myintent);
+                        break;
+                    case 1:
+                        // delete
+                        break;
+                }
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
+        dinnerlist.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+            }
+        });
+        dinnerlist.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
+
         dinnerlayout.addView(dinnerlist);
+        LinearLayout addlayout = new LinearLayout(getContext());
+        addlayout.setOrientation(LinearLayout.HORIZONTAL);
+        ImageView plus = new ImageView(getContext());
+        plus.setId(11112);
+        plus.setImageResource(R.drawable.add);
+        plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
+        addlayout.addView(plus);
+        TextView additem = new TextView(getContext());
+        additem.setText("Add Item");
+        additem.setId(11111);
+        additem.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
+        addlayout.addView(additem);
+        addlayout.setBackgroundColor(getResources().getColor(R.color.whitecolor));
+        additem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CameraActivity.class);
+                intent.putExtra("mealtime", TimePeriod.NIGHT);
+                intent.putExtra("mealdate", myCalendar.getTime());
+                startActivity(intent);
+            }
+        });
+        dinnerlayout.addView(addlayout);
         return dinnercard;
     }
 
