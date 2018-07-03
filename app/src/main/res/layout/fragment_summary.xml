@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_summaryll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/appIntro2BottomBarHeight">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:text="@string/summarytitle"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:text="@string/summarydesc"/>
+
+            <LinearLayout
+                android:id="@+id/summary_wtloss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"
+                    android:text="@string/weightloss"/>
+
+                <TextView
+                    android:id="@+id/textView_wtloss"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/wtloss_lackinfowarning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/holo_red_light"
+                    android:text="@string/wtloss_lackinfowarning"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/summary_hbp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"
+                    android:text="@string/hbpressure"/>
+
+                <TextView
+                    android:id="@+id/textView_hbp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/hbp_customwarning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/holo_red_light"
+                    android:text="@string/hbp_customwarning"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/summary_sugar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"
+                    android:text="@string/diabetes"/>
+
+                <TextView
+                    android:id="@+id/textView_sugar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/diabetes_customwarning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/holo_red_light"
+                    android:text="@string/diabetes_customwarning"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

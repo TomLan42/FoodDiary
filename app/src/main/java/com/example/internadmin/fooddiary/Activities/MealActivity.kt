@@ -8,8 +8,15 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import com.example.internadmin.fooddiary.Interfaces.ServingSliceListener
 import com.example.internadmin.fooddiary.Models.DishID
@@ -32,8 +39,8 @@ import java.util.*
 
 class MealActivity : AppCompatActivity() {
 
-    private var servingcounter = 0
-    private var servingslice: Float = 0f
+    //private var servingcounter = 0
+    //private var servingslice: Float = 0f
 
     private lateinit var mymeal: Meal
     private var clearCache = false
@@ -44,7 +51,7 @@ class MealActivity : AppCompatActivity() {
         setContentView(R.layout.activity_meal)
 
         var totalserving: Float
-        val mypizzaslicer = findViewById<miniPizzaView>(R.id.pizzaslicer)
+        //val mypizzaslicer = findViewById<miniPizzaView>(R.id.pizzaslicer)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         if(intent.hasExtra("Meal")){
@@ -52,23 +59,23 @@ class MealActivity : AppCompatActivity() {
             mymeal = Meal()
             mymeal.populateFromDatabase(mymealID, this)
             totalserving = mymeal.servingAmt
-            servingcounter = Math.round(totalserving - 0.5).toInt()
-            servingslice = totalserving - servingcounter.toFloat()
-            executeOnMealInitialized(mypizzaslicer, true)
+            //servingcounter = Math.round(totalserving - 0.5).toInt()
+            //servingslice = totalserving - servingcounter.toFloat()
+            executeOnMealInitialized(true)
         }else if(intent.hasExtra("DishID")){
             val mydishid = DishID(intent.getStringExtra("DishID"), intent.getIntExtra("Version", -1), this)
 
             mydishid.setDishIDPopulatedListener{
                 totalserving = getPrevServingAmt(mydishid)
-                servingcounter = Math.round(totalserving - 0.5).toInt()
-                servingslice = totalserving - servingcounter.toFloat()
-                Log.i("Serving Slice", servingslice.toString())
+                //servingcounter = Math.round(totalserving - 0.5).toInt()
+                //servingslice = totalserving - servingcounter.toFloat()
+                //Log.i("Serving Slice", servingslice.toString())
                 mymeal = Meal(mydishid, Date(), totalserving, this)
                 val myfoodimg = intent.getSerializableExtra("FoodImg")
                 if(myfoodimg != null){
                     mymeal.setFoodImg(myfoodimg as File)
                 }
-                executeOnMealInitialized(mypizzaslicer, false)
+                executeOnMealInitialized(false)
             }
             mydishid.execute()
 
@@ -82,7 +89,7 @@ class MealActivity : AppCompatActivity() {
 
     }
 
-    private fun executeOnMealInitialized(mypizzaslicer: miniPizzaView, toUpdate: Boolean){
+    private fun executeOnMealInitialized(toUpdate: Boolean){
 
         if(::mymeal.isInitialized){
             img_mealpic.setImageBitmap(mymeal.foodImg)
@@ -120,10 +127,30 @@ class MealActivity : AppCompatActivity() {
 
             }
 
-            servingsviewgroup(mypizzaslicer)
+            btn_moreinfo.setOnClickListener{
+
+                val alertadd = AlertDialog.Builder(this)
+                val factory = LayoutInflater.from(this)
+                val view = factory.inflate(R.layout.mealactivityinfo_dialog, null)
+
+                //val dishimg = view.findViewById<ImageView>(R.id.dialog_imageview)
+                //dishimg.setImageBitmap(mymeal.dishID.getFoodImg())
+                nutritionfactsviewgroup(mymeal.dishID.nutrition, view)
+                alertadd.setView(view)
+                alertadd.setTitle(mymeal.dishID.getFoodName())
+                alertadd.setNegativeButton("Ok") { dlg, _ -> dlg.dismiss() }
+                alertadd.show()
+
+            }
+
+            //servingsviewgroup(mypizzaslicer)
+            servingsviewgroup(mymeal.servingAmt)
             datetimeviewgroup(mymeal.timeConsumed)
-            nutritionfactsviewgroup(mymeal.dishID.nutrition)
-            ingredientsviewgroup(mymeal.dishID.ingredients)
+            //nutritionfactsviewgroup(mymeal.dishID.nutrition)
+            //ingredientsviewgroup(mymeal.dishID.ingredients)
+
+            txt_servingsizelarge.text = getString(R.string.serving_size) + ": " +
+                    getnutritionstr(mymeal.dishID.nutrition, "Serving Size", "1 plate")
         }else{
             RedirectToMainOnError("Meal was not properly initialized.", this)
         }
@@ -156,7 +183,7 @@ class MealActivity : AppCompatActivity() {
         edit.apply()
     }
 
-    private fun servingsviewgroup(mypizzaslicer: miniPizzaView){
+    /*private fun servingsviewgroup(mypizzaslicer: miniPizzaView){
 
         pizzacounternumber.text = servingcounter.toString()
 
@@ -165,7 +192,6 @@ class MealActivity : AppCompatActivity() {
         if(servingcounter > 0)
             pizzacounter.visibility = View.VISIBLE
         mypizzaslicer.setServingSlice(servingslice)
-        //TODO: set pizza slice in meal activity
 
         btn_pluspizzacount.setOnClickListener{
             servingcounter++
@@ -199,11 +225,85 @@ class MealActivity : AppCompatActivity() {
         }
 
 
+    }*/
+
+    private fun servingsviewgroup(servingAmt: Float) {
+
+        seekbar_servingsize.setMax(30)
+        if(servingAmt > 3)
+            seekbar_servingsize.setProgress(30)
+        else
+            seekbar_servingsize.setProgress(Math.round(servingAmt*10))
+        seekbar_servingsize.incrementProgressBy(1)
+
+        edittxt_servingsize.setText(String.format("%.2f", servingAmt))
+
+        val myseekbar_servingsize: SeekBar = findViewById(R.id.seekbar_servingsize)
+
+        myseekbar_servingsize.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+
+                if(fromUser){
+                    mymeal.servingAmt = progress/10f
+                    edittxt_servingsize.setText(String.format("%.2f", mymeal.servingAmt))
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+
+
+            }
+
+        })
+
+        edittxt_servingsize.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                val mystr = edittxt_servingsize.text.toString()
+
+                if(!TextUtils.isEmpty(mystr)) {
+                    mymeal.servingAmt = mystr.toFloat()
+
+                    if(mymeal.servingAmt > 3)
+                        myseekbar_servingsize.setProgress(30)
+                    else
+                        myseekbar_servingsize.setProgress((mymeal.servingAmt*10).toInt())
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        /*
+
+        edittxt_servingsize.setOnFocusChangeListener{ _ , hasFocus ->
+
+            if(!hasFocus){
+                val mystr = edittxt_servingsize.text.toString()
+
+                if(TextUtils.isEmpty(mystr)) {
+                    mymeal.servingAmt = 1f
+                    myseekbar_servingsize.setProgress(10)
+                    edittxt_servingsize.setText("1.0")
+                }
+            }
+
+        }*/
+
+
     }
 
     private fun datetimeviewgroup(defaultdate: Date){
 
-        val dateFormat = SimpleDateFormat("E, d MMM y, hh:mm")
+        val dateFormat = SimpleDateFormat("E, d MMM y")
         if(intent.hasExtra("mealdate")){
             var mealdate = intent.getLongExtra("mealdate", -1)
             // Complete this portion
@@ -283,34 +383,52 @@ class MealActivity : AppCompatActivity() {
 
     }
 
-    private fun nutritionfactsviewgroup(nutrition: JsonObject){
+    private fun nutritionfactsviewgroup(nutrition: JsonObject, view: View){
+        /*
         btn_expandnutritionfacts.setOnClickListener{
             nutrition_expandable.toggle()
         }
 
         txt_servingsizelarge.text = getString(R.string.serving_size) + ": " +
-                getnutritionstr(nutrition, "Serving Size", "1 plate")
+                getnutritionstr(nutrition, "Serving Size", "1 plate")*/
 
-        text_servingsize.text =
-                getnutritionstr(nutrition, "Serving Size", "1 plate")
-        text_calories.text =
-                getnutritionfloat(nutrition, "Calories", "")
-        text_totalfat.text = getnutritionfloat(nutrition, "Fat", "g")
-        text_satfat.text = getnutritionfloat(nutrition, "Saturated Fat", "g")
-        text_transfat.text = getnutritionfloat(nutrition, "Trans Fat", "g")
-        text_cholesterol.text = getnutritionfloat(nutrition, "Cholesterol", "mg")
-        text_sodium.text = getnutritionfloat(nutrition, "Sodium", "mg")
-        text_totalcarbohydrate.text = getnutritionfloat(nutrition, "Carbohydrate", "g")
-        text_fibre.text = getnutritionfloat(nutrition, "Fibre", "g")
-        text_sugars.text = getnutritionfloat(nutrition, "Sugars", "g")
-        text_protein.text = getnutritionfloat(nutrition, "Protein", "g")
+        val text_servingsize = view.findViewById<TextView>(R.id.text_servingsize)
+        val text_calories = view.findViewById<TextView>(R.id.text_calories)
+        val text_totalfat = view.findViewById<TextView>(R.id.text_totalfat)
+        val text_satfat = view.findViewById<TextView>(R.id.text_satfat)
+        val text_transfat = view.findViewById<TextView>(R.id.text_transfat)
+        val text_cholesterol = view.findViewById<TextView>(R.id.text_cholesterol)
+        val text_sodium = view.findViewById<TextView>(R.id.text_sodium)
+        val text_totalcarbohydrate = view.findViewById<TextView>(R.id.text_totalcarbohydrate)
+        val text_fibre = view.findViewById<TextView>(R.id.text_fibre)
+        val text_sugars = view.findViewById<TextView>(R.id.text_sugars)
+        val text_protein = view.findViewById<TextView>(R.id.text_protein)
+        val text_totalfatdv = view.findViewById<TextView>(R.id.text_totalfatdv)
+        val text_satfatdv = view.findViewById<TextView>(R.id.text_satfatdv)
+        val text_cholesteroldv = view.findViewById<TextView>(R.id.text_cholesteroldv)
+        val text_sodiumdv = view.findViewById<TextView>(R.id.text_sodiumdv)
+        val text_totalcarbohydratedv = view.findViewById<TextView>(R.id.text_totalcarbohydratedv)
+        val text_fibredv = view.findViewById<TextView>(R.id.text_fibredv)
 
-        text_totalfatdv.text = getdailyval(nutrition, "Fat", 78f)
-        text_satfatdv.text = getdailyval(nutrition, "Saturated Fat", 20f)
-        text_cholesteroldv.text = getdailyval(nutrition, "Cholesterol", 300f)
-        text_sodiumdv.text = getdailyval(nutrition, "Sodium", 2300f)
-        text_totalcarbohydratedv.text = getdailyval(nutrition, "Carbohydrate", 275f)
-        text_fibredv.text = getdailyval(nutrition, "Fibre", 28f)
+        text_servingsize.setText(getnutritionstr(nutrition, "Serving Size", "1 plate"))
+        text_calories.setText(
+                getnutritionfloat(nutrition, "Energy", ""))
+        text_totalfat.setText( getnutritionfloat(nutrition, "Fat", "g"))
+        text_satfat.setText( getnutritionfloat(nutrition, "Saturated Fat", "g"))
+        text_transfat.setText( getnutritionfloat(nutrition, "Trans Fat", "g"))
+        text_cholesterol.setText( getnutritionfloat(nutrition, "Cholesterol", "mg"))
+        text_sodium.setText( getnutritionfloat(nutrition, "Sodium", "mg"))
+        text_totalcarbohydrate.setText( getnutritionfloat(nutrition, "Carbohydrate", "g"))
+        text_fibre.setText( getnutritionfloat(nutrition, "Fibre", "g"))
+        text_sugars.setText( getnutritionfloat(nutrition, "Sugars", "g"))
+        text_protein.setText( getnutritionfloat(nutrition, "Protein", "g"))
+
+        text_totalfatdv.setText( getdailyval(nutrition, "Fat", 78f))
+        text_satfatdv.setText( getdailyval(nutrition, "Saturated Fat", 20f))
+        text_cholesteroldv.setText( getdailyval(nutrition, "Cholesterol", 300f))
+        text_sodiumdv.setText( getdailyval(nutrition, "Sodium", 2300f))
+        text_totalcarbohydratedv.setText( getdailyval(nutrition, "Carbohydrate", 275f))
+        text_fibredv.setText( getdailyval(nutrition, "Fibre", 28f))
 
     }
 
@@ -342,6 +460,7 @@ class MealActivity : AppCompatActivity() {
 
     }
 
+    /*
     private fun ingredientsviewgroup(ingredients: List<String>){
         btn_expandingredients.setOnClickListener {
             ingredients_expandable.toggle()
@@ -361,7 +480,7 @@ class MealActivity : AppCompatActivity() {
 
         text_ingredients.text = finalstring
 
-    }
+    }*/
 
     private fun RedirectToMainOnError(Message: String, ctx: Context){
         val builder  = AlertDialog.Builder(ctx)

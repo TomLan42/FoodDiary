@@ -50,7 +50,7 @@ class PredictionActivity : AppCompatActivity() {
         searchView = MaterialSearchView(this)
         predictionlistview = findViewById(R.id.predictionlistview)
         predictionlistview.setChoiceMode(ListView.CHOICE_MODE_SINGLE)
-        predictionlistview.setSelector(R.color.grey)
+        //predictionlistview.setSelector(R.color.grey)
         //// -----------------------------------------------------------
         var searchparams = RelativeLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
         var toolbarparams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 150)
@@ -112,11 +112,20 @@ class PredictionActivity : AppCompatActivity() {
         predictAdapter = PredictListViewAdapter(this, listpredictions)
 
         predictionlistview.adapter = predictAdapter
-        predictionlistview.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+        val noofitems = predictionlistview.adapter.count
+        predictionlistview.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, _ ->
 
             btn_mealActivity.isEnabled = true
             btn_mealActivity.backgroundTintList = ColorStateList.valueOf(resources.getColor(android.R.color.holo_blue_dark))
             mypos = position
+
+            for(i in 0 until noofitems){
+                val myview = parent.getChildAt(i)
+                val checkbox = myview.findViewById<CheckBox>(R.id.checkBox_predictionSelect)
+
+                checkbox.isChecked = (i == position)
+            }
+
             //Toast.makeText(this, "Found as " + position.toString(), Toast.LENGTH_LONG).show()
         }
 

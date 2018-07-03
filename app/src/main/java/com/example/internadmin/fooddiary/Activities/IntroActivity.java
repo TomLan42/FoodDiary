@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +16,11 @@ import android.widget.Toast;
 import com.example.internadmin.fooddiary.R;
 import com.example.internadmin.fooddiary.Views.GetMealTimeFragment;
 import com.example.internadmin.fooddiary.Views.GetNutritionPrefFragment;
+import com.example.internadmin.fooddiary.Views.GetNutritionTrackFragment;
+import com.example.internadmin.fooddiary.Views.GetUserProfileFragment;
+import com.example.internadmin.fooddiary.Views.MoreInfoFragment;
+import com.example.internadmin.fooddiary.Views.Summary;
+import com.example.internadmin.fooddiary.Views.SummaryFragment;
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntro2Fragment;
 
@@ -47,6 +53,19 @@ public class IntroActivity extends AppIntro2 {
         int color = Color.parseColor("#3F51B5");
         addSlide(AppIntro2Fragment.newInstance(title, description, R.drawable.ic_launcher_foreground, color));
 
+        GetUserProfileFragment trackuserprofile = GetUserProfileFragment.newInstance(color);
+        addSlide(trackuserprofile);
+
+        GetNutritionTrackFragment tracknutrition = GetNutritionTrackFragment.newInstance(color);
+        addSlide(tracknutrition);
+
+        MoreInfoFragment getmoreinfo = MoreInfoFragment.newInstance(color);
+        addSlide(getmoreinfo);
+
+        SummaryFragment summary = SummaryFragment.newInstance(color);
+        addSlide(summary);
+
+        /*
         color = Color.parseColor("#EB984E");
         int[] breakfasttime = {prefs.getInt(getString(R.string.breakfast_start_hour), 0),
                 prefs.getInt(getString(R.string.breakfast_start_min), 0),
@@ -93,7 +112,7 @@ public class IntroActivity extends AppIntro2 {
         GetNutritionPrefFragment prefFragment = GetNutritionPrefFragment
                 .newInstance(R.drawable.cutpizza_small, color);
 
-        addSlide(prefFragment);
+        addSlide(prefFragment);*/
 
 
         // OPTIONAL METHODS
@@ -121,7 +140,15 @@ public class IntroActivity extends AppIntro2 {
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
 
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+        edit.apply();
+        Toast.makeText(this, getString(R.string.settingcomplete), Toast.LENGTH_LONG).show();
 
+        Intent myintent = new Intent(this, MainActivity.class);
+        startActivity(myintent);
+        finish();
+        /*
         int[] breakfast = {prefs.getInt(getString(R.string.breakfast_start_hour), 0),
                 prefs.getInt(getString(R.string.breakfast_start_min), 0),
                 prefs.getInt(getString(R.string.breakfast_end_hour), 0),
@@ -177,10 +204,11 @@ public class IntroActivity extends AppIntro2 {
             Intent myintent = new Intent(this, MainActivity.class);
             startActivity(myintent);
             finish();
-        }
+        }*/
 
     }
 
+    /*
     private boolean timeIntervalOverlaps(int[] timerangeA, int[] timerangeB){
         Calendar mytrAstart = Calendar.getInstance();
         Calendar mytrAend = Calendar.getInstance();
@@ -212,11 +240,13 @@ public class IntroActivity extends AppIntro2 {
         return (mytrAstart.getTime().getTime() <= mytrBend.getTime().getTime() &&
                 mytrBstart.getTime().getTime() < mytrAend.getTime().getTime());
 
-    }
+    }*/
 
     @Override
     public void onSlideChanged(@Nullable Fragment oldFragment, @Nullable Fragment newFragment) {
         super.onSlideChanged(oldFragment, newFragment);
+
+
         // Do something when the slide changes.
         if(newFragment instanceof GetMealTimeFragment){
             //Toast.makeText(this, "Slide changed", Toast.LENGTH_SHORT).show();

@@ -440,7 +440,7 @@ public class Summary extends Fragment {
         addlayout.setOrientation(LinearLayout.HORIZONTAL);
         ImageView plus = new ImageView(getContext());
         plus.setId(11112);
-        plus.setImageResource(R.drawable.add);
+        //plus.setImageResource(R.drawable.add);
         plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
         addlayout.addView(plus);
         TextView additem = new TextView(getContext());
@@ -598,7 +598,7 @@ public class Summary extends Fragment {
         addlayout.setOrientation(LinearLayout.HORIZONTAL);
         ImageView plus = new ImageView(getContext());
         plus.setId(11112);
-        plus.setImageResource(R.drawable.add);
+        //plus.setImageResource(R.drawable.add);
         plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
         addlayout.addView(plus);
         TextView additem = new TextView(getContext());
@@ -748,7 +748,7 @@ public class Summary extends Fragment {
         addlayout.setOrientation(LinearLayout.HORIZONTAL);
         ImageView plus = new ImageView(getContext());
         plus.setId(11112);
-        plus.setImageResource(R.drawable.add);
+        //plus.setImageResource(R.drawable.add);
         plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
         addlayout.addView(plus);
         TextView additem = new TextView(getContext());

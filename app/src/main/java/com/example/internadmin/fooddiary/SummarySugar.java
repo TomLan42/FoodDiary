@@ -63,7 +63,7 @@ public class SummarySugar extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
         tracking = "Sodium";
-        limit = (int)prefs.getFloat(getString(R.string.tracking_nutrition_limit), 0);
+        limit = (int)prefs.getInt(getString(R.string.tracking_nutrition_limit), 0);
         //TextView record = getView().findViewById(R.id.record);
         left = getView().findViewById(R.id.amount2);
         handler = new DBHandler(getContext());

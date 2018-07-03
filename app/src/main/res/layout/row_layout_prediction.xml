@@ -1,23 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_layout_prediction"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
+    android:gravity="center_vertical"
     android:descendantFocusability="blocksDescendants">
 
-
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="60dp"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/predictedFoodName"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:text="TextView"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:padding="5dp"
         android:textSize="20sp"
         android:paddingStart="20dp"
-        android:gravity="center_vertical"/>
+        android:gravity="bottom"/>
+
+        <TextView
+            android:id="@+id/bestMatchPredict"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="#a4c639"
+            android:textSize="10sp"
+            android:visibility="gone"
+            android:paddingStart="20dp"
+            android:text="Best Match"/>
+
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/btn_predictionHelp"
@@ -27,6 +46,14 @@
         android:background="@null"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_help_outline_black_24dp" />
+
+    <CheckBox
+        android:id="@+id/checkBox_predictionSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_marginEnd="10dp"/>
 
 
 </LinearLayout>

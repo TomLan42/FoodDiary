@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_userprofilell"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/appIntro2BottomBarHeight">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:text="@string/userprofiletitle"
+        android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="@string/gender"/>
+
+        <RadioGroup
+            android:id="@+id/radioGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp">
+
+            <RadioButton
+                android:id="@+id/radioMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:text="@string/radio_male"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/radioFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:text="@string/radio_female" />
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="@string/age"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edittxt_age"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/white"
+                android:inputType="number" />
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="0dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="years old"/>
+        </LinearLayout>
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="@string/height"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edittxt_height"
+                android:layout_width="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/white"
+                android:inputType="number"/>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="0dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="cm"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="@string/weight"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edittxt_weight"
+                android:layout_width="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/white"
+                android:inputType="number"/>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="0dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="kg"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -30,6 +30,41 @@
     <string name="settingcomplete">Initial Settings complete! You may change the settings again under the settings tab.</string>
     <string name="poweredby">Powered by:</string>
     <string name="nutritionpreftitle">Set Nutrition Type</string>
+
+    <string name="nutritiontracktitle">Set Health Monitors</string>
+    <string name="getnutritiontrackdescription">What goals would you like to achieve? (Please check at least 1 option.)</string>
+    <string name="weightloss">Weight Loss</string>
+    <string name="healthconditiondesc">I have some health conditions I would like to track:</string>
+    <string name="diabetes">Diabetes</string>
+    <string name="hbpressure">High Blood Pressure</string>
+
+    <string name="userprofiletitle">Set User Profile</string>
+    <string name="gender">Gender:</string>
+    <string name="radio_male">Male</string>
+    <string name="radio_female">Female</string>
+    <string name="age">Age: </string>
+    <string name="agehint">Please provide your age.</string>
+    <string name="height">Height: </string>
+    <string name="weight">Weight: </string>
+
+    <string name="moreinfotitle">More Information</string>
+    <string name="wtlosstarget">Please input your desired weight.</string>
+    <string name="carbotarget">Please select the Low-Sugar diet you would like to embark on.</string>
+    <string name="sodiumtarget">Please select the Low-Sodium diet you would like to embark on.</string>
+    <string name="wtlossrecommendation">We recommend losing 0.45 to 0.9kg a week. Please key in an appropriate number of weeks.</string>
+    <string name="stdsaltregime">Standard DASH diet (2,500mg Sodium limit)</string>
+    <string name="recsaltregime">Recommended DASH diet (1,500mg Sodium limit)</string>
+    <string name="customsaltregime">Custom Sodium limit (mg): </string>
+    <string name="reccarbsregime">45g Carbs Limit (Recommended)</string>
+    <string name="customcarbsregime">Custom Carbs Limit: </string>
+    <string name="nouserprofilewarning">*Warning: No user profile has been keyed in. We are unable to calculate your weight loss regime accurately without this information.</string>
+
+    <string name="summarytitle">Summary</string>
+    <string name="summarydesc">Your initial settings are as shown below:</string>
+    <string name="wtloss_lackinfowarning">*Warning: Previous information was not keyed in properly. Defaults were used in computing the shown values, and may not be customised to your profile.</string>
+    <string name="hbp_customwarning">*Warning: Custom option was chosen, but a value was not keyed in. Default values will be used.</string>
+    <string name="diabetes_customwarning">Warning: Custom option was chosen, but a value was not keyed in. Default values will be used.</string>
+
     <string name="breakfast_start_hour">breakfast_start_hour</string>
     <string name="breakfast_start_min">breakfast_start_min</string>
     <string name="breakfast_end_hour">breakfast_end_hour</string>

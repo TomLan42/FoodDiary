@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_moreinfoll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/appIntro2BottomBarHeight">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:text="@string/moreinfotitle"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/moreinfo_wtloss"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="@string/weightloss"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:text="@string/wtlosstarget"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edittxt_moreinfoweight"
+                android:layout_width="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/white"
+                android:inputType="number"/>
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="0dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="kg in"/>
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="0dp"/>
+
+            <EditText
+                android:id="@+id/edittxt_moreinfoweightwks"
+                android:layout_width="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/white"
+                android:inputType="number"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="weeks"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:text="@string/wtlossrecommendation"/>
+
+        <TextView
+            android:id="@+id/nouserprofilewarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="@string/nouserprofilewarning"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/moreinfo_hbp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:text="@string/hbpressure"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:text="@string/sodiumtarget"/>
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <RadioGroup
+                android:id="@+id/radioHBPRegime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp">
+
+                <RadioButton
+                    android:id="@+id/radioStdSalt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:text="@string/stdsaltregime"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radioRecSalt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:text="@string/recsaltregime" />
+
+
+                <RadioButton
+                    android:id="@+id/radioCustomSalt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:text="@string/customsaltregime" />
+
+
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/edittxt_CustomSalt"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/white"
+                android:layout_alignBottom="@id/radioHBPRegime"
+                android:layout_toEndOf="@id/radioHBPRegime"
+                android:inputType="number"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/moreinfo_sugar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:text="@string/diabetes"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:text="@string/carbotarget"/>
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <RadioGroup
+                android:id="@+id/radioDiabetesRegime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp">
+
+                <RadioButton
+                    android:id="@+id/radioRecCarbs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:text="@string/reccarbsregime"
+                    android:checked="true" />
+
+
+                <RadioButton
+                    android:id="@+id/radioCustomCarbs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:text="@string/customcarbsregime" />
+
+            </RadioGroup>
+
+                <EditText
+                    android:id="@+id/edittxt_CustomCarbs"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_alignBottom="@id/radioDiabetesRegime"
+                    android:layout_toEndOf="@id/radioDiabetesRegime"
+                    android:backgroundTint="@color/white"
+                    android:inputType="number"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>
