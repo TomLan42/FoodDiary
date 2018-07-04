@@ -312,7 +312,7 @@ class MealActivity : AppCompatActivity() {
             setdatetime.text = dateFormat.format(defaultdate)
         }
         if(intent.hasExtra("mealtime")){
-            var mealtime = intent.getSerializableExtra("mealtime")
+            var mealtime = intent.getSerializableExtra("mealtime") as TimePeriod
             // complete this portion
         }
         setmealofday.text = getMealType(defaultdate)

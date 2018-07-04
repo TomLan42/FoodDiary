@@ -45,9 +45,6 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
 
-        // working with the app intro
-        // THE NEXT FEW LINES SET A SHARED PREFERENCE IF IT IS NOT ALREADY DONE, SO IF IT IS NOT ALREADY DONE THEN INTRO
-        // ACTIVITY NEEDS TO BE SHOWN (SINCE APP IS OPENED FOR THE FIRST TIME)
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         // CODE TO GET THE SCREEN DISPLAY SIZE
@@ -56,47 +53,6 @@ public class MainActivity extends AppCompatActivity{
         display.getSize(size);
         // MAIN LAYOUT OF THE ACTIVITY, FRAMELAYOUT
         FrameLayout main = new FrameLayout(this);
-
-        // CODE FOR CREATING SEARCHVIEW.. COMMENTED FOR NOW IN CASE NEEDED SOMEWHERE
-        //toolbar = new Toolbar(MainActivity.this);
-        //searchView = new MaterialSearchView(MainActivity.this);
-        /*
-        FrameLayout.LayoutParams toolparams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        FrameLayout.LayoutParams searchparams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        searchView.setLayoutParams(searchparams);
-        searchView.setId(711);
-        toolbar.setLayoutParams(toolparams);
-        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        toolbar.setTitle("FOOD!!!");
-        toolbar.setVisibility(View.VISIBLE);
-        toolbar.setId(710);
-        setSupportActionBar(toolbar);
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                //Do some magic
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //Do some magic
-                return false;
-            }
-        });
-
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-                //Do some magic
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                //Do some magic
-            }
-        });*/
-        //searchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
 
         // GETTING THE ACTION BAR HEIGHT
         int actionBarHeight = 0;

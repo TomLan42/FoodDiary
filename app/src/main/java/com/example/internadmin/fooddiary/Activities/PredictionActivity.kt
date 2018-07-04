@@ -113,7 +113,7 @@ class PredictionActivity : AppCompatActivity() {
 
         predictionlistview.adapter = predictAdapter
         val noofitems = predictionlistview.adapter.count
-        predictionlistview.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, _ ->
+        predictionlistview.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
 
             btn_mealActivity.isEnabled = true
             btn_mealActivity.backgroundTintList = ColorStateList.valueOf(resources.getColor(android.R.color.holo_blue_dark))
@@ -128,6 +128,11 @@ class PredictionActivity : AppCompatActivity() {
 
             //Toast.makeText(this, "Found as " + position.toString(), Toast.LENGTH_LONG).show()
         }
+
+        //predictionlistview.setItemChecked(0, true);
+        //val myview = predictionlistview.getChildAt(0)
+        //val checkbox = myview.findViewById<CheckBox>(R.id.checkBox_predictionSelect)
+        //checkbox.isChecked = true
 
         btn_mealActivity.setOnClickListener{
             val mypredict = predictionlistview.getItemAtPosition(mypos) as Prediction
