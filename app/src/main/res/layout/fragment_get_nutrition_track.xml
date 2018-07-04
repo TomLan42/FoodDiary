@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_nutritiontrackll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/appIntro2BottomBarHeight">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:text="@string/nutritiontracktitle"
+        android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="@string/getnutritiontrackdescription"/>
+
+        <CheckBox
+            android:id="@+id/checkBox_weightloss"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:text="@string/weightloss" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:text="@string/healthconditiondesc"/>
+
+        <CheckBox
+            android:id="@+id/checkBox_diabetes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:text="@string/diabetes" />
+
+        <CheckBox
+            android:id="@+id/checkBox_hbpressure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:text="@string/hbpressure" />
+
+
+    </LinearLayout>
+</LinearLayout>
