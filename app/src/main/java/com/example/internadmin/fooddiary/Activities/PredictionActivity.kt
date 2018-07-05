@@ -70,7 +70,7 @@ class PredictionActivity : AppCompatActivity() {
             // WORK HERE --------------------------------------------------------------------------------------
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchView.closeSearch()
-                TimeUnit.MICROSECONDS.sleep(5)
+                //TimeUnit.SECONDS.sleep(1)
                 // foodName is a function that converts a food name to internal food name
                 var internalfoodname = foodName(query!!)
                 val mydishid = DishID(internalfoodname, 1, applicationContext)
@@ -90,6 +90,7 @@ class PredictionActivity : AppCompatActivity() {
                         RedirectToMainOnError("Could not get Dish ID.", applicationContext)
                     }
                 }
+                TimeUnit.MICROSECONDS.sleep(5)
                 mydishid.execute()
                 return true
             }
