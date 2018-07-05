@@ -65,7 +65,7 @@ class MealActivity : AppCompatActivity() {
         }else if(intent.hasExtra("DishID")){
             val mydishid = DishID(intent.getStringExtra("DishID"), intent.getIntExtra("Version", -1), this)
             val mealdate = Date(intent.getLongExtra("mealdate", -1))
-            val mealtime = intent.getSerializableExtra("mealtime") as TimePeriod
+            val mealtime = intent.getSerializableExtra("mealtime") as? TimePeriod
 
             mydishid.setDishIDPopulatedListener{
                 totalserving = getPrevServingAmt(mydishid)

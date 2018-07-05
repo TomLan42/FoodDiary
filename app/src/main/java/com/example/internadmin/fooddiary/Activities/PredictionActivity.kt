@@ -49,6 +49,7 @@ class PredictionActivity : AppCompatActivity() {
         //val main = FrameLayout(this)
         toolbar = Toolbar(this)
         searchView = MaterialSearchView(this)
+        val myactivity = this
 
         //// -----------------------------------------------------------
         var searchparams = RelativeLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
@@ -72,7 +73,7 @@ class PredictionActivity : AppCompatActivity() {
                 //TimeUnit.SECONDS.sleep(1)
                 // foodName is a function that converts a food name to internal food name
                 var internalfoodname = foodName(query!!)
-                val mydishid = DishID(internalfoodname, 1, applicationContext)
+                val mydishid = DishID(internalfoodname, 1, myactivity)
                 Log.d("FOODINTERNALNAME", internalfoodname)
                 mydishid.setDishIDPopulatedListener { dataAdded ->
                     Log.d("inside here", "inside here")
@@ -82,11 +83,15 @@ class PredictionActivity : AppCompatActivity() {
                         b.putSerializable("FoodImg", foodImgFile)
                         b.putString("DishID", internalfoodname)
                         b.putInt("Version", -1)
-                        val intent = Intent(applicationContext, MealActivity::class.java)
+                        if(intent.hasExtra("mealtime")){
+                            b.putSerializable("mealtime", intent.getSerializableExtra("mealtime"))
+                            b.putLong("mealdate", intent.getLongExtra("mealdate", -1))
+                        }
+                        val intent = Intent(myactivity, MealActivity::class.java)
                         intent.putExtras(b)
                         startActivity(intent)
                     }else{
-                        RedirectToMainOnError("Could not get Dish ID.", applicationContext)
+                        RedirectToMainOnError("Could not get Dish ID.", myactivity)
                     }
                 }
                 TimeUnit.MICROSECONDS.sleep(5)
