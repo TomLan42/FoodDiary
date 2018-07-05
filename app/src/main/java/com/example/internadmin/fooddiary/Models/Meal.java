@@ -125,6 +125,8 @@ public class Meal{
         TimeConsumed = date;
     }
 
+    public void setTimePeriod(TimePeriod timePeriod){ this.timePeriod = timePeriod; }
+
     public void setServingAmt(float amt){
         ServingAmt = amt;
     }

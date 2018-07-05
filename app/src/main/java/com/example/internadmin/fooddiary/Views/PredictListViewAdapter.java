@@ -2,6 +2,7 @@ package com.example.internadmin.fooddiary.Views;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,24 +115,15 @@ public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
         viewHolder.predictedFoodName.setText(mypredict.getFoodName());
 
         if(position == 0){
-            viewHolder.predictedBestMatch.setVisibility(View.VISIBLE);
+            viewHolder.row_layout_prediction.setBackgroundColor(Color.parseColor("#a4c639"));
+            viewHolder.predictedFoodName.setTextColor(Color.parseColor("#ffffff"));
+            viewHolder.predictedBestMatch.setText("Best Match");
+            viewHolder.predictedBestMatch.setTextColor(Color.parseColor("#ffffff"));
+        } else if (position == 1){
+            viewHolder.predictedBestMatch.setTextColor(Color.parseColor("#a4c639"));
+            viewHolder.predictedBestMatch.setText("2nd Best Match");
         }
 
-        //viewHolder.predictedSelect.setChecked(position == selectedPosition);
-        //viewHolder.predictedSelect.setTag(position);
-        /*viewHolder.predictedSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-              @Override
-              public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                  if(isChecked){
-                      selectedPosition = (Integer) buttonView.getTag();
-                      notifyDataSetChanged();
-                  }
-          }
-
-        });*/
-        //int displposition = position + 1;
         return convertView;
 
     };

@@ -64,17 +64,20 @@ class MealActivity : AppCompatActivity() {
             executeOnMealInitialized(true)
         }else if(intent.hasExtra("DishID")){
             val mydishid = DishID(intent.getStringExtra("DishID"), intent.getIntExtra("Version", -1), this)
+            val mealdate = Date(intent.getLongExtra("mealdate", -1))
+            val mealtime = intent.getSerializableExtra("mealtime") as TimePeriod
 
             mydishid.setDishIDPopulatedListener{
                 totalserving = getPrevServingAmt(mydishid)
                 //servingcounter = Math.round(totalserving - 0.5).toInt()
                 //servingslice = totalserving - servingcounter.toFloat()
                 //Log.i("Serving Slice", servingslice.toString())
-                mymeal = Meal(mydishid, Date(), totalserving, this)
+                mymeal = Meal(mydishid, mealdate, mealtime, totalserving)
                 val myfoodimg = intent.getSerializableExtra("FoodImg")
                 if(myfoodimg != null){
                     mymeal.setFoodImg(myfoodimg as File)
                 }
+
                 executeOnMealInitialized(false)
             }
             mydishid.execute()
@@ -304,17 +307,7 @@ class MealActivity : AppCompatActivity() {
     private fun datetimeviewgroup(defaultdate: Date){
 
         val dateFormat = SimpleDateFormat("E, d MMM y")
-        if(intent.hasExtra("mealdate")){
-            var mealdate = intent.getLongExtra("mealdate", -1)
-            // Complete this portion
 
-        }else{
-            setdatetime.text = dateFormat.format(defaultdate)
-        }
-        if(intent.hasExtra("mealtime")){
-            var mealtime = intent.getSerializableExtra("mealtime") as TimePeriod
-            // complete this portion
-        }
         setmealofday.text = getMealType(defaultdate)
 
         btn_datetimepicker.setOnClickListener {

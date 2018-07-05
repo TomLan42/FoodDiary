@@ -10,6 +10,7 @@ import com.example.internadmin.fooddiary.R.color.grey
 import kotlinx.android.synthetic.main.activity_prediction.*
 import java.io.File
 import android.content.DialogInterface
+import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
@@ -48,9 +49,7 @@ class PredictionActivity : AppCompatActivity() {
         //val main = FrameLayout(this)
         toolbar = Toolbar(this)
         searchView = MaterialSearchView(this)
-        predictionlistview = findViewById(R.id.predictionlistview)
-        predictionlistview.setChoiceMode(ListView.CHOICE_MODE_SINGLE)
-        //predictionlistview.setSelector(R.color.grey)
+
         //// -----------------------------------------------------------
         var searchparams = RelativeLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
         var toolbarparams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 150)
@@ -82,7 +81,7 @@ class PredictionActivity : AppCompatActivity() {
                         val b = Bundle()
                         b.putSerializable("FoodImg", foodImgFile)
                         b.putString("DishID", internalfoodname)
-                        b.putInt("Version", 1)
+                        b.putInt("Version", -1)
                         val intent = Intent(applicationContext, MealActivity::class.java)
                         intent.putExtras(b)
                         startActivity(intent)
@@ -110,6 +109,10 @@ class PredictionActivity : AppCompatActivity() {
         //// -----------------------------------------------------------
         updateView()
 
+        predictionlistview = findViewById(R.id.predictionlistview)
+        predictionlistview.setChoiceMode(ListView.CHOICE_MODE_SINGLE)
+        //predictionlistview.setSelector(R.color.green)
+
         predictAdapter = PredictListViewAdapter(this, listpredictions)
 
         predictionlistview.adapter = predictAdapter
@@ -129,6 +132,7 @@ class PredictionActivity : AppCompatActivity() {
         }
 
         //predictionlistview.setItemChecked(0, true);
+        //predictionlistview.performItemClick(predictionlistview.selectedView, 0, 0)
         //val myview = predictionlistview.getChildAt(0)
         //val checkbox = myview.findViewById<CheckBox>(R.id.checkBox_predictionSelect)
         //checkbox.isChecked = true
@@ -163,6 +167,7 @@ class PredictionActivity : AppCompatActivity() {
         }
 
     }
+
 
 
     private fun updateView(){
