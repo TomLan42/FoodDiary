@@ -126,8 +126,6 @@ class PredictionActivity : AppCompatActivity() {
 
                 checkbox.isChecked = (i == position)
             }
-
-            //Toast.makeText(this, "Found as " + position.toString(), Toast.LENGTH_LONG).show()
         }
 
         //predictionlistview.setItemChecked(0, true);
@@ -162,8 +160,6 @@ class PredictionActivity : AppCompatActivity() {
                 }
             }
             mydishid.execute()
-
-            //Toast.makeText(this, mypredict.foodName, Toast.LENGTH_LONG).show()
         }
 
     }

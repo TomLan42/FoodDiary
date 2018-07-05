@@ -29,6 +29,7 @@ import com.example.internadmin.fooddiary.Views.Test;
 import com.example.internadmin.fooddiary.Views.MovableFloatingActionButton;
 import com.example.internadmin.fooddiary.Views.Settings;
 import com.example.internadmin.fooddiary.Views.Summary;
+import com.example.internadmin.fooddiary.Views.UpdateHistory;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 public class MainActivity extends AppCompatActivity{
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity{
                         transaction.commit();
                     }
                     if(position == 1){
-                        Test test = new Test();
+                        UpdateHistory test = new UpdateHistory();
                         transaction.replace(ll.getId(), test);
                         //transaction.addToBackStack(null);
                         transaction.commit();
