@@ -87,9 +87,9 @@ class PredictionActivity : AppCompatActivity() {
                             b.putSerializable("mealtime", intent.getSerializableExtra("mealtime"))
                             b.putLong("mealdate", intent.getLongExtra("mealdate", -1))
                         }
-                        val intent = Intent(myactivity, MealActivity::class.java)
-                        intent.putExtras(b)
-                        startActivity(intent)
+                        val myintent = Intent(myactivity, MealActivity::class.java)
+                        myintent.putExtras(b)
+                        startActivity(myintent)
                     }else{
                         RedirectToMainOnError("Could not get Dish ID.", myactivity)
                     }

@@ -405,11 +405,11 @@ class CameraActivity : AppCompatActivity() {
             Log.e("Meal Caching", "Cannot create Cached Image: " + e.message)
         }
         if(intent.hasExtra("mealtime")){
-            var mealtime = intent.getSerializableExtra("mealtime")
-            var date = intent.getLongExtra("mealdate", -1)
+            val mealtime = intent.getSerializableExtra("mealtime")
+            val date = intent.getLongExtra("mealdate", -1)
             val myintent = Intent(this, PredictionActivity::class.java)
-            myintent.putExtra("mealtime", mealtime)
-            myintent.putExtra("mealdate", date)
+            result.putSerializable("mealtime", mealtime)
+            result.putLong("mealdate", date)
             myintent.putExtras(result)
             startActivity(myintent)
         }

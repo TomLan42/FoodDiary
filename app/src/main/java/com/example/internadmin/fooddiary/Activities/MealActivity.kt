@@ -64,15 +64,25 @@ class MealActivity : AppCompatActivity() {
             executeOnMealInitialized(true)
         }else if(intent.hasExtra("DishID")){
             val mydishid = DishID(intent.getStringExtra("DishID"), intent.getIntExtra("Version", -1), this)
-            val mealdate = Date(intent.getLongExtra("mealdate", -1))
-            val mealtime = intent.getSerializableExtra("mealtime") as? TimePeriod
+
+
 
             mydishid.setDishIDPopulatedListener{
                 totalserving = getPrevServingAmt(mydishid)
                 //servingcounter = Math.round(totalserving - 0.5).toInt()
                 //servingslice = totalserving - servingcounter.toFloat()
                 //Log.i("Serving Slice", servingslice.toString())
-                mymeal = Meal(mydishid, mealdate, mealtime, totalserving)
+
+                if(intent.hasExtra("mealtime")){
+                    Log.i("HELLLOOO", "WASSSUPPP")
+                    val mealdate = Date(intent.getLongExtra("mealdate", -1))
+                    val mealtime = intent.getSerializableExtra("mealtime") as? TimePeriod
+                    mymeal = Meal(mydishid, mealdate, mealtime, totalserving)
+                }else{
+                    Log.i("BYEEEE", "WASSSUPPP")
+                    mymeal = Meal(mydishid, Date(), totalserving, this)
+                }
+
                 val myfoodimg = intent.getSerializableExtra("FoodImg")
                 if(myfoodimg != null){
                     mymeal.setFoodImg(myfoodimg as File)
@@ -309,6 +319,7 @@ class MealActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("E, d MMM y")
 
         setmealofday.text = getMealType(defaultdate)
+        setdatetime.text = dateFormat.format(mymeal.timeConsumed)
 
         btn_datetimepicker.setOnClickListener {
             SingleDateAndTimePickerDialog.Builder(this)
