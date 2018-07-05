@@ -104,4 +104,6 @@
         <item>South Indian Thali</item>
     </string-array>
     <string name="title_activity_testact">Testact</string>
+
+    <string name="manual_search">Manual Search</string>
 </resources>

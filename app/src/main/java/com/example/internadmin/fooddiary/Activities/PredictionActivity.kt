@@ -15,18 +15,17 @@ import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.example.internadmin.fooddiary.AsyncTasks.ImageUploadTask
 import com.example.internadmin.fooddiary.Models.DishID
 import com.example.internadmin.fooddiary.Models.Prediction
 import com.example.internadmin.fooddiary.R
-import com.example.internadmin.fooddiary.Testact
 import com.example.internadmin.fooddiary.Views.PredictListViewAdapter
-import com.example.internadmin.fooddiary.Views.Test
 import com.miguelcatalan.materialsearchview.MaterialSearchView
+import kotlinx.android.synthetic.main.prediction_footer_layout.*
 import java.util.concurrent.TimeUnit
 
 
@@ -37,7 +36,7 @@ class PredictionActivity : AppCompatActivity() {
     lateinit var toolbar: Toolbar
     lateinit var searchView: MaterialSearchView
     private lateinit var predictAdapter: PredictListViewAdapter
-    private var mypos = -1
+    private var mypos = 0
     lateinit var constraint: ConstraintLayout
     private lateinit var foodImgFile: File
 
@@ -49,7 +48,6 @@ class PredictionActivity : AppCompatActivity() {
         //val main = FrameLayout(this)
         toolbar = Toolbar(this)
         searchView = MaterialSearchView(this)
-        val myactivity = this
 
         //// -----------------------------------------------------------
         var searchparams = RelativeLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
@@ -73,7 +71,7 @@ class PredictionActivity : AppCompatActivity() {
                 //TimeUnit.SECONDS.sleep(1)
                 // foodName is a function that converts a food name to internal food name
                 var internalfoodname = foodName(query!!)
-                val mydishid = DishID(internalfoodname, 1, myactivity)
+                val mydishid = DishID(internalfoodname, 1, this@PredictionActivity)
                 Log.d("FOODINTERNALNAME", internalfoodname)
                 mydishid.setDishIDPopulatedListener { dataAdded ->
                     Log.d("inside here", "inside here")
@@ -87,11 +85,11 @@ class PredictionActivity : AppCompatActivity() {
                             b.putSerializable("mealtime", intent.getSerializableExtra("mealtime"))
                             b.putLong("mealdate", intent.getLongExtra("mealdate", -1))
                         }
-                        val myintent = Intent(myactivity, MealActivity::class.java)
+                        val myintent = Intent(this@PredictionActivity, MealActivity::class.java)
                         myintent.putExtras(b)
                         startActivity(myintent)
                     }else{
-                        RedirectToMainOnError("Could not get Dish ID.", myactivity)
+                        RedirectToMainOnError("Could not get Dish ID.", this@PredictionActivity)
                     }
                 }
                 TimeUnit.MICROSECONDS.sleep(5)
@@ -116,7 +114,10 @@ class PredictionActivity : AppCompatActivity() {
 
         predictionlistview = findViewById(R.id.predictionlistview)
         predictionlistview.setChoiceMode(ListView.CHOICE_MODE_SINGLE)
-        //predictionlistview.setSelector(R.color.green)
+
+        val footerView = (this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
+                .inflate(R.layout.prediction_footer_layout, null, false)
+        predictionlistview.addFooterView(footerView)
 
         predictAdapter = PredictListViewAdapter(this, listpredictions)
 
@@ -124,11 +125,9 @@ class PredictionActivity : AppCompatActivity() {
         val noofitems = predictionlistview.adapter.count
         predictionlistview.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
 
-            btn_mealActivity.isEnabled = true
-            btn_mealActivity.backgroundTintList = ColorStateList.valueOf(resources.getColor(android.R.color.holo_blue_dark))
             mypos = position
 
-            for(i in 0 until noofitems){
+            for(i in 0 until noofitems-1){
                 val myview = parent.getChildAt(i)
                 val checkbox = myview.findViewById<CheckBox>(R.id.checkBox_predictionSelect)
 
@@ -136,11 +135,13 @@ class PredictionActivity : AppCompatActivity() {
             }
         }
 
-        //predictionlistview.setItemChecked(0, true);
-        //predictionlistview.performItemClick(predictionlistview.selectedView, 0, 0)
-        //val myview = predictionlistview.getChildAt(0)
-        //val checkbox = myview.findViewById<CheckBox>(R.id.checkBox_predictionSelect)
-        //checkbox.isChecked = true
+        footer_layout.setOnClickListener {
+
+            searchView.showSearch()
+
+        }
+
+
 
         btn_mealActivity.setOnClickListener{
             val mypredict = predictionlistview.getItemAtPosition(mypos) as Prediction
@@ -186,9 +187,6 @@ class PredictionActivity : AppCompatActivity() {
             foodImgFile = intent.getSerializableExtra("FoodImg") as File
             val imgpath = foodImgFile.absolutePath
             imgview.setImageBitmap(BitmapFactory.decodeFile(imgpath))
-
-            btn_mealActivity.isEnabled = false
-            btn_mealActivity.backgroundTintList = ColorStateList.valueOf(resources.getColor(grey))
 
         }else{
             RedirectToMainOnError("Could not Retrieve Predictions", this)

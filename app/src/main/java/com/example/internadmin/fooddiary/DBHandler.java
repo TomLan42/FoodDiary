@@ -127,6 +127,7 @@ public class DBHandler extends SQLiteOpenHelper {
     */
 
     public boolean insertMealEntry (String FoodName, Date TimeConsumed, TimePeriod timePeriod, float ServingAmt, File FoodImg) {
+        Log.i("MyTimePeriod", timePeriod.toString());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(HISTORY_COLUMN_FOODNAME, FoodName);
@@ -306,6 +307,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         sqlquery += " order by " + HISTORY_COLUMN_DATE + " desc";
 
+        Log.i("SQLQuery", sqlquery);
+
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(sqlquery, null );
         res.moveToFirst();
@@ -481,7 +484,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Bundle b = new Bundle();
 
-        String selection = DISHID_COLUMN_FOODNAME + " = ? ";
+        String selection = DISHID_COLUMN_FOODNAME + " COLLATE NOCASE = ? ";
 
         String[] selectionArgs = { FoodName };
 

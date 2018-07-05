@@ -74,12 +74,10 @@ class MealActivity : AppCompatActivity() {
                 //Log.i("Serving Slice", servingslice.toString())
 
                 if(intent.hasExtra("mealtime")){
-                    Log.i("HELLLOOO", "WASSSUPPP")
                     val mealdate = Date(intent.getLongExtra("mealdate", -1))
                     val mealtime = intent.getSerializableExtra("mealtime") as? TimePeriod
                     mymeal = Meal(mydishid, mealdate, mealtime, totalserving)
                 }else{
-                    Log.i("BYEEEE", "WASSSUPPP")
                     mymeal = Meal(mydishid, Date(), totalserving, this)
                 }
 

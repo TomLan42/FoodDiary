@@ -2,6 +2,7 @@ package com.example.internadmin.fooddiary.Views;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
 
     //int selectedPosition = 0;
+    private Boolean firstTime = true;
 
 
     public PredictListViewAdapter(Activity context, ArrayList<Prediction> myPredictions) {
@@ -119,7 +121,12 @@ public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
             viewHolder.predictedFoodName.setTextColor(Color.parseColor("#ffffff"));
             viewHolder.predictedBestMatch.setText("Best Match");
             viewHolder.predictedBestMatch.setTextColor(Color.parseColor("#ffffff"));
+            if(firstTime){
+                firstTime = false;
+                viewHolder.predictedSelect.setChecked(true);
+            }
         } else if (position == 1){
+            viewHolder.predictedFoodName.setTextColor(Color.parseColor("#a4c639"));
             viewHolder.predictedBestMatch.setTextColor(Color.parseColor("#a4c639"));
             viewHolder.predictedBestMatch.setText("2nd Best Match");
         }

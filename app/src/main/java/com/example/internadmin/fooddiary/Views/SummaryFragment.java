@@ -230,12 +230,14 @@ public class SummaryFragment extends Fragment implements ISlideSelectionListener
         if(hbp){
             HBPLayout.setVisibility(View.VISIBLE);
             hbp_customwarning.setVisibility(View.GONE);
-            int hbpregime = prefs.getInt("DiabetesRegime", 0);
+            int hbpregime = prefs.getInt("HBPRegime", 0);
             switch (hbpregime){
                 case 0:
-                    textView_hbp.setText("Chosen Option:" + getString(R.string.reccarbsregime));
+                    textView_hbp.setText("Chosen Option:" + getString(R.string.stdsaltregime));
                     break;
                 case 1:
+                    textView_hbp.setText("Chosen Option:" + getString(R.string.recsaltregime));
+                case 2:
 
                     if(prefs.contains("CustomHBPRegime")){
                         textView_hbp.setText("Chosen Option: Custom Regime ("

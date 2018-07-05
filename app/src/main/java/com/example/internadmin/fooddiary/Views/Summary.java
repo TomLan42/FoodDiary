@@ -164,7 +164,8 @@ public class Summary extends Fragment {
         meal_ll.removeAllViews();
         List<Long> breakfastlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.MORNING);
         List<Long> lunchlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.AFTERNOON);
-        List<Long> dinnerlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.NIGHT);
+        List<Long> dinnerlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.EVENING);
+        dinnerlist.addAll(handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.NIGHT));
 
         // IF THE LIST CONTAINS NON ZERO NUMBER OF ITEMS THEN CARD FOR THAT MEAL IS CREATED
         //if(breakfastlist.size() > 0){
