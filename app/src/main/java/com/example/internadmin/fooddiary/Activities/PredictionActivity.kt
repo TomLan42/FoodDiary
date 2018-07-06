@@ -155,8 +155,8 @@ class PredictionActivity : AppCompatActivity() {
                     b.putInt("Version", mydishid.ver)
                     if(intent.hasExtra("mealtime")){
                         val mealintent = Intent(this, MealActivity::class.java)
-                        mealintent.putExtra("mealtime", intent.getSerializableExtra("mealtime"))
-                        mealintent.putExtra("mealdate", intent.getLongExtra("mealdate", -1))
+                        b.putSerializable("mealtime", intent.getSerializableExtra("mealtime"))
+                        b.putLong("mealdate", intent.getLongExtra("mealdate", -1))
                         mealintent.putExtras(b)
                         startActivity(mealintent)
                     }
