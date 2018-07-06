@@ -47,7 +47,11 @@ public class Report extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        String[] myDataset = { "One", "Two", "Three" };
+        Bundle b = new Bundle();
+        b.putString("Title", "WASSSUPPPP");
+        b.putString("Content", "MY MANNNNN");
+
+        Bundle[] myDataset = { b, new Bundle(), new Bundle() };
 
         // specify an adapter (see also next example)
         mAdapter = new ReportRecyclerViewAdapter(myDataset);

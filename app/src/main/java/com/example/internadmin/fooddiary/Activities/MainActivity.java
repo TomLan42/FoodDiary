@@ -24,6 +24,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.internadmin.fooddiary.R;
 import com.example.internadmin.fooddiary.Views.MovableFloatingActionButton;
+import com.example.internadmin.fooddiary.Views.Report;
 import com.example.internadmin.fooddiary.Views.Settings;
 import com.example.internadmin.fooddiary.Views.Summary;
 import com.example.internadmin.fooddiary.Views.UpdateHistory;
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity{
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Summary", R.drawable.ic_camera_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Camera", R.drawable.ic_arrow_back_white, R.color.colorPrimary);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem("Query Food", R.drawable.ic_arrow_forward_white, R.color.colorPrimary);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Query", R.drawable.ic_arrow_forward_white, R.color.colorPrimary);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Report", R.drawable.ic_arrow_forward_white, R.color.colorPrimary);
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
@@ -173,6 +174,11 @@ public class MainActivity extends AppCompatActivity{
                         Settings settings = new Settings();
                         transaction.replace(ll.getId(), settings);
                         //transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                    if (position == 3){
+                        Report report = new Report();
+                        transaction.replace(ll.getId(), report);
                         transaction.commit();
                     }
                 }

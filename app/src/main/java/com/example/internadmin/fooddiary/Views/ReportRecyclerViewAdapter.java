@@ -1,25 +1,33 @@
 package com.example.internadmin.fooddiary.Views;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.internadmin.fooddiary.R;
 
 public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
 
-        private String[] mDataset;
+        private Bundle[] mDataset;
 
-        public ReportRecyclerViewAdapter(String[] myDataset) {
+        public ReportRecyclerViewAdapter(Bundle[] myDataset) {
             mDataset = myDataset;
         }
 
         class HeaderViewHolder extends ReportRecyclerView.ViewHolder {
+            TextView headerCardTitle;
+            TextView headerCardContent;
 
-            public HeaderViewHolder(View itemView){
+            HeaderViewHolder(View itemView){
                 super(itemView);
+
+                headerCardTitle = itemView.findViewById(R.id.txt_headercardTitle);
+                headerCardContent = itemView.findViewById(R.id.txt_headercardContent);
 
             }
         }
@@ -61,7 +69,7 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
         }
 
         @Override
-        public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
             switch (holder.getItemViewType()) {
                 /*case 0:
                     ViewHolder0 viewHolder0 = (ViewHolder0)holder;
@@ -72,6 +80,14 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
                     ViewHolder2 viewHolder2 = (ViewHolder2)holder;
 
                     break;*/
+
+                default:
+                    HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
+                    Bundle b = mDataset[position];
+                    headerViewHolder.headerCardTitle
+                            .setText(b.getString("Title", "Hello World!"));
+                    headerViewHolder.headerCardContent
+                            .setText(b.getString("Content", "What a great day!"));
             }
         }
 
