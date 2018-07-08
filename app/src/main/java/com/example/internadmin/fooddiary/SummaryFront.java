@@ -63,7 +63,7 @@ public class SummaryFront extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
         tracking = "Energy";
-        limit = (int)prefs.getInt(getString(R.string.tracking_nutrition_limit), 0);
+        limit = (int)prefs.getInt(getString(R.string.calorielimit), 0);
         //TextView record = getView().findViewById(R.id.record);
         left = getView().findViewById(R.id.amount);
         handler = new DBHandler(getContext());

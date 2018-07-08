@@ -3,6 +3,7 @@ package com.example.internadmin.fooddiary.Views;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.gesture.Gesture;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import com.example.internadmin.fooddiary.Activities.CameraActivity;
 import com.example.internadmin.fooddiary.Barchart;
 import com.example.internadmin.fooddiary.DBHandler;
+
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -78,7 +81,7 @@ public class Summary extends Fragment {
     DBHandler handler;
     TextView dateselect;
     Calendar myCalendar;
-    private static final int NUM_PAGES = 3;
+    int NUM_PAGES;
     ViewPager viewPager;
     TabLayout mytabdots;
     PagerAdapter pagerAdapter;
@@ -91,6 +94,7 @@ public class Summary extends Fragment {
     LinearLayout ll;
     SwipeMenuListView dinnerlist;
     Point size;
+    SharedPreferences prefs;
     public Summary() {
         // Required empty public constructor
     }
@@ -111,7 +115,10 @@ public class Summary extends Fragment {
                              Bundle savedInstanceState) {
         // THE MAIN SCROLLVIEW FOR THE WHOLE FRAGMENT
         sv = new ScrollView(getContext());
-
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+        int cals = prefs.getInt(getString(R.string.trackcalories), 0);
+        int carbs = prefs.getInt(getString(R.string.trackcarbs), 0);
+        NUM_PAGES = cals + carbs + 1;
         caloriesfrag = new SummaryFront();
         sugarfrag = new SummarySugar();
         // LINEAR LAYOUT TO CONTAIN OTHER VIEWS (SINCE SCROLLVIEW CAN HAVE ONLY ONE VIEW APPENDED IN IT)
@@ -781,11 +788,18 @@ public class Summary extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
+            if(NUM_PAGES == 3){
+                if(position == 0) return caloriesfrag;
+                if(position == 1) return sugarfrag;
+                if(position == 2) return new Barchart();
+                return caloriesfrag;
+            }
+            else {
+                if(position == 0) return caloriesfrag;
+                if(position == 1) return new Barchart();
+                return caloriesfrag;
+            }
             //caloriesfrag = new SummaryFront();
-            if(position == 0) return caloriesfrag;
-            if(position == 1) return sugarfrag;
-            if(position == 2) return new Barchart();
-            return caloriesfrag;
         }
 
         @Override
