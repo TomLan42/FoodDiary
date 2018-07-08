@@ -28,6 +28,13 @@ app:cardElevation="6dp">
             android:padding="1dp"
             android:textColor="@color/black" />
 
+            <android.support.design.widget.TabLayout
+            android:id="@+id/periodtabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="@color/green"
+            app:tabMode="fixed"
+            app:tabGravity="fill" />
 
         </LinearLayout>
 

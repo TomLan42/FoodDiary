@@ -300,7 +300,7 @@ public class DBHandler extends SQLiteOpenHelper {
         List<Long> list = new ArrayList<>();
 
         String sqlquery = "select " + HISTORY_COLUMN_ID +  " from " + HISTORY_TABLE_NAME +
-                " where " + HISTORY_COLUMN_DATE + " <= '" + dateFormat.format(dateOnly) + "'";;
+                " where " + HISTORY_COLUMN_DATE + " = '" + dateFormat.format(dateOnly) + "'";;
 
         if(timePeriod != null)
             sqlquery += " and " + HISTORY_COLUMN_PERIOD + " = " + timePeriod.ordinal();

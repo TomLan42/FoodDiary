@@ -113,7 +113,8 @@ public class GetNutritionTrackFragment extends Fragment implements ISlideSelecti
 
         SharedPreferences.Editor edit = prefs.edit();
 
-        edit.putBoolean("weightloss", true).apply();
+        if(!prefs.contains("weightloss"))
+            edit.putBoolean("weightloss", true).apply();
 
         setCheckboxesListener(selections, edit);
 

@@ -2,6 +2,7 @@ package com.example.internadmin.fooddiary.Views;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,30 +12,41 @@ import android.widget.TextView;
 
 import com.example.internadmin.fooddiary.R;
 
+import java.util.ArrayList;
+
 public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
 
-        private Bundle[] mDataset;
+        private ArrayList<Bundle> mDataset;
+        private TabLayout.OnTabSelectedListener changePeriodListener;
 
-        public ReportRecyclerViewAdapter(Bundle[] myDataset) {
-            mDataset = myDataset;
+        public ReportRecyclerViewAdapter(ArrayList<Bundle> myDataset,
+                                         TabLayout.OnTabSelectedListener changePeriodListener) {
+            this.mDataset = myDataset;
+            this.changePeriodListener = changePeriodListener;
         }
 
         class HeaderViewHolder extends ReportRecyclerView.ViewHolder {
             TextView headerCardTitle;
             TextView headerCardContent;
+            TabLayout headerCardPeriodSelect;
 
             HeaderViewHolder(View itemView){
                 super(itemView);
 
                 headerCardTitle = itemView.findViewById(R.id.txt_headercardTitle);
                 headerCardContent = itemView.findViewById(R.id.txt_headercardContent);
+                headerCardPeriodSelect = itemView.findViewById(R.id.periodtabs);
+
+                headerCardPeriodSelect.addTab(headerCardPeriodSelect.newTab().setText("Daily"));
+                headerCardPeriodSelect.addTab(headerCardPeriodSelect.newTab().setText("Weekly"));
+                headerCardPeriodSelect.addTab(headerCardPeriodSelect.newTab().setText("Monthly"));
 
             }
         }
 
-        class ViewHolder2 extends ReportRecyclerView.ViewHolder {
+        class SummaryViewHolder extends ReportRecyclerView.ViewHolder {
 
-            public ViewHolder2(View itemView) {
+            public SummaryViewHolder(View itemView) {
                 super(itemView);
 
             }
@@ -44,7 +56,7 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
         public int getItemViewType(int position) {
             // Just as an example, return 0 or 2 depending on position
             // Note that unlike in ListView adapters, types don't have to be contiguous
-            return 0;
+            return position;
         }
 
         @Override
@@ -70,6 +82,7 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+            Bundle b = mDataset.get(position);
             switch (holder.getItemViewType()) {
                 /*case 0:
                     ViewHolder0 viewHolder0 = (ViewHolder0)holder;
@@ -80,20 +93,29 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
                     ViewHolder2 viewHolder2 = (ViewHolder2)holder;
 
                     break;*/
-
-                default:
+                case 0:
                     HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
-                    Bundle b = mDataset[position];
                     headerViewHolder.headerCardTitle
                             .setText(b.getString("Title", "Hello World!"));
                     headerViewHolder.headerCardContent
                             .setText(b.getString("Content", "What a great day!"));
+                    //headerViewHolder.headerCardPeriodSelect.getTabAt(0).select();
+                    headerViewHolder.headerCardPeriodSelect.addOnTabSelectedListener(changePeriodListener);
+                    break;
+
+                default:
+                    HeaderViewHolder defaultViewHolder = (HeaderViewHolder)holder;
+                    defaultViewHolder.headerCardTitle
+                            .setText(b.getString("Title", "Hello World!"));
+                    defaultViewHolder.headerCardContent
+                            .setText(b.getString("Content", "What a great day!"));
+                    defaultViewHolder.headerCardPeriodSelect.getTabAt(0).select();
             }
         }
 
         @Override
         public int getItemCount() {
-            return mDataset.length;
+            return mDataset.size();
         }
 
 }
