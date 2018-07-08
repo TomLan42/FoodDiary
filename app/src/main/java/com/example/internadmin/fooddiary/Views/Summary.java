@@ -86,6 +86,7 @@ public class Summary extends Fragment {
     TabLayout mytabdots;
     PagerAdapter pagerAdapter;
     BarChart chart;
+    int cals;
     SwipeMenuListView breakfastlist;
     SwipeMenuListView lunchlist;
     LinearLayout meal_ll;
@@ -116,7 +117,7 @@ public class Summary extends Fragment {
         // THE MAIN SCROLLVIEW FOR THE WHOLE FRAGMENT
         sv = new ScrollView(getContext());
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
-        int cals = prefs.getInt(getString(R.string.trackcalories), 0);
+        cals = prefs.getInt(getString(R.string.trackcalories), 0);
         int carbs = prefs.getInt(getString(R.string.trackcarbs), 0);
         NUM_PAGES = cals + carbs + 1;
         caloriesfrag = new SummaryFront();
@@ -794,8 +795,13 @@ public class Summary extends Fragment {
                 if(position == 2) return new Barchart();
                 return caloriesfrag;
             }
-            else {
+            else if(NUM_PAGES == 2 && cals == 1){
                 if(position == 0) return caloriesfrag;
+                if(position == 1) return new Barchart();
+                return caloriesfrag;
+            }
+            else{
+                if(position == 0) return sugarfrag;
                 if(position == 1) return new Barchart();
                 return caloriesfrag;
             }
