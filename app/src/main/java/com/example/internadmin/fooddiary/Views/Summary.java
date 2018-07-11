@@ -117,8 +117,8 @@ public class Summary extends Fragment {
         // THE MAIN SCROLLVIEW FOR THE WHOLE FRAGMENT
         sv = new ScrollView(getContext());
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
-        cals = prefs.getInt(getString(R.string.trackcalories), 0);
-        int carbs = prefs.getInt(getString(R.string.trackcarbs), 0);
+        cals = prefs.getBoolean(getString(R.string.trackcalories), false)? 1:0;
+        int carbs = prefs.getBoolean(getString(R.string.trackcarbs), false)? 1:0;
         NUM_PAGES = cals + carbs + 1;
         caloriesfrag = new SummaryFront();
         sugarfrag = new SummarySugar();
@@ -803,7 +803,7 @@ public class Summary extends Fragment {
             else{
                 if(position == 0) return sugarfrag;
                 if(position == 1) return new Barchart();
-                return caloriesfrag;
+                return sugarfrag;
             }
             //caloriesfrag = new SummaryFront();
         }

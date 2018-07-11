@@ -62,8 +62,13 @@ public class SummarySugar extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
-        tracking = "Carbohydrates";
-        limit = (int)prefs.getInt(getString(R.string.carbslimit), 0);
+        tracking = "Carbohydrate";
+        int diabetesRegime = prefs.getInt("DiabetesRegime", 0);
+
+        if(diabetesRegime == 0)
+            limit = 45;
+        else
+            limit = prefs.getInt(getString(R.string.customdiabetesregime), 0);
         //TextView record = getView().findViewById(R.id.record);
         left = getView().findViewById(R.id.amount2);
         handler = new DBHandler(getContext());

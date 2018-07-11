@@ -191,7 +191,7 @@ public class SummaryFragment extends Fragment implements ISlideSelectionListener
                 wtloss_lackinfowarning.setVisibility(View.VISIBLE);
             }
 
-            edit.putInt(getString(R.string.tracking_nutrition_limit), DailyCalorieLimit).apply();
+            edit.putInt(getString(R.string.calorielimit), DailyCalorieLimit).apply();
 
             textView_wtloss.setText(wtlossdisplay);
 

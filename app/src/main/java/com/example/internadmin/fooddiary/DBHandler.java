@@ -137,6 +137,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         long rowID = db.insert(HISTORY_TABLE_NAME, null, contentValues);
         if(rowID == -1){
+            db.close();
             return false;
         }else{
 
@@ -150,6 +151,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_ID + " = ? ", new String[] { Long.toString(rowID)});
             }
+            db.close();
 
             return true;
         }
@@ -216,6 +218,7 @@ public class DBHandler extends SQLiteOpenHelper {
         cv.put(HISTORY_COLUMN_SERVINGS, ServingAmt);
 
         int updated = db.update(HISTORY_TABLE_NAME, cv, HISTORY_COLUMN_ID + "=" + RowID, null);
+        db.close();
 
         return (updated > 0);
 
@@ -281,6 +284,7 @@ public class DBHandler extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+        db.close();
         return list;
     }
 
@@ -352,6 +356,7 @@ public class DBHandler extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+        db.close();
 
         return hmap;
     }
@@ -385,6 +390,7 @@ public class DBHandler extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+        db.close();
 
         return hmap;
     }
@@ -432,6 +438,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return b;
     }
@@ -463,6 +470,8 @@ public class DBHandler extends SQLiteOpenHelper {
         cv.put(DISHID_COLUMN_IMGPATH, ImgPath);
 
         db.insertWithOnConflict(DISHID_TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+
+        db.close();
 
     }
 
@@ -504,6 +513,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return b;
 
@@ -544,9 +554,11 @@ public class DBHandler extends SQLiteOpenHelper {
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
 
-        if (!destFile.exists()) {
-            destFile.createNewFile();
+        if (destFile.exists()) {
+            destFile.delete();
         }
+
+        destFile.createNewFile();
 
         FileChannel source = null;
         FileChannel destination = null;
@@ -563,6 +575,12 @@ public class DBHandler extends SQLiteOpenHelper {
                 destination.close();
             }
         }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        this.close();
+        super.finalize();
     }
 
 }
