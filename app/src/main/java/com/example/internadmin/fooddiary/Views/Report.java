@@ -202,7 +202,7 @@ public class Report extends Fragment {
             Pair<String, Float> mynutrition = getdaynutrition(servingslist, "Energy");
             String maxContributingFood = mynutrition.first;
             float consumedCalories = mynutrition.second;
-            float caloriesLimit = (float) pref.getInt(getString(R.string.tracking_nutrition_limit), 2000);
+            float caloriesLimit = (float) pref.getInt(getString(R.string.calorielimit), 2000);
 
             Bundle tryhardercard = new Bundle();
 
@@ -282,7 +282,7 @@ public class Report extends Fragment {
 
             ArrayList<Column> columns =  populateBarchart(currentweek, endofWeek, "Energy");
             columns.remove(columns.size()-1);
-            float caloriesLimit = (float) pref.getInt(getString(R.string.tracking_nutrition_limit), 2000);
+            float caloriesLimit = (float) pref.getInt(getString(R.string.calorielimit), 2000);
 
             Bundle b = new Bundle();
 
@@ -371,7 +371,7 @@ public class Report extends Fragment {
 
             Pair<String, Float> mynutrition = getdaynutrition(servingslist, "Energy");
 
-            float caloriesLimit = (float) pref.getInt(getString(R.string.tracking_nutrition_limit), 2000);
+            float caloriesLimit = (float) pref.getInt(getString(R.string.calorielimit), 2000);
             String maxContributingFood = mynutrition.first;
             float consumedCalories = mynutrition.second;
             Bundle b = new Bundle();
