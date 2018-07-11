@@ -223,10 +223,11 @@ public class Report extends Fragment {
                 report.add(tryhardercard);
 
                 Bundle advicecard = new Bundle();
+                advicecard.putInt("ViewType", 3);
                 advicecard.putString("Title", "Things to Note");
-                advicecard.putString("Content", String.format("%s is the largest contributor in %s.",
+                advicecard.putString("Content", String.format("%sis the largest contributor in %s.",
                         DisplayFoodName(maxContributingFood), getString(R.string.cal)));
-                advicecard.putString("Subcontent", "Cut down on this for better results!");
+                advicecard.putString("Subcontent", "Cut down for better results!");
                 report.add(advicecard);
             }
 
