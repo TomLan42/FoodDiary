@@ -55,7 +55,7 @@ class PredictionActivity : AppCompatActivity() {
         searchView.layoutParams = searchparams
         searchView.id = 711
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary))
-        toolbar.title = "FOOD!!!"
+        toolbar.title = "Predictions"
         toolbar.visibility = View.VISIBLE
         toolbar.layoutParams = toolbarparams
         toolbar.id = 710
@@ -92,7 +92,7 @@ class PredictionActivity : AppCompatActivity() {
                         RedirectToMainOnError("Could not get Dish ID.", this@PredictionActivity)
                     }
                 }
-                TimeUnit.MICROSECONDS.sleep(5)
+                //TimeUnit.MICROSECONDS.sleep(5)
                 mydishid.execute()
                 return true
             }

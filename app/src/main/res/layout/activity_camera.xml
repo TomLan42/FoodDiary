@@ -63,6 +63,7 @@
             android:id="@+id/fabPCGallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:reusable="true"
             >
 
         <android.support.design.widget.FloatingActionButton
@@ -92,6 +93,7 @@
             android:id="@+id/fabPCCapture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:reusable="true"
             >
 
         <android.support.design.widget.FloatingActionButton

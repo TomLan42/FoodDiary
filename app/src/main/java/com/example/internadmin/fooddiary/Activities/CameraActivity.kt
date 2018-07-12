@@ -354,14 +354,14 @@ class CameraActivity : AppCompatActivity() {
 
                 if(isCamera){
                     fabPCCapture.attachListener {
-                        goToPredictionActivity(result, bitmap)
                         fabPCCapture.hide()
+                        goToPredictionActivity(result, bitmap)
                     }
                     fabPCCapture.beginFinalAnimation()
                 } else{
                     fabPCGallery.attachListener {
-                        goToPredictionActivity(result, bitmap)
                         fabPCGallery.hide()
+                        goToPredictionActivity(result, bitmap)
                     }
                     fabPCGallery.beginFinalAnimation()
                 }

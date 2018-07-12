@@ -34,6 +34,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
 
@@ -263,6 +265,9 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
                             b.getString("Title", "Error Displaying Content")
                     );
                     ArrayList<Column> columns = b.getParcelableArrayList("BarData");
+
+                    //Reverse column order to force horizontal barchart to display from top to bottom.
+                    Collections.reverse(columns);
                     BarData data = getBarData(columns,
                             b.getString("Label", ""));
                     barchartViewHolder.barChartCardChart.setData(data);
@@ -293,8 +298,20 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
                     yAxis.setAxisMinimum(0f);
 
                     if(b.containsKey("LimitLineVal")){
+                        Float max = null;
+
+                        for(Column column:columns){
+                            if(max == null || column.getColVal() > max)
+                                max = column.getColVal();
+                        }
+
+                        Float limitlineval = b.getFloat("LimitLineVal", 0f);
+
+                        if(max > limitlineval)
+                            limitlineval = max;
+
                         yAxis.setAxisMaximum(
-                                b.getFloat("LimitLineVal", 2000f)*1.05f
+                                limitlineval*1.05f
                         );
                     }
 

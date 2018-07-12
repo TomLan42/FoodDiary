@@ -435,10 +435,10 @@ public class Report extends Fragment {
         HashMap<String, DishID> dishIDHashMap = new HashMap<>();
         HashMap<String, Float> totalNutritionValbyFoodName = new HashMap<>();
 
-        while(!enddate.before(startdate)){
+        while(!startdate.after(enddate)){
 
             HashMap<String, Float> servings = handler
-                    .getAllServingsOnDay(enddate.getTime(), null);
+                    .getAllServingsOnDay(startdate.getTime(), null);
 
             Iterator it = servings.entrySet().iterator();
 
@@ -469,10 +469,10 @@ public class Report extends Fragment {
                 }
             }
 
-            columns.add(new Column(enddate.getDisplayName(Calendar.DAY_OF_WEEK,
+            columns.add(new Column(startdate.getDisplayName(Calendar.DAY_OF_WEEK,
                     Calendar.SHORT, getResources().getConfiguration().locale), dailytotal));
 
-            enddate.add(Calendar.DATE, -1);
+            startdate.add(Calendar.DATE, 1);
         }
 
         //WARNING: THIS IS NOT A DAY COLUMN AND MUST BE REMOVED.
