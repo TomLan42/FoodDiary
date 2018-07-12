@@ -52,6 +52,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.internadmin.fooddiary.Activities.MealActivity;
+import com.example.internadmin.fooddiary.DineCard;
 import com.example.internadmin.fooddiary.Models.FoodItem;
 import com.example.internadmin.fooddiary.Models.Meal;
 import com.example.internadmin.fooddiary.Models.TimePeriod;
@@ -76,6 +77,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Summary extends Fragment {
+    // Defining global variables required for creating the view
+    // NOTE: THE WHOLE VIEW IS CREATED PROGRAMMATICALLY
     ScrollView sv;
     CardView barcard;
     DBHandler handler;
@@ -87,6 +90,7 @@ public class Summary extends Fragment {
     PagerAdapter pagerAdapter;
     BarChart chart;
     int cals;
+    int carbs;
     SwipeMenuListView breakfastlist;
     SwipeMenuListView lunchlist;
     LinearLayout meal_ll;
@@ -97,7 +101,6 @@ public class Summary extends Fragment {
     Point size;
     SharedPreferences prefs;
     public Summary() {
-        // Required empty public constructor
     }
 
     @Override
@@ -105,9 +108,6 @@ public class Summary extends Fragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null)
             return;
-
-
-        //setContentView(sv);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -116,80 +116,93 @@ public class Summary extends Fragment {
                              Bundle savedInstanceState) {
         // THE MAIN SCROLLVIEW FOR THE WHOLE FRAGMENT
         sv = new ScrollView(getContext());
+        // loading default preferences
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+        // get whether calories are to be tracked or not
+        // trackcalories is 0 if not to be tracked and 1 if calories are to be tracked
         cals = prefs.getBoolean(getString(R.string.trackcalories), false)? 1:0;
-        int carbs = prefs.getBoolean(getString(R.string.trackcarbs), false)? 1:0;
+        // trackcarbs is 0 if not to be tracked and 1 if calories are to be tracked
+        carbs = prefs.getBoolean(getString(R.string.trackcarbs), false)? 1:0;
+        // NUM_PAGES is required for the viewpager inside the summary fragment
         NUM_PAGES = cals + carbs + 1;
+        // creating global variables for calorie and carbohydrates fragments
         caloriesfrag = new SummaryFront();
+        // this aint sugar fragment.. its actually carbohydrate fragment... (though can be used for any..
+        // we just have to change the "tracking" string in the global variables of the fragment)
         sugarfrag = new SummarySugar();
-        // LINEAR LAYOUT TO CONTAIN OTHER VIEWS (SINCE SCROLLVIEW CAN HAVE ONLY ONE VIEW APPENDED IN IT)
+        // ll is the linear layout that contains all other view (since scrollview can only have one view appended to it)
         ll = new LinearLayout(getContext());
+        // meal_ll is the linear layout that contains all the dining cards (Morning, Afternoon, Evening, Night)
         meal_ll = new LinearLayout(getContext());
         meal_ll.setOrientation(LinearLayout.VERTICAL);
         ll.setOrientation(LinearLayout.VERTICAL);
         sv.addView(ll);
-
-        // DATABASE HANDLER OBJECT
+        // this is the database hanlder object
         handler = new DBHandler(getContext());
-
-        // GETTING THE SCREEN SIZE OF THE DEVICE
+        // this is to get the screen size of the device since all the calculations are done programmatically to set
+        // the layout of the view
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-
-        // THE ARRAY TO BE PASSED INTO THE BARCHART FUNCTION TO CREATE BAR CHART
-        // FUNCTION TO CREATE BARCHART CARD
+        // this is the textview that opens the calender dateselector
+        // this is to allow the user to change user or view history
         dateselect = new TextView(getContext());
+        // settings layout parameters for the dateselector textview (refer to creating linear layout programmatically
+        // if you dont know how to do it)
         dateselect.setPadding(50, 50, 50, 50);
         dateselect.setText("TextView");
         dateselect.setBackground(getResources().getDrawable(R.drawable.rounded_corner));
         LinearLayout.LayoutParams dateparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         dateparams.setMargins(10, 10, 10, 10);
         dateselect.setLayoutParams(dateparams);
-        CardView barcard = createChart();
+        // this is the cardview for showing the circular progress bars..
+        // the circular progress bars are separate fragments, they are contained in a viewpager which is contained
+        // in this cardview
+        CardView barcard = createProgress();
         ll.addView(barcard);
         ll.addView(meal_ll);
-        // GETTING THE LIST OF FOOD ITEMS IN BREAKFAST LUNCH AND DINNER
+        // this calender object is used to set data according to today's date at the start of activity
         GregorianCalendar calen = new GregorianCalendar();
         calen.setTime(new Date());
-        addAllCards(calen);
+        // this is the calender object that is used to change the date for which the data is shown
         myCalendar = new GregorianCalendar();
+        // this is the function that adds all cards to the scrollview
+        addAllCards(calen);
+        // this is to set date listener (when the dateselect textview is clicked)
         setDateListener();
+        // this is to update the labels in the circular progresss bars
         updateLabel(0);
-        //sv.addView(fab);
+        // due to listview.. scrollview has some bug and does not open in top position when activity starts
+        // this smooth scroll is to move it automatically to top when activity starts
         sv.smoothScrollTo(0, 0);
-        sv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                breakfastlist.smoothCloseMenu();
-                lunchlist.smoothCloseMenu();
-                dinnerlist.smoothCloseMenu();
-            }
-        });
         return sv;
     }
     public void addAllCards(GregorianCalendar calen){
+        // we need to first remove all cards if they are present (this is useful when date is changed)
+        // otherwise it will show the new date cards and also the previous date cards
         meal_ll.removeAllViews();
+        // getting list of the food items consumed that day
         List<Long> breakfastlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.MORNING);
         List<Long> lunchlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.AFTERNOON);
         List<Long> dinnerlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.EVENING);
-        dinnerlist.addAll(handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.NIGHT));
+        //dinnerlist.addAll(handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.NIGHT));
 
-        // IF THE LIST CONTAINS NON ZERO NUMBER OF ITEMS THEN CARD FOR THAT MEAL IS CREATED
+        // IF THE LIST CONTAINS NON ZERO NUMBER OF ITEMS THEN CARD FOR THAT MEAL IS CREATED (this was the idea earlier, but then removed)
         //if(breakfastlist.size() > 0){
-        CardView breakfastcard = createBreakfast(breakfastlist);
+        CardView breakfastcard = new DineCard(getContext(), size, "Morning", R.drawable.sun, breakfastlist, calen, TimePeriod.MORNING, 1000);
         meal_ll.addView(breakfastcard);
         //}
         //if(lunchlist.size() > 0){
-        CardView lunchcard = createLunch(lunchlist);
+        CardView lunchcard = new DineCard(getContext(), size, "Afternoon", R.drawable.fullsun, lunchlist, calen, TimePeriod.AFTERNOON, 1005);
         meal_ll.addView(lunchcard);
         //}
         //if(dinnerlist.size() > 0){
-        CardView dinnercard = createDinner(dinnerlist);
+        CardView dinnercard = new DineCard(getContext(), size, "Night", R.drawable.moon, dinnerlist, calen, TimePeriod.EVENING, 1009);
         meal_ll.addView(dinnercard);
         //}
     }
     public void setDateListener(){
+        // global calender object which is used to change the date for which data is shown
         myCalendar = new GregorianCalendar();
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -197,10 +210,13 @@ public class Summary extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
+                // set the date of mycalender to the date selected by user using dateselector
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                // update all labels (labels in circular progress bars)
                 updateLabel(1);
+                // all the cards (Morning, Breakfast, Dinner, Night) are added again with the new date
                 addAllCards((GregorianCalendar) myCalendar);
             }
         };
@@ -212,34 +228,31 @@ public class Summary extends Fragment {
         });
     }
     private void updateLabel(int i){
+        // update the label on the circular progress bars and the dateselect textview
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         dateselect.setText(sdf.format(myCalendar.getTime()));
         if(i==1){
             caloriesfrag.updateLabel(myCalendar);
-            sugarfrag.updateLabel(myCalendar);
+            if(carbs==1) sugarfrag.updateLabel(myCalendar);
         }
     }
 
-    public CardView createChart(){
-        /*
-        function to create the card view for the barchart and integrate barchart with it.
-        Takes input a 2D array containing co-ordinates of top points of bars. (x(vals[0]), y(vals[1]))
-        Returns a CardView object.
-        */
-
-        // CREATING THE CARD FOR CONTAINING BARCHART
+    public CardView createProgress(){
+        // main layout of the complete card
         LinearLayout ll = new LinearLayout(getContext());
         ll.setOrientation(LinearLayout.VERTICAL);
+        // barcard is the card at the top of the summary fragment
         barcard = new CardView(getContext());
         barcard.addView(ll);
+        // addig the dateselector textview to the card
         ll.addView(dateselect);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-
+        // viewpager to handle transition in different circular progress bars
         viewPager = new ViewPager(getContext());
-        viewPager.setId(1311);
+        viewPager.setId(1025);
         XmlPullParser parser = getResources().getXml(R.xml.createchartviewpager);
         try {
             parser.next();
@@ -269,7 +282,7 @@ public class Summary extends Fragment {
         mytabdots = new TabLayout(getContext(), tlattr);
         mytabdots.setLayoutParams(mytabdotsParams);
         mytabdots.setupWithViewPager(viewPager, true);
-        mytabdots.setId(1112);
+        mytabdots.setId(1026);
         mytabdots.setClickable(false);
         mytabdots.setFocusable(false);
 
@@ -310,478 +323,7 @@ public class Summary extends Fragment {
         return barcard;
     }
 
-    public CardView createBreakfast(List<Long> mealdata){
-        /*
-        function to create cardview for breakfast.
-        Creates a cardview.
-        Structure of cardview:
-        CardView:
-            LinearLayout:
-                RelativeLayout:
-                    BreakFast text
-                    Image
-                ListView
-        Returns the cardview
-        */
-        CardView breakfastcard = new CardView(getContext());
-        LinearLayout breakfastlayout = new LinearLayout(getContext());
-        breakfastlayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        int marginx = (int)(size.x*0.027);
-        int marginy = (int)(size.x*0.027);
-        params.setMargins(marginx, marginy, marginx, marginy);
-        breakfastcard.setLayoutParams(params);
-        breakfastcard.setRadius(0);
-        breakfastcard.setCardBackgroundColor(Color.parseColor("#FFC6D6C3"));
-        breakfastcard.setMaxCardElevation(15);
-        breakfastcard.setCardElevation(9);
-        breakfastcard.addView(breakfastlayout);
-        RelativeLayout rl = new RelativeLayout(getContext());
-        breakfastlayout.addView(rl);
-        TextView breakfasthead = new TextView(getContext());
-        breakfasthead.setText("Breakfast");
-        breakfasthead.setId(100);
-        breakfasthead.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (size.x*0.085));
-        RelativeLayout.LayoutParams breakfastparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        breakfastparams.setMargins((int)(size.x*0.06), (int)(size.y*0.04), 0,(int)(size.x*0.05));
-        ImageView sunrise = new ImageView(getContext());
-        sunrise.setId(101);
-        sunrise.setImageResource(R.drawable.sun);
-        RelativeLayout.LayoutParams sunriseparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        sunriseparams.addRule(RelativeLayout.RIGHT_OF, breakfasthead.getId());
-        sunriseparams.setMargins((int)(size.x*0.25), (int)(size.y*0.02), 0,(int)(size.x*0.04));
-        rl.addView(breakfasthead, breakfastparams);
-        rl.addView(sunrise, sunriseparams);
-
-        ArrayList<FoodItem> foodlist = new ArrayList<>();
-        for(int i = 0; i < mealdata.size(); i++){
-            Long id = mealdata.get(i);
-            Meal meal = new Meal();
-            meal.populateFromDatabase(id, getContext());
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
-        }
-        breakfastlist = new SwipeMenuListView(getContext());
-        final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
-        breakfastlist.setAdapter(adapter);
-        breakfastlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Long myitem = adapter.getItem(position).getId();
-                Intent myintent = new Intent(getContext(), MealActivity.class);
-                myintent.putExtra("Meal", myitem);
-                startActivity(myintent);
-            }
-        });
-
-        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                SwipeMenuItem openItem = new SwipeMenuItem(
-                        getContext());
-                // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
-                // set item width
-                openItem.setWidth(dp2px(90));
-                // set item title
-                openItem.setTitle("Open");
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // set item title font color
-                openItem.setTitleColor(Color.WHITE);
-                // add to menu
-                menu.addMenuItem(openItem);
-
-                // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(
-                        getContext());
-                // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
-                        0x3F, 0x25)));
-                // set item width
-                deleteItem.setWidth(dp2px(90));
-                // set a icon
-                //deleteItem.setIcon(R.drawable.search_icon);
-                // add to menu
-                menu.addMenuItem(deleteItem);
-            }
-        };
-        breakfastlist.setMenuCreator(creator);
-        breakfastlist.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        Long myitem = adapter.getItem(position).getId();
-                        Intent myintent = new Intent(getContext(), MealActivity.class);
-                        myintent.putExtra("Meal", myitem);
-                        startActivity(myintent);
-                        break;
-                    case 1:
-                        // delete
-                        break;
-                }
-                // false : close the menu; true : not close the menu
-                return false;
-            }
-        });
-        breakfastlist.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
-            }
-        });
-        breakfastlist.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
-        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
-
-        breakfastlayout.addView(breakfastlist);
-        LinearLayout addlayout = new LinearLayout(getContext());
-        addlayout.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView plus = new ImageView(getContext());
-        plus.setId(11132);
-        //plus.setImageResource(R.drawable.add);
-        plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
-        addlayout.addView(plus);
-        TextView additem = new TextView(getContext());
-        additem.setText("Add Item");
-        additem.setId(11137);
-        additem.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
-        addlayout.addView(additem);
-        addlayout.setBackgroundColor(getResources().getColor(R.color.whitecolor));
-        additem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), CameraActivity.class);
-                intent.putExtra("mealtime", TimePeriod.MORNING);
-                intent.putExtra("mealdate", myCalendar.getTime());
-                startActivity(intent);
-            }
-        });
-        breakfastlayout.addView(addlayout);
-        return breakfastcard;
-    }
-
-    public int dp2px(float dips)
-    {
-        return (int) (dips * getActivity().getResources().getDisplayMetrics().density + 0.5f);
-    }
-    public CardView createLunch(List<Long> mealdata){
-        /*
-        Formatting same as createbreakfast
-        */
-        // getting the meal from the list
-        CardView lunchcard = new CardView(getContext());
-        LinearLayout lunchlayout = new LinearLayout(getContext());
-        lunchlayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        int marginx = (int)(size.x*0.027);
-        int marginy = (int)(size.x*0.027);
-        params.setMargins(marginx, marginy, marginx, marginy);
-        lunchcard.setLayoutParams(params);
-        lunchcard.setRadius(0);
-        lunchcard.setCardBackgroundColor(Color.parseColor("#FFC6D6C3"));
-        lunchcard.setMaxCardElevation(15);
-        lunchcard.setCardElevation(9);
-        lunchcard.addView(lunchlayout);
-        RelativeLayout rl = new RelativeLayout(getContext());
-        lunchlayout.addView(rl);
-        TextView lunchhead = new TextView(getContext());
-        lunchhead.setText("Lunch");
-        lunchhead.setId(102);
-        lunchhead.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (size.x*0.085));
-        RelativeLayout.LayoutParams lunchparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        lunchparams.setMargins((int)(size.x*0.06), (int)(size.y*0.04), 0,(int)(size.x*0.05));
-        ImageView suncomp = new ImageView(getContext());
-        suncomp.setId(103);
-        suncomp.setImageResource(R.drawable.fullsun);
-        RelativeLayout.LayoutParams suncompparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        suncompparams.addRule(RelativeLayout.RIGHT_OF, lunchhead.getId());
-        suncompparams.setMargins((int)(size.x*0.375), (int)(size.y*0.02), 0,(int)(size.x*0.04));
-        rl.addView(lunchhead, lunchparams);
-        rl.addView(suncomp, suncompparams);
-        lunchlist = new SwipeMenuListView(getContext());
-        ArrayList<FoodItem> foodlist = new ArrayList<>();
-
-        // adding data from lunchlist to the cardlist
-        for(int i = 0; i < mealdata.size(); i++){
-            Long id = mealdata.get(i);
-            Meal meal = new Meal();
-            meal.populateFromDatabase(id, getContext());
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
-        }
-        //foodlist.add(new FoodItem("thosai", "yummy"));
-        //foodlist.add(new FoodItem("thosai", "yummy"));
-        //foodlist.add(new FoodItem("aloo paratha", "not so good"));
-        final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
-        lunchlist.setAdapter(adapter);
-        lunchlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Long myitem = adapter.getItem(position).getId();
-                Intent myintent = new Intent(getContext(), MealActivity.class);
-                myintent.putExtra("Meal", myitem);
-                startActivity(myintent);
-            }
-        });
-        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                SwipeMenuItem openItem = new SwipeMenuItem(
-                        getContext());
-                // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
-                // set item width
-                openItem.setWidth(dp2px(90));
-                // set item title
-                openItem.setTitle("Open");
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // set item title font color
-                openItem.setTitleColor(Color.WHITE);
-                // add to menu
-                menu.addMenuItem(openItem);
-
-                // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(
-                        getContext());
-                // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
-                        0x3F, 0x25)));
-                // set item width
-                deleteItem.setWidth(dp2px(90));
-                // set a icon
-                //deleteItem.setIcon(R.drawable.search_icon);
-                // add to menu
-                menu.addMenuItem(deleteItem);
-            }
-        };
-        lunchlist.setMenuCreator(creator);
-        lunchlist.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        Long myitem = adapter.getItem(position).getId();
-                        Intent myintent = new Intent(getContext(), MealActivity.class);
-                        myintent.putExtra("Meal", myitem);
-                        startActivity(myintent);
-                        break;
-                    case 1:
-                        // delete
-                        break;
-                }
-                // false : close the menu; true : not close the menu
-                return false;
-            }
-        });
-        lunchlist.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
-            }
-        });
-        lunchlist.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
-        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
-        LinearLayout addlayout = new LinearLayout(getContext());
-        addlayout.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView plus = new ImageView(getContext());
-        plus.setId(11112);
-        //plus.setImageResource(R.drawable.add);
-        plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
-        addlayout.addView(plus);
-        TextView additem = new TextView(getContext());
-        additem.setText("Add Item");
-        additem.setId(11111);
-        additem.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
-        addlayout.addView(additem);
-        addlayout.setBackgroundColor(getResources().getColor(R.color.whitecolor));
-        additem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), CameraActivity.class);
-                intent.putExtra("mealtime", TimePeriod.AFTERNOON);
-                intent.putExtra("mealdate", myCalendar.getTime());
-                startActivity(intent);
-            }
-        });
-        lunchlayout.addView(lunchlist);
-        lunchlayout.addView(addlayout);
-        return lunchcard;
-    }
-    public CardView createDinner(List<Long> mealdata){
-        /*
-        Formatting same as createbreakfast
-        */
-        CardView dinnercard = new CardView(getContext());
-        LinearLayout dinnerlayout = new LinearLayout(getContext());
-        dinnerlayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        int marginx = (int)(size.x*0.027);
-        int marginy = (int)(size.x*0.027);
-        params.setMargins(marginx, marginy, marginx, marginy);
-        dinnercard.setLayoutParams(params);
-        dinnercard.setRadius(0);
-        dinnercard.setCardBackgroundColor(Color.parseColor("#FFC6D6C3"));
-        dinnercard.setMaxCardElevation(15);
-        dinnercard.setCardElevation(9);
-        dinnercard.addView(dinnerlayout);
-        RelativeLayout rl = new RelativeLayout(getContext());
-        dinnerlayout.addView(rl);
-        TextView dinnerhead = new TextView(getContext());
-        dinnerhead.setText("Dinner");
-        dinnerhead.setId(1049);
-        dinnerhead.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (size.x*0.085));
-        RelativeLayout.LayoutParams dinnerparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        dinnerparams.setMargins((int)(size.x*0.06), (int)(size.y*0.04), 0,(int)(size.x*0.05));
-        ImageView moon = new ImageView(getContext());
-        moon.setId(1059);
-        moon.setImageResource(R.drawable.moon);
-        RelativeLayout.LayoutParams moonparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        moonparams.addRule(RelativeLayout.RIGHT_OF, dinnerhead.getId());
-        moonparams.setMargins((int)(size.x*0.365), (int)(size.y*0.02), 0,(int)(size.x*0.04));
-        rl.addView(dinnerhead, dinnerparams);
-        rl.addView(moon, moonparams);
-        dinnerlist = new SwipeMenuListView(getContext());
-        ArrayList<FoodItem> foodlist = new ArrayList<>();
-        for(int i = 0; i < mealdata.size(); i++){
-            Long id = mealdata.get(i);
-            Meal meal = new Meal();
-            meal.populateFromDatabase(id, getContext());
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
-        }
-        final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
-        dinnerlist.setAdapter(adapter);
-        dinnerlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Long myitem = adapter.getItem(position).getId();
-                Intent myintent = new Intent(getContext(), MealActivity.class);
-                myintent.putExtra("Meal", myitem);
-                startActivity(myintent);
-            }
-        });
-        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                SwipeMenuItem openItem = new SwipeMenuItem(
-                        getContext());
-                // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
-                // set item width
-                openItem.setWidth(dp2px(90));
-                // set item title
-                openItem.setTitle("Open");
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // set item title font color
-                openItem.setTitleColor(Color.WHITE);
-                // add to menu
-                menu.addMenuItem(openItem);
-
-                // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(
-                        getContext());
-                // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
-                        0x3F, 0x25)));
-                // set item width
-                deleteItem.setWidth(dp2px(90));
-                // set a icon
-                //deleteItem.setIcon(R.drawable.search_icon);
-                // add to menu
-                menu.addMenuItem(deleteItem);
-            }
-        };
-        dinnerlist.setMenuCreator(creator);
-        dinnerlist.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        Long myitem = adapter.getItem(position).getId();
-                        Intent myintent = new Intent(getContext(), MealActivity.class);
-                        myintent.putExtra("Meal", myitem);
-                        startActivity(myintent);
-                        break;
-                    case 1:
-                        // delete
-                        break;
-                }
-                // false : close the menu; true : not close the menu
-                return false;
-            }
-        });
-        dinnerlist.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
-            }
-        });
-        dinnerlist.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
-        //  ---------------------------------------------------- SWIPE MENU LIST VIEW
-
-        dinnerlayout.addView(dinnerlist);
-        LinearLayout addlayout = new LinearLayout(getContext());
-        addlayout.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView plus = new ImageView(getContext());
-        plus.setId(13172);
-        //plus.setImageResource(R.drawable.add);
-        plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
-        addlayout.addView(plus);
-        TextView additem = new TextView(getContext());
-        additem.setText("Add Item");
-        additem.setId(13711);
-        additem.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
-        addlayout.addView(additem);
-        addlayout.setBackgroundColor(getResources().getColor(R.color.whitecolor));
-        additem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), CameraActivity.class);
-                intent.putExtra("mealtime", TimePeriod.NIGHT);
-                intent.putExtra("mealdate", myCalendar.getTime());
-                startActivity(intent);
-            }
-        });
-        dinnerlayout.addView(addlayout);
-        return dinnercard;
-    }
-
-
-
-
+    // handling the viewpager that shows circular progress bars
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -789,6 +331,7 @@ public class Summary extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
+            // logic to show circular progress bars only for those nutrients which the user wants to keep track of
             if(NUM_PAGES == 3){
                 if(position == 0) return caloriesfrag;
                 if(position == 1) return sugarfrag;
@@ -805,7 +348,6 @@ public class Summary extends Fragment {
                 if(position == 1) return new Barchart();
                 return sugarfrag;
             }
-            //caloriesfrag = new SummaryFront();
         }
 
         @Override
