@@ -31,6 +31,7 @@ import java.util.Map;
 import devlight.io.library.ArcProgressStackView;
 
 public class SummaryFront extends Fragment {
+    // NOTE :::: Same as SummarySugar therefore no significant comments
     DBHandler handler;
     //TextView dateselect;
     String tracking;
@@ -126,27 +127,4 @@ public class SummaryFront extends Fragment {
         super.onResume();
         arcProgressStackView.animateProgress();
     }
-    /*
-    public float getdaycalories() {
-        Calendar cal = new GregorianCalendar();
-        cal.setTime(new Date());
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        Calendar tom = new GregorianCalendar();
-        tom.setTime(new Date());
-        HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
-        Iterator it = servings.entrySet().iterator();
-        float tot = 0;
-        while (it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
-            DishID id = new DishID((String) pair.getKey(), -1, getContext());
-            id.execute();
-            JsonObject nutrition = id.getNutrition();
-            Log.d("jsoncheck", nutrition.toString());
-            float calorie = nutrition.get("Energy").getAsFloat();
-            tot += calorie*(float)pair.getValue();
-        }
-        return tot;
-    }*/
 }

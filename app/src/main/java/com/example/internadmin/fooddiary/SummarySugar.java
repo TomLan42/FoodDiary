@@ -31,13 +31,13 @@ import java.util.Map;
 import devlight.io.library.ArcProgressStackView;
 
 public class SummarySugar extends Fragment {
+    // declaring global variables
     DBHandler handler;
-    //TextView dateselect;
+    // tracking will be used as query string everywhere.. basically it contains which nutrition to track
     String tracking;
     int limit;
     TextView left;
     Calendar myCalendar;
-    public int totalheight;
     SharedPreferences prefs;
     ArcProgressStackView arcProgressStackView;
     ArrayList<ArcProgressStackView.Model> models;
@@ -62,6 +62,7 @@ public class SummarySugar extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+        // tracking Carbohydrates
         tracking = "Carbohydrate";
         int diabetesRegime = prefs.getInt("DiabetesRegime", 0);
 
@@ -87,31 +88,11 @@ public class SummarySugar extends Fragment {
 
 
 
-    }/*
-    public void setDateListener(){
-        myCalendar = new GregorianCalendar();
+    }
 
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
-            }
-        };
-        dateselect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(getContext(), date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-    }*/
     public void updateLabel(Calendar myCalendar){
-        //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        //dateselect.setText(sdf.format(myCalendar.getTime()));
+        // to update the label in the center of the circular progess bar
+        // and to update the value in circular progress bar
         float consumed = getdaycalories(myCalendar);
         left.setText(String.valueOf(Math.round(limit-consumed)) +"/" +String.valueOf(limit) +"\n"+tracking + " Left");
 
@@ -124,6 +105,7 @@ public class SummarySugar extends Fragment {
 
     }
     public float getdaycalories(Calendar cal){
+        // function that gets the total amount of "tracking" nutrition consumed in that day
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
@@ -131,6 +113,7 @@ public class SummarySugar extends Fragment {
         tom.set(Calendar.HOUR_OF_DAY, 23);
         tom.set(Calendar.MINUTE, 59);
         tom.set(Calendar.SECOND, 59);
+        // dbhandler function for getting id of all dishes in the particular range
         HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
         Iterator it = servings.entrySet().iterator();
         float tot = 0;
@@ -151,27 +134,4 @@ public class SummarySugar extends Fragment {
         super.onResume();
         arcProgressStackView.animateProgress();
     }
-    /*
-    public float getdaycalories() {
-        Calendar cal = new GregorianCalendar();
-        cal.setTime(new Date());
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        Calendar tom = new GregorianCalendar();
-        tom.setTime(new Date());
-        HashMap<String, Float> servings = handler.getAllServingsTimePeriod(cal.getTime(), tom.getTime());
-        Iterator it = servings.entrySet().iterator();
-        float tot = 0;
-        while (it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
-            DishID id = new DishID((String) pair.getKey(), -1, getContext());
-            id.execute();
-            JsonObject nutrition = id.getNutrition();
-            Log.d("jsoncheck", nutrition.toString());
-            float calorie = nutrition.get("Energy").getAsFloat();
-            tot += calorie*(float)pair.getValue();
-        }
-        return tot;
-    }*/
 }
