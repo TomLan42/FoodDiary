@@ -160,6 +160,8 @@ public class Summary extends Fragment {
         // in this cardview
         CardView barcard = createProgress();
         ll.addView(barcard);
+        CardView datecard = dateCard();
+        ll.addView(datecard);
         ll.addView(meal_ll);
         // this calender object is used to set data according to today's date at the start of activity
         GregorianCalendar calen = new GregorianCalendar();
@@ -201,6 +203,18 @@ public class Summary extends Fragment {
         meal_ll.addView(dinnercard);
         //}
     }
+
+    public CardView dateCard(){
+        CardView datecard = new CardView(getContext());
+        RelativeLayout rl = new RelativeLayout(getContext());
+        rl.addView(dateselect);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins((int)(size.x*0.027), 0, (int)(size.x*0.027), (int)(size.x*0.027));
+        datecard.setLayoutParams(params);
+        datecard.addView(rl);
+        return datecard;
+    }
+
     public void setDateListener(){
         // global calender object which is used to change the date for which data is shown
         myCalendar = new GregorianCalendar();
@@ -245,7 +259,7 @@ public class Summary extends Fragment {
         barcard = new CardView(getContext());
         barcard.addView(ll);
         // addig the dateselector textview to the card
-        ll.addView(dateselect);
+        //ll.addView(dateselect);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -290,7 +304,7 @@ public class Summary extends Fragment {
         // SETTING MARGINS TO THE CARD
         int marginx = (int)(size.x*0.027);
         int marginy = (int)(size.x*0.027);
-        params.setMargins(marginx, marginy, marginx, marginy);
+        params.setMargins(marginx, marginy, marginx, 0);
         // SETTING OTHER LAYOUT PARAMETERS FOR THE CARD
         barcard.setLayoutParams(params);
         barcard.setRadius(0);

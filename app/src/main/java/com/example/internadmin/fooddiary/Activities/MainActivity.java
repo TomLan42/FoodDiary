@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity{
     FragmentManager manager;
     Boolean allowRefresh = false;
     LinearLayout ll;
+    AHBottomNavigation bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -102,9 +103,8 @@ public class MainActivity extends AppCompatActivity{
         fragparams.width = (int)(size.x*1);
         ll.setLayoutParams(fragparams);
 
-
         // INITIALIZING THE BOTTOM NAVIGATION BAR
-        AHBottomNavigation bottomNavigation = new AHBottomNavigation(MainActivity.this);
+        bottomNavigation = new AHBottomNavigation(MainActivity.this);
 
 
         // SETTING THE LAYOUT PARAMETERS FOR THE BOTTOM NAVIGATION BAR
@@ -124,10 +124,10 @@ public class MainActivity extends AppCompatActivity{
         manager.beginTransaction().replace(ll.getId(), summary).commit();
 
         // SETTING ITEMS FOR THE BOTTOM NAVIFATION BAR
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Summary", R.drawable.ic_camera_black_24dp, R.color.colorAccent);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Summary", R.drawable.summary, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Camera", R.drawable.ic_arrow_back_white, R.color.colorPrimary);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Query Food", R.drawable.ic_arrow_forward_white, R.color.colorPrimary);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Report", R.drawable.ic_arrow_forward_white, R.color.colorPrimary);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Settings", R.drawable.settings, R.color.colorPrimary);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Report", R.drawable.analytics, R.color.colorPrimary);
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
@@ -196,8 +196,10 @@ public class MainActivity extends AppCompatActivity{
         if (allowRefresh)
         {
             allowRefresh = false;
-            Summary summary = new Summary();
-            manager.beginTransaction().replace(ll.getId(), summary).commit();
+            if(prevpos==0) {
+                Summary summary = new Summary();
+                manager.beginTransaction().replace(ll.getId(), summary).commit();
+            }
         }
     }
 
