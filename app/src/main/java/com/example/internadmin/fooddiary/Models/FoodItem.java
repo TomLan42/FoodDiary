@@ -1,5 +1,6 @@
 package com.example.internadmin.fooddiary.Models;
 
+// This is the adapter for food item list shown in meal cards
 public class FoodItem {
     private String title;
     private String content;

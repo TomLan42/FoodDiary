@@ -35,6 +35,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Barchart extends Fragment {
+    /*----------------------------------------------------------------------------------------------
+    This class is to create a barchart fragment for 1 week summary and include in summary fragment.
+    This is currently not being used.
+
+    To use it only creating an instance of this class and adding it to the view programmatically is
+    enough.
+    ----------------------------------------------------------------------------------------------*/
+
     DBHandler handler;
     Point size;
     BarChart chart;
@@ -50,7 +58,9 @@ public class Barchart extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // dbhandler object
         handler = new DBHandler(getContext());
+        //layout to contain the barchart
         LinearLayout ll = new LinearLayout(getContext());
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         size = new Point();
@@ -121,6 +131,8 @@ public class Barchart extends Fragment {
         chart.setDescription(description);
         return chart;
     }
+    // this array list goes to the cart as x axis labels..
+    // There are two sundays in it because the first label shows at origin which we dont want
     private ArrayList<String> getXAxisValues() {
         ArrayList<String> xAxis = new ArrayList<>();
         xAxis.add("Sun");
@@ -133,6 +145,7 @@ public class Barchart extends Fragment {
         xAxis.add("Sat");
         return xAxis;
     }
+    // this is the function to get the weekly calories of the person.
     public float[] getcaloriearray(){
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         Calendar cal = new GregorianCalendar();
@@ -143,6 +156,8 @@ public class Barchart extends Fragment {
         float[] val = {0, 0, 0, 0, 0, 0, 0};
         Calendar today = new GregorianCalendar();
         today.setTime(new Date());
+        // I had to divide the logic between when the current day is sunday and when its not sunday
+        // the following is when the current day is sunday
         if(cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
             Calendar tom = new GregorianCalendar();
             tom = (Calendar) cal.clone();
@@ -162,6 +177,7 @@ public class Barchart extends Fragment {
             }
             val[0] = tot;
         }
+        // this is when the current day is not sunday
         else{
             cal.add( Calendar.DAY_OF_WEEK, -(cal.get(Calendar.DAY_OF_WEEK)-1));
             cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -188,8 +204,6 @@ public class Barchart extends Fragment {
                 }
                 val[counter] = tot;
                 counter += 1;
-                //Log.d("Time solver", format.format(cal.getTime()));
-                //Log.d("Time solver 2", format.format(today.getTime()));
                 if(isSameDay(cal, today)) break;
                 cal.add(Calendar.DATE, 1);
             }

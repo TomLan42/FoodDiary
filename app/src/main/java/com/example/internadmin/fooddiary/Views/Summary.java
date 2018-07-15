@@ -212,6 +212,9 @@ public class Summary extends Fragment {
     }
 
     public void setDateListener(){
+        /*-----------------------------------------------------------------------------------------
+        This is the date listener function for doing some logic when a date is selected in calendar
+        -----------------------------------------------------------------------------------------*/
         // global calender object which is used to change the date for which data is shown
         myCalendar = new GregorianCalendar();
 

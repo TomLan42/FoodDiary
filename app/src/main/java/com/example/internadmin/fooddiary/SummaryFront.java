@@ -65,20 +65,13 @@ public class SummaryFront extends Fragment {
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
         tracking = "Energy";
         limit = prefs.getInt(getString(R.string.calorielimit), 0);
-        //TextView record = getView().findViewById(R.id.record);
         left = getView().findViewById(R.id.amount);
         handler = new DBHandler(getContext());
         myCalendar = Calendar.getInstance();
-        //float consumed = getdaycalories();
-        //left.setText(String.valueOf(2200-consumed));
-        //record.setText("Recording " + tracking);
-        ///dateselect = getView().findViewById(R.id.date);
-        //dateselect.setBackgroundResource(R.color.colorAccent);
 
         //setDateListener();
 
         arcProgressStackView = view.findViewById(R.id.apsv);
-        //totalheight = dateselect.getHeight()*3 + arcProgressStackView.getHeight() + record.getHeight()*3;
         updateLabel(myCalendar);
 
 
@@ -86,8 +79,6 @@ public class SummaryFront extends Fragment {
     }
 
     public void updateLabel(Calendar myCalendar){
-        //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        //dateselect.setText(sdf.format(myCalendar.getTime()));
         float consumed = getdaycalories(myCalendar);
         left.setText(String.valueOf(Math.round(limit-consumed)) +"/" +String.valueOf(limit) +"\n"+tracking + " Left");
 

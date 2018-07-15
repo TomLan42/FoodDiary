@@ -31,8 +31,7 @@ import com.example.internadmin.fooddiary.Views.UpdateHistory;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 public class MainActivity extends AppCompatActivity{
-    MaterialSearchView searchView;
-    Toolbar toolbar;
+    // Global variables in use
     int prevpos = 0;
     Summary summary;
     FragmentManager manager;
@@ -86,9 +85,6 @@ public class MainActivity extends AppCompatActivity{
         fab.setId(899);
         fab.setLayoutParams(fabparams);
         main.setId(894);
-        //main.addView(toolbar);
-        //main.addView(searchView);
-
 
         // LINEAR LAYOUT AS A LAYOUT PLACEHOLDER FOR FRAGMENTS TO COME
         ll = new LinearLayout(MainActivity.this);
@@ -161,19 +157,16 @@ public class MainActivity extends AppCompatActivity{
                     if(position == 0){
                         Summary sum = new Summary();
                         transaction.replace(ll.getId(), sum);
-                        //transaction.addToBackStack(null);
                         transaction.commit();
                     }
                     if(position == 1){
                         UpdateHistory test = new UpdateHistory();
                         transaction.replace(ll.getId(), test);
-                        //transaction.addToBackStack(null);
                         transaction.commit();
                     }
                     if(position == 2){
                         Settings settings = new Settings();
                         transaction.replace(ll.getId(), settings);
-                        //transaction.addToBackStack(null);
                         transaction.commit();
                     }
                     if (position == 3){
@@ -196,6 +189,10 @@ public class MainActivity extends AppCompatActivity{
         if (allowRefresh)
         {
             allowRefresh = false;
+            // when activity is resumed it automatically jumps to summary fragment and sometimes
+            // the bottom navbar shows highlights different fragment (the one which was open before
+            //  the activity was changed originally) . To avoid that, i deliberately change everything
+            // to summary fragment
             if(prevpos==0) {
                 Summary summary = new Summary();
                 manager.beginTransaction().replace(ll.getId(), summary).commit();
@@ -205,24 +202,8 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-
+    // this function is to return color for a color code
     private int fetchColor(@ColorRes int color) {
         return ContextCompat.getColor(this, color);
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
-        return true;
-    }
-    @Override
-    public void onBackPressed() {
-        if (searchView.isSearchOpen()) {
-            searchView.closeSearch();
-        } else {
-            super.onBackPressed();
-        }
-    }*/
 }

@@ -30,6 +30,9 @@ import java.util.Calendar;
 import java.util.List;
 
 public class DineCard extends CardView{
+    /*----------------------------------------------------------------------
+    This is the default class for the meal cards (morning, afternoon night).
+    ----------------------------------------------------------------------*/
     // This is a custom cardview made for creating morning, afternoon, evening and night cards
     public DineCard(@NonNull Context context, Point size, String title, int imageresid, List<Long> mealdata, Calendar myCalendar, final TimePeriod timePeriod, int idstart) {
         super(context);

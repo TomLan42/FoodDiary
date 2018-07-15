@@ -50,6 +50,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class UpdateHistory extends Fragment {
+    /*----------------------------------------------------------------------------------------------
+    This is not being used now. Prof yap wanted to the history tab as a completely different tab.
+    But then we settled for adding history feature in summary itself.
+    ----------------------------------------------------------------------------------------------*/
     public UpdateHistory() {
         // Required empty public constructor
     }

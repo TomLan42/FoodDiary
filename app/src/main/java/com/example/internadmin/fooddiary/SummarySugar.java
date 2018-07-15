@@ -70,20 +70,10 @@ public class SummarySugar extends Fragment {
             limit = 45;
         else
             limit = prefs.getInt(getString(R.string.customdiabetesregime), 0);
-        //TextView record = getView().findViewById(R.id.record);
         left = getView().findViewById(R.id.amount2);
         handler = new DBHandler(getContext());
         myCalendar = Calendar.getInstance();
-        //float consumed = getdaycalories();
-        //left.setText(String.valueOf(2200-consumed));
-        //record.setText("Recording " + tracking);
-        ///dateselect = getView().findViewById(R.id.date);
-        //dateselect.setBackgroundResource(R.color.colorAccent);
-
-        //setDateListener();
-
         arcProgressStackView = view.findViewById(R.id.apsv2);
-        //totalheight = dateselect.getHeight()*3 + arcProgressStackView.getHeight() + record.getHeight()*3;
         updateLabel(myCalendar);
 
 
