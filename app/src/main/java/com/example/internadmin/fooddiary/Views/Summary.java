@@ -2,75 +2,44 @@ package com.example.internadmin.fooddiary.Views;
 
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.gesture.Gesture;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import com.example.internadmin.fooddiary.Activities.CameraActivity;
 import com.example.internadmin.fooddiary.Barchart;
 import com.example.internadmin.fooddiary.DBHandler;
 
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.util.Xml;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TextView;
-
-import com.example.internadmin.fooddiary.Activities.MealActivity;
 import com.example.internadmin.fooddiary.DineCard;
-import com.example.internadmin.fooddiary.Models.FoodItem;
-import com.example.internadmin.fooddiary.Models.Meal;
 import com.example.internadmin.fooddiary.Models.TimePeriod;
 import com.example.internadmin.fooddiary.R;
 import com.example.internadmin.fooddiary.SummaryFront;
 import com.example.internadmin.fooddiary.SummarySugar;
-import com.example.internadmin.fooddiary.SwipeList.SwipeMenu;
-import com.example.internadmin.fooddiary.SwipeList.SwipeMenuCreator;
-import com.example.internadmin.fooddiary.SwipeList.SwipeMenuItem;
-import com.example.internadmin.fooddiary.SwipeList.SwipeMenuListView;
 import com.github.mikephil.charting.charts.BarChart;
-
-import org.w3c.dom.Text;
 import org.xmlpull.v1.XmlPullParser;
-
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -91,13 +60,10 @@ public class Summary extends Fragment {
     BarChart chart;
     int cals;
     int carbs;
-    SwipeMenuListView breakfastlist;
-    SwipeMenuListView lunchlist;
     LinearLayout meal_ll;
     SummaryFront caloriesfrag;
     SummarySugar sugarfrag;
     LinearLayout ll;
-    SwipeMenuListView dinnerlist;
     Point size;
     SharedPreferences prefs;
     public Summary() {
@@ -147,14 +113,10 @@ public class Summary extends Fragment {
         // this is the textview that opens the calender dateselector
         // this is to allow the user to change user or view history
         dateselect = new TextView(getContext());
-        // settings layout parameters for the dateselector textview (refer to creating linear layout programmatically
-        // if you dont know how to do it)
+        //setting some parameters for dateselect
         dateselect.setPadding(50, 50, 50, 50);
         dateselect.setText("TextView");
         dateselect.setBackground(getResources().getDrawable(R.drawable.rounded_corner));
-        LinearLayout.LayoutParams dateparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        dateparams.setMargins(10, 10, 10, 10);
-        dateselect.setLayoutParams(dateparams);
         // this is the cardview for showing the circular progress bars..
         // the circular progress bars are separate fragments, they are contained in a viewpager which is contained
         // in this cardview
@@ -206,12 +168,46 @@ public class Summary extends Fragment {
 
     public CardView dateCard(){
         CardView datecard = new CardView(getContext());
-        RelativeLayout rl = new RelativeLayout(getContext());
-        rl.addView(dateselect);
+        RelativeLayout ll2 = new RelativeLayout(getContext());
+        RelativeLayout.LayoutParams dateparams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams leftparams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams rightparams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ImageView left = new ImageView(getContext());
+        left.setImageResource(R.drawable.leftarrow);
+        ImageView right = new ImageView(getContext());
+        right.setImageResource(R.drawable.rightarrow);
+        left.setMaxHeight(dp2px(30));
+        right.setMaxHeight(dp2px(30));
+        datecard.setLayoutParams(dateparams);
+        dateselect.setLayoutParams(dateparams);
+        dateselect.setTextSize(dp2px((float) (5)));
+        ll2.addView(left);
+        dateparams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        //dateparams.setMargins(dp2px(135), 0, dp2px(135), 0);
+        ll2.addView(dateselect);
+        ll2.addView(right);
+        left.setLayoutParams(leftparams);
+        right.setLayoutParams(rightparams);
+        leftparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+        rightparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins((int)(size.x*0.027), 0, (int)(size.x*0.027), (int)(size.x*0.027));
         datecard.setLayoutParams(params);
-        datecard.addView(rl);
+        datecard.addView(ll2);
+        left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myCalendar.add(Calendar.DATE, -1);
+                updateLabel(1);
+            }
+        });
+        right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myCalendar.add(Calendar.DATE, 1);
+                updateLabel(1);
+            }
+        });
         return datecard;
     }
 
@@ -322,8 +318,8 @@ public class Summary extends Fragment {
                 RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         viewpagerRLParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-        viewpagerRLParams.height = (int)(size.y*0.5);
-        tabdotsRLParams.height = (int)(size.y*0.05);
+        viewpagerRLParams.height = (int)(dp2px(260));
+        tabdotsRLParams.height = (int)(dp2px(26));
 
         RelativeLayout myRL = new RelativeLayout(getContext());
         myRL.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -335,6 +331,11 @@ public class Summary extends Fragment {
 
         //barcard.addView(chart);
         return barcard;
+    }
+
+    public int dp2px(float dips)
+    {
+        return (int) (dips * getActivity().getResources().getDisplayMetrics().density + 0.5f);
     }
 
     // handling the viewpager that shows circular progress bars

@@ -65,8 +65,9 @@ public class DineCard extends CardView{
         dineimg.setId(idstart+2);
         dineimg.setImageResource(imageresid);
         RelativeLayout.LayoutParams dineimgparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        dineimgparams.addRule(RelativeLayout.RIGHT_OF, dinehead.getId());
-        dineimgparams.setMargins((int)(size.x*0.25), (int)(size.y*0.02), 0,(int)(size.x*0.04));
+        //dineimgparams.addRule(RelativeLayout.RIGHT_OF, dinehead.getId());
+        dineimgparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        dineimgparams.setMargins(0, (int)(size.y*0.02), (int)(size.x*0.10),(int)(size.x*0.04));
         rl.addView(dinehead, dineparams);
         rl.addView(dineimg, dineimgparams);
         // Creating the listView that contains the list of fooditems consumed
