@@ -49,7 +49,7 @@ public class DineCard extends CardView{
         params.setMargins(marginx, marginy, marginx, marginy);
         this.setLayoutParams(params);
         this.setRadius(0);
-        this.setCardBackgroundColor(Color.parseColor("#FFC6D6C3"));
+        this.setCardBackgroundColor(getResources().getColor(R.color.cardcolor));
         this.setMaxCardElevation(15);
         this.setCardElevation(9);
         this.addView(dinelayout);

@@ -25,211 +25,22 @@
         android:layout_marginLeft="10dp"
         android:textColor="@color/colorAccent"
         />
-    <LinearLayout
-        android:id="@+id/breakstartlin"
+
+    <Switch
+        android:id="@+id/caloriesSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Track Calories" />
 
-        <TextView
-            android:id="@+id/breakfaststart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="Breakfast Starttime"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/breakfaststarttime"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="None"
-            android:textSize="14sp"
-            android:textStyle="italic" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#000000"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/breakendlin"
+    <Switch
+        android:id="@+id/carbsSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/breakfastend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="Breakfast Endtime"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/breakfastendtime"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="None"
-            android:textSize="14sp"
-            android:textStyle="italic" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#000000"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/lunchstartlin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/lunchstart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="Lunch Starttime"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/lunchstarttime"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="None"
-            android:textSize="14sp"
-            android:textStyle="italic" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#000000" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/lunchendlin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/lunchend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="Lunch Endtime"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/lunchendtime"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="5dp"
-            android:text="None"
-            android:textSize="14sp"
-            android:textStyle="italic" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#000000"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/dinnerstartlin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/dinnerstart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="Dinner Starttime"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/dinnerstarttime"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="None"
-            android:textSize="14sp"
-            android:textStyle="italic" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#000000"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/dinnerendlin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/dinnerend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="Dinner Endtime"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/dinnerendtime"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingLeft="10dp"
-            android:text="None"
-            android:textSize="14sp"
-            android:textStyle="italic" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#000000"/>
-
-    </LinearLayout>
-
-
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Track Carbohydrates" />
 
 
 </LinearLayout>

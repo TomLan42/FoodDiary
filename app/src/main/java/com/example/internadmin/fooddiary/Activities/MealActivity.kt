@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.activity_meal.*
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.nutritionfactlabel.*
 import java.io.File
 import java.text.SimpleDateFormat
@@ -111,14 +112,14 @@ class MealActivity : AppCompatActivity() {
 
                 if(toUpdate){
                     mymeal.updateInDatabase(this)
-                    Toast.makeText(this, "Updated Entry!", Toast.LENGTH_LONG).show()
+                    Toasty.success(this, "Updated Entry!", Toast.LENGTH_LONG).show()
                 }else{
                     mymeal.saveToDatabase(this)
                     clearCache = !mymeal.deleteFoodImg()
                     //deleteFoodImg() in here is to delete the cached Food image.
                     //Copied Image in DBhandler not deleted.
                     //If deleteFoodImg() is unsuccessful, returns false. Set to clear Cache.
-                    Toast.makeText(this, "Saved Entry!", Toast.LENGTH_LONG).show()
+                    Toasty.success(this, "Saved Entry!", Toast.LENGTH_LONG).show()
                 }
 
                 val myintent = Intent(this, MainActivity::class.java)
@@ -127,9 +128,9 @@ class MealActivity : AppCompatActivity() {
 
             btn_deleteMeal.setOnClickListener{
                 if(mymeal.deleteMeal(this)){
-                    Toast.makeText(this, "Entry Deleted.", Toast.LENGTH_LONG).show()
+                    Toasty.success(this, "Entry Deleted.", Toast.LENGTH_LONG).show()
                 }else{
-                    Toast.makeText(this, "Could not delete Entry.", Toast.LENGTH_LONG).show()
+                    Toasty.error(this, "Could not delete Entry.", Toast.LENGTH_LONG).show()
                 }
 
                 val myintent = Intent(this, MainActivity::class.java)

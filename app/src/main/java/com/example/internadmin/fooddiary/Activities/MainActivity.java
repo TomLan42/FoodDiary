@@ -60,8 +60,7 @@ public class MainActivity extends AppCompatActivity{
         {
             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
         }
-
-
+        getWindow().getDecorView().setBackgroundColor(getColor(R.color.mainbackground));
         // NEXT FEW LINES SET THE PROPERTIES FOR THE MOVABLE FLOATING ACTION BAR USED FOR GOING TO CAMERA ACTIVITY
         MovableFloatingActionButton fab = new MovableFloatingActionButton(MainActivity.this);
         fab.setImageResource(R.drawable.ic_camera_white_24dp);

@@ -39,6 +39,7 @@ public class SummaryFront extends Fragment {
     TextView left;
     Calendar myCalendar;
     public int totalheight;
+    int calslimit;
     SharedPreferences prefs;
     ArcProgressStackView arcProgressStackView;
     ArrayList<ArcProgressStackView.Model> models;
@@ -65,6 +66,7 @@ public class SummaryFront extends Fragment {
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
         tracking = "Energy";
         limit = prefs.getInt(getString(R.string.calorielimit), 0);
+        calslimit = 2200;
         left = getView().findViewById(R.id.amount);
         handler = new DBHandler(getContext());
         myCalendar = Calendar.getInstance();
@@ -83,9 +85,17 @@ public class SummaryFront extends Fragment {
         left.setText(String.valueOf(Math.round(limit-consumed)) +"/" +String.valueOf(limit) +"\n"+tracking + " Left");
 
         models = new ArrayList<>();
-        models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
-                , Color.parseColor("#90ee90"), Color.parseColor("#228B22")));
+        if(getdaycalories(myCalendar) < calslimit/2){
+            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+                    , getResources().getColor(R.color.progresscolorprimary), getResources().getColor(R.color.progresscolorfillerprimary)));
+        }else if(getdaycalories(myCalendar) < 3*calslimit/4){
 
+            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+                    , getResources().getColor(R.color.progresscolorsecondary), getResources().getColor(R.color.progresscolorfillersecondary)));
+        }else{
+            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+                    , getResources().getColor(R.color.progresscolordanger), getResources().getColor(R.color.progresscolorfillerdanger)));
+        }
         arcProgressStackView.setModels(models);
         arcProgressStackView.animateProgress();
 

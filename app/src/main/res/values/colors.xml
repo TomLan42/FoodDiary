@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF66CC00</color>
-    <color name="colorPrimaryDark">#228B22</color>
-    <color name="colorAccent">#228B22</color>
+    <color name="colorPrimary">#7F2525</color>
+    <color name="colorPrimaryDark">#E6881E</color>
+    <color name="colorAccent">#E6881E</color>
     <color name="IntroColor">#228B22</color>
     <color name="whitecolor">#ffffff</color>
 
@@ -11,4 +11,18 @@
     <color name="light_blue">#FF6599FF</color>
     <color name="green">#FF66CC00</color>
     <color name="black">#000000</color>
+    <color name="progresscolorprimary">#B8E8B1</color>
+    <color name="progresscolorfillerprimary">#247B17</color>
+    <color name="summarycardcolorprimary">#82BF7A</color>
+    <color name="datebackgroundprimary">#B8E8B1</color>
+    <color name="progresscolorsecondary">#F2C196</color>
+    <color name="progresscolorfillersecondary">#D36209</color>
+    <color name="summarycardcolorsecondary">#DE8C44</color>
+    <color name="datebackgroundsecondary">#F2C196</color>
+    <color name="progresscolordanger">#F0BDAB</color>
+    <color name="progresscolorfillerdanger">#C25732</color>
+    <color name="summarycardcolordanger">#E18C6F</color>
+    <color name="datebackgrounddanger">#F0BDAB</color>
+    <color name="cardcolor">#F8F8F8</color>
+    <color name="mainbackground">#E4E1E1</color>
 </resources>

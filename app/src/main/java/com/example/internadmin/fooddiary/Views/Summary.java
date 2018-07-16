@@ -20,6 +20,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Xml;
 import android.view.Display;
 import android.view.Gravity;
@@ -33,17 +34,23 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import com.example.internadmin.fooddiary.DineCard;
+import com.example.internadmin.fooddiary.Models.DishID;
 import com.example.internadmin.fooddiary.Models.TimePeriod;
 import com.example.internadmin.fooddiary.R;
 import com.example.internadmin.fooddiary.SummaryFront;
 import com.example.internadmin.fooddiary.SummarySugar;
 import com.github.mikephil.charting.charts.BarChart;
+import com.google.gson.JsonObject;
+
 import org.xmlpull.v1.XmlPullParser;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class Summary extends Fragment {
     // Defining global variables required for creating the view
@@ -60,10 +67,13 @@ public class Summary extends Fragment {
     BarChart chart;
     int cals;
     int carbs;
+    int calslimit;
+    int carbslimit;
     LinearLayout meal_ll;
     SummaryFront caloriesfrag;
     SummarySugar sugarfrag;
     LinearLayout ll;
+    CardView datecard;
     Point size;
     SharedPreferences prefs;
     public Summary() {
@@ -82,6 +92,8 @@ public class Summary extends Fragment {
                              Bundle savedInstanceState) {
         // THE MAIN SCROLLVIEW FOR THE WHOLE FRAGMENT
         sv = new ScrollView(getContext());
+        // limits of cals and carbs
+        calslimit = 2200;
         // loading default preferences
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
         // get whether calories are to be tracked or not
@@ -114,9 +126,10 @@ public class Summary extends Fragment {
         // this is to allow the user to change user or view history
         dateselect = new TextView(getContext());
         //setting some parameters for dateselect
-        dateselect.setPadding(50, 50, 50, 50);
+        dateselect.setPadding(50, 10, 50, 10);
         dateselect.setText("TextView");
-        dateselect.setBackground(getResources().getDrawable(R.drawable.rounded_corner));
+        // this is the calender object that is used to change the date for which the data is shown
+        myCalendar = new GregorianCalendar();
         // this is the cardview for showing the circular progress bars..
         // the circular progress bars are separate fragments, they are contained in a viewpager which is contained
         // in this cardview
@@ -128,10 +141,9 @@ public class Summary extends Fragment {
         // this calender object is used to set data according to today's date at the start of activity
         GregorianCalendar calen = new GregorianCalendar();
         calen.setTime(new Date());
-        // this is the calender object that is used to change the date for which the data is shown
-        myCalendar = new GregorianCalendar();
         // this is the function that adds all cards to the scrollview
         addAllCards(calen);
+        setColors();
         // this is to set date listener (when the dateselect textview is clicked)
         setDateListener();
         // this is to update the labels in the circular progresss bars
@@ -166,8 +178,32 @@ public class Summary extends Fragment {
         //}
     }
 
+    public float getdaycalories(Calendar cal, String tracking){
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        Calendar tom = (GregorianCalendar) cal.clone();
+        tom.set(Calendar.HOUR_OF_DAY, 23);
+        tom.set(Calendar.MINUTE, 59);
+        tom.set(Calendar.SECOND, 59);
+        HashMap<String, Float> servings = handler.getAllServingsOnDay(cal.getTime(), null);
+        Iterator it = servings.entrySet().iterator();
+        float tot = 0;
+        while (it.hasNext()){
+            Map.Entry pair = (Map.Entry)it.next();
+            DishID id = new DishID((String) pair.getKey(), -1, getContext());
+            id.execute();
+            JsonObject nutrition = id.getNutrition();
+            Log.d("jsoncheck", nutrition.toString());
+            float calorie = nutrition.get(tracking).getAsFloat();
+            tot += calorie*(float)pair.getValue();
+        }
+        return tot;
+    }
+
+
     public CardView dateCard(){
-        CardView datecard = new CardView(getContext());
+        datecard = new CardView(getContext());
         RelativeLayout ll2 = new RelativeLayout(getContext());
         RelativeLayout.LayoutParams dateparams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         RelativeLayout.LayoutParams leftparams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -189,9 +225,11 @@ public class Summary extends Fragment {
         left.setLayoutParams(leftparams);
         right.setLayoutParams(rightparams);
         leftparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+        leftparams.setMargins(dp2px(3), 0, dp2px(3), 0);
+        rightparams.setMargins(dp2px(3), 0, dp2px(3), 0);
         rightparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins((int)(size.x*0.027), 0, (int)(size.x*0.027), (int)(size.x*0.027));
+        params.setMargins((int)(size.x*0.027)+dp2px(4), 0, (int)(size.x*0.027)+dp2px(4), (int)(size.x*0.027));
         datecard.setLayoutParams(params);
         datecard.addView(ll2);
         left.setOnClickListener(new View.OnClickListener() {
@@ -199,6 +237,8 @@ public class Summary extends Fragment {
             public void onClick(View view) {
                 myCalendar.add(Calendar.DATE, -1);
                 updateLabel(1);
+                setColors();
+                addAllCards((GregorianCalendar) myCalendar);
             }
         });
         right.setOnClickListener(new View.OnClickListener() {
@@ -206,9 +246,27 @@ public class Summary extends Fragment {
             public void onClick(View view) {
                 myCalendar.add(Calendar.DATE, 1);
                 updateLabel(1);
+                setColors();
+                addAllCards((GregorianCalendar)myCalendar);
             }
         });
         return datecard;
+    }
+
+    public void setColors(){
+        if(getdaycalories(myCalendar, "Energy") < calslimit/2){
+            datecard.setBackgroundColor(getResources().getColor(R.color.datebackgroundprimary));
+            barcard.setBackgroundColor(getResources().getColor(R.color.summarycardcolorprimary));
+            mytabdots.setSelectedTabIndicatorColor(getResources().getColor(R.color.progresscolorfillerprimary));
+        }else if(getdaycalories(myCalendar, "Energy") < 3*calslimit/4){
+            datecard.setBackgroundColor(getResources().getColor(R.color.datebackgroundsecondary));
+            barcard.setBackgroundColor(getResources().getColor(R.color.summarycardcolorsecondary));
+            mytabdots.setDrawingCacheBackgroundColor(getResources().getColor(R.color.progresscolorfillersecondary));
+        }else{
+            datecard.setBackgroundColor(getResources().getColor(R.color.datebackgrounddanger));
+            barcard.setBackgroundColor(getResources().getColor(R.color.summarycardcolordanger));
+            mytabdots.setSelectedTabIndicatorColor(getResources().getColor(R.color.progresscolorfillerdanger));
+        }
     }
 
     public void setDateListener(){
@@ -227,8 +285,10 @@ public class Summary extends Fragment {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                barcard.setRadius(dp2px(4));
                 // update all labels (labels in circular progress bars)
                 updateLabel(1);
+                setColors();
                 // all the cards (Morning, Breakfast, Dinner, Night) are added again with the new date
                 addAllCards((GregorianCalendar) myCalendar);
             }
@@ -244,8 +304,9 @@ public class Summary extends Fragment {
         // update the label on the circular progress bars and the dateselect textview
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         dateselect.setText(sdf.format(myCalendar.getTime()));
+
         if(i==1){
-            caloriesfrag.updateLabel(myCalendar);
+            if(cals==1)caloriesfrag.updateLabel(myCalendar);
             if(carbs==1) sugarfrag.updateLabel(myCalendar);
         }
     }
@@ -298,7 +359,7 @@ public class Summary extends Fragment {
         mytabdots.setId(1026);
         mytabdots.setClickable(false);
         mytabdots.setFocusable(false);
-
+        mytabdots.setSelectedTabIndicatorColor(Color.parseColor("#53200E"));
 
         // SETTING MARGINS TO THE CARD
         int marginx = (int)(size.x*0.027);
@@ -306,8 +367,7 @@ public class Summary extends Fragment {
         params.setMargins(marginx, marginy, marginx, 0);
         // SETTING OTHER LAYOUT PARAMETERS FOR THE CARD
         barcard.setLayoutParams(params);
-        barcard.setRadius(0);
-        barcard.setCardBackgroundColor(Color.parseColor("#FFC6D6C3"));
+        barcard.setRadius(dp2px(4));
         barcard.setMaxCardElevation(15);
         barcard.setCardElevation(9);
 

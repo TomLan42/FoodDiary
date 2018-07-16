@@ -26,6 +26,7 @@ import com.example.internadmin.fooddiary.Interfaces.PostTaskListener
 import com.example.internadmin.fooddiary.Models.Prediction
 import com.example.internadmin.fooddiary.Models.TimePeriod
 import com.example.internadmin.fooddiary.R
+import es.dmoral.toasty.Toasty
 
 
 /**
@@ -104,10 +105,10 @@ class CameraActivity : AppCompatActivity() {
 
             if(isChecked){
                 btn_flash.setImageResource(R.drawable.ic_flash_on)
-                Toast.makeText(this, "Flash is On", Toast.LENGTH_SHORT).show()
+                Toasty.info(this, "Flash is On", Toast.LENGTH_SHORT, true).show();
             }else{
                 btn_flash.setImageResource(R.drawable.ic_flash_off)
-                Toast.makeText(this, "Flash is Off", Toast.LENGTH_SHORT).show()
+                Toasty.info(this, "Flash is Off", Toast.LENGTH_SHORT, true).show();
             }
         }
 
@@ -178,7 +179,7 @@ class CameraActivity : AppCompatActivity() {
                     photo
                             ?.let {
                                 Log.i(LOGGING_TAG, "New photo captured. Bitmap length: ${it.bitmap.byteCount}")
-                                Toast.makeText(this, "Photo captured", Toast.LENGTH_LONG).show()
+                                Toasty.success(this, "Image Captured!! Fetching results", Toast.LENGTH_SHORT, true).show();
 
                                 uploadBitmap(it.bitmap, true)
 
@@ -337,7 +338,7 @@ class CameraActivity : AppCompatActivity() {
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 fabPCGallery.hide()
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+                Toasty.info(this, "Cancelled", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -375,7 +376,7 @@ class CameraActivity : AppCompatActivity() {
                 else
                     fabPCGallery.hide()
 
-                Toast.makeText(this, result.getString(DownloadDishIDTask.Result),
+                Toasty.info(this, result.getString(DownloadDishIDTask.Result),
                         Toast.LENGTH_LONG).show()
 
                 val myintent = Intent(this, MainActivity::class.java)
