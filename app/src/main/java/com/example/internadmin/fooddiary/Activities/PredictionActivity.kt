@@ -14,11 +14,13 @@ import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.widget.*
+import com.afollestad.materialdialogs.MaterialDialog
 import com.example.internadmin.fooddiary.AsyncTasks.FormSubmitTask
 import com.example.internadmin.fooddiary.AsyncTasks.ImageUploadTask
 import com.example.internadmin.fooddiary.Models.DishID
@@ -26,6 +28,7 @@ import com.example.internadmin.fooddiary.Models.Prediction
 import com.example.internadmin.fooddiary.R
 import com.example.internadmin.fooddiary.Views.PredictListViewAdapter
 import com.miguelcatalan.materialsearchview.MaterialSearchView
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.prediction_footer_layout.*
 import java.util.concurrent.TimeUnit
 
@@ -74,6 +77,8 @@ class PredictionActivity : AppCompatActivity() {
                 searchView.closeSearch()
                 //TimeUnit.SECONDS.sleep(1)
                 // foodName is a function that converts a food name to internal food name
+                var submitter = FormSubmitTask(filename, query, this@PredictionActivity)
+                submitter.execute()
                 var internalfoodname = foodName(query!!)
                 val mydishid = DishID(internalfoodname, 1, this@PredictionActivity)
                 Log.d("FOODINTERNALNAME", internalfoodname)
@@ -144,17 +149,6 @@ class PredictionActivity : AppCompatActivity() {
             searchView.showSearch()
 
         }
-        //Form submission for right dish prediction
-        formdata = findViewById(R.id.formdata)
-        formsubmit = findViewById(R.id.formsubmit)
-        formsubmit.setOnClickListener {
-            val correctname = formdata.text.toString()
-            Log.d("CName:Prediction", correctname)
-            var submitter = FormSubmitTask(filename, correctname, this)
-            submitter.execute()
-            Log.d("Submit executed", "same")
-        }
-
 
         btn_mealActivity.setOnClickListener{
             val mypredict = predictionlistview.getItemAtPosition(mypos) as Prediction

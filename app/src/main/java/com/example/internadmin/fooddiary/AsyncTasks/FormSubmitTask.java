@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.internadmin.fooddiary.Config;
 import org.json.JSONException;
@@ -24,6 +25,8 @@ import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
+import es.dmoral.toasty.Toasty;
+
 public class FormSubmitTask extends AsyncTask<Void, Void, Bundle> {
     private String dstURL;
     private WeakReference<Context> weakContext;
@@ -32,20 +35,16 @@ public class FormSubmitTask extends AsyncTask<Void, Void, Bundle> {
     public static final String Result = "Result";
     public static final String Success = "Success";
     private String FileName;
+    Context context;
     private String CorrectPrediction;
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        ProgressDialog progDialog = progDialogref.get();
-        progDialog.setMessage("Downloading Resources...");
-        progDialog.setIndeterminate(false);
-        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progDialog.setCancelable(true);
-        progDialog.show();
     }
 
     public FormSubmitTask(String FileName, String CorrectPrediction, Context context){
         dstURL = Config.submitformAddress;
+        this.context = context;
         this.FileName = FileName;
         weakContext = new WeakReference<>(context);
         this.CorrectPrediction = CorrectPrediction;
@@ -130,7 +129,6 @@ public class FormSubmitTask extends AsyncTask<Void, Void, Bundle> {
             if (Response.equals("true")) {
 
                 b.putString(Result, Success);
-                //Write JSON back to file
                 return b;
             } else {
                 b.putString(Result, "fail");
@@ -144,8 +142,5 @@ public class FormSubmitTask extends AsyncTask<Void, Void, Bundle> {
     @Override
     protected void onPostExecute(Bundle result) {
         super.onPostExecute(result);
-        if (progDialogref.get() != null && progDialogref.get().isShowing()) {
-            progDialogref.get().dismiss();
-        }
     }
 }
