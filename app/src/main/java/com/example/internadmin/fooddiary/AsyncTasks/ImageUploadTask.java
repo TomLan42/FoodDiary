@@ -39,6 +39,7 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
     private String dstURL;
     private PostTaskListener<Bundle> postTaskListener;
     public static final String Result = "Result";
+    public static final String filename = "filename";
     public static final String Success = "Success";
     public static final String noofpredictions = "NoOfPredictions";
 
@@ -125,6 +126,8 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
 
             if(myresult.equals(Success)){
                 b.putString(Result, Success);
+                b.putString(filename, myJson.get(filename).getAsString());
+                Log.d("FILENAME", myJson.get(filename).getAsString());
                 JsonArray Predictions = myJson.getAsJsonArray("Predictions");
                 int noOfPredictions = Predictions.size();
                 b.putInt(noofpredictions, noOfPredictions);

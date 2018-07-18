@@ -27,10 +27,8 @@ public class FoodItemAdapter extends ArrayAdapter<FoodItem> {
         }
         FoodItem foodItem = getItem(position);
         if(foodItem != null){
-            TextView title = (TextView)convertView.findViewById(R.id.foodtitle);
-            TextView content = (TextView)convertView.findViewById(R.id.foodcontent);
+            TextView title = convertView.findViewById(R.id.foodtitle);
             title.setText(foodItem.getTitle());
-            content.setText(foodItem.getContent());
         }
         return convertView;
     }

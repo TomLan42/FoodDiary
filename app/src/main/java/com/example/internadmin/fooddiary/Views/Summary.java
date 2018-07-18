@@ -64,7 +64,6 @@ public class Summary extends Fragment {
     ViewPager viewPager;
     TabLayout mytabdots;
     PagerAdapter pagerAdapter;
-    BarChart chart;
     int cals;
     int carbs;
     int calslimit;
@@ -102,7 +101,7 @@ public class Summary extends Fragment {
         // trackcarbs is 0 if not to be tracked and 1 if calories are to be tracked
         carbs = prefs.getBoolean(getString(R.string.trackcarbs), false)? 1:0;
         // NUM_PAGES is required for the viewpager inside the summary fragment
-        NUM_PAGES = cals + carbs + 1;
+        NUM_PAGES = cals + carbs;
         // creating global variables for calorie and carbohydrates fragments
         caloriesfrag = new SummaryFront();
         // this aint sugar fragment.. its actually carbohydrate fragment... (though can be used for any..
@@ -387,7 +386,9 @@ public class Summary extends Fragment {
         RelativeLayout myRL = new RelativeLayout(getContext());
         myRL.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT));
-
+        if(NUM_PAGES==1){
+            mytabdots.setVisibility(View.INVISIBLE);
+        }
         myRL.addView(viewPager, viewpagerRLParams);
         myRL.addView(mytabdots, tabdotsRLParams);
         ll.addView(myRL);
@@ -410,20 +411,20 @@ public class Summary extends Fragment {
         @Override
         public Fragment getItem(int position) {
             // logic to show circular progress bars only for those nutrients which the user wants to keep track of
-            if(NUM_PAGES == 3){
+            if(NUM_PAGES == 2){
                 if(position == 0) return caloriesfrag;
                 if(position == 1) return sugarfrag;
-                if(position == 2) return new Barchart();
+                //if(position == 2) return new Barchart();
                 return caloriesfrag;
             }
-            else if(NUM_PAGES == 2 && cals == 1){
+            else if(NUM_PAGES == 1 && cals == 1){
                 if(position == 0) return caloriesfrag;
-                if(position == 1) return new Barchart();
+                //if(position == 1) return new Barchart();
                 return caloriesfrag;
             }
             else{
                 if(position == 0) return sugarfrag;
-                if(position == 1) return new Barchart();
+                //if(position == 1) return new Barchart();
                 return sugarfrag;
             }
         }

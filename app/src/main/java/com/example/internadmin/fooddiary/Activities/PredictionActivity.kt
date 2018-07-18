@@ -19,6 +19,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.widget.*
+import com.example.internadmin.fooddiary.AsyncTasks.FormSubmitTask
 import com.example.internadmin.fooddiary.AsyncTasks.ImageUploadTask
 import com.example.internadmin.fooddiary.Models.DishID
 import com.example.internadmin.fooddiary.Models.Prediction
@@ -34,9 +35,12 @@ class PredictionActivity : AppCompatActivity() {
     private var listpredictions = ArrayList<Prediction>()
     private lateinit var  predictionlistview: ListView
     lateinit var toolbar: Toolbar
+    lateinit var formdata: EditText
+    lateinit var formsubmit: Button
     lateinit var searchView: MaterialSearchView
     private lateinit var predictAdapter: PredictListViewAdapter
     private var mypos = 0
+    lateinit var filename: String
     lateinit var constraint: ConstraintLayout
     private lateinit var foodImgFile: File
 
@@ -140,7 +144,16 @@ class PredictionActivity : AppCompatActivity() {
             searchView.showSearch()
 
         }
-
+        //Form submission for right dish prediction
+        formdata = findViewById(R.id.formdata)
+        formsubmit = findViewById(R.id.formsubmit)
+        formsubmit.setOnClickListener {
+            val correctname = formdata.text.toString()
+            Log.d("CName:Prediction", correctname)
+            var submitter = FormSubmitTask(filename, correctname, this)
+            submitter.execute()
+            Log.d("Submit executed", "same")
+        }
 
 
         btn_mealActivity.setOnClickListener{
@@ -179,6 +192,8 @@ class PredictionActivity : AppCompatActivity() {
     private fun updateView(){
         val intent = getIntent()
         if(intent.hasExtra(ImageUploadTask.noofpredictions)){
+            filename = intent.getStringExtra(ImageUploadTask.filename)
+            Log.d("INSIDE PREDICTION", filename)
             for(i in 0 until  intent.getIntExtra(ImageUploadTask.noofpredictions, 0)){
                 listpredictions.add(intent.getSerializableExtra(i.toString()) as Prediction)
             }

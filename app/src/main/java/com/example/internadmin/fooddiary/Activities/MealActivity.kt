@@ -160,9 +160,13 @@ class MealActivity : AppCompatActivity() {
             datetimeviewgroup(mymeal.timeConsumed)
             //nutritionfactsviewgroup(mymeal.dishID.nutrition)
             //ingredientsviewgroup(mymeal.dishID.ingredients)
-
-            txt_servingsizelarge.text = getString(R.string.serving_size) + ": " +
-                    getnutritionstr(mymeal.dishID.nutrition, "Serving Size", "1 plate")
+            var serving = getString(R.string.serving_size) + ": " + getnutritionstr(mymeal.dishID.nutrition, "Serving Size", "1 plate")
+            if(serving == getString(R.string.serving_size) + ": " + "1 plate"){
+                serving += " Serving"
+            }else{
+                serving += " g Serving"
+            }
+            txt_servingsizelarge.text = serving
         }else{
             RedirectToMainOnError("Meal was not properly initialized.", this)
         }
@@ -412,10 +416,14 @@ class MealActivity : AppCompatActivity() {
         val text_sodiumdv = view.findViewById<TextView>(R.id.text_sodiumdv)
         val text_totalcarbohydratedv = view.findViewById<TextView>(R.id.text_totalcarbohydratedv)
         val text_fibredv = view.findViewById<TextView>(R.id.text_fibredv)
-
-        text_servingsize.setText(getnutritionstr(nutrition, "Serving Size", "1 plate"))
-        text_calories.setText(
-                getnutritionfloat(nutrition, "Energy", ""))
+        var serving = getnutritionstr(nutrition, "Serving Size", "1 plate")
+        if(serving == "1 plate"){
+            serving = serving + " Standarg Serving"
+        }else{
+            serving = serving + " g Standarg Serving"
+        }
+        text_servingsize.setText(serving)
+        text_calories.setText(getnutritionfloat(nutrition, "Energy", ""))
         text_totalfat.setText( getnutritionfloat(nutrition, "Fat", "g"))
         text_satfat.setText( getnutritionfloat(nutrition, "Saturated Fat", "g"))
         text_transfat.setText( getnutritionfloat(nutrition, "Trans Fat", "g"))

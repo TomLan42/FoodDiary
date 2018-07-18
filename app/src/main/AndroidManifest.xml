@@ -29,7 +29,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_camera"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".Activities.PredictionActivity" />
+        <activity android:name=".Activities.PredictionActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            />
         <activity android:name=".Activities.MealActivity" />
         <activity android:name=".Predict" />
         <activity

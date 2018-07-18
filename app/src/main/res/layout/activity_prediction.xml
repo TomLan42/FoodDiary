@@ -29,7 +29,7 @@
     <ListView
         android:id="@+id/predictionlistview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="256dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,6 +47,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_done_24dp" />
+
+    <EditText
+        android:id="@+id/formdata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="tell us right"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/predictionlistview" />
+
+    <Button
+        android:id="@+id/formsubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="8dp"
+        android:text="Submit"
+        app:layout_constraintStart_toEndOf="@+id/formdata"
+        app:layout_constraintTop_toBottomOf="@+id/predictionlistview" />
 
 
 </android.support.constraint.ConstraintLayout>
