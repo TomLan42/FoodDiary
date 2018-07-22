@@ -23,15 +23,18 @@ import android.provider.MediaStore
 import com.example.internadmin.fooddiary.AsyncTasks.DownloadDishIDTask
 import com.example.internadmin.fooddiary.AsyncTasks.ImageUploadTask
 import com.example.internadmin.fooddiary.Interfaces.PostTaskListener
-import com.example.internadmin.fooddiary.Models.Prediction
-import com.example.internadmin.fooddiary.Models.TimePeriod
 import com.example.internadmin.fooddiary.R
+import android.media.ExifInterface
 import es.dmoral.toasty.Toasty
 
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * A full-screen activity for grabbing an image from either the camera
+ * or the gallery, place it into the app cache, and calls ImageUploadtask
+ * to send the image to the server for prediction.
+ *
+ * Once the prediction is returned, the image File and the predictions are
+ * passed to the PredictionActivity for the user to choose.
  */
 class CameraActivity : AppCompatActivity() {
     private val mHideHandler = Handler()
@@ -78,6 +81,7 @@ class CameraActivity : AppCompatActivity() {
 
     private lateinit var imguploadtask :ImageUploadTask
 
+    //Set all the OnClickListeners for the UI buttons
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -144,6 +148,7 @@ class CameraActivity : AppCompatActivity() {
 
     }
 
+    //Start the camera, and set the camera configuration
     private fun startCamera(){
         fotoapparat = Fotoapparat(
                 context = this,
@@ -159,6 +164,7 @@ class CameraActivity : AppCompatActivity() {
 
     private val LOGGING_TAG = "Fotoapparat"
 
+    //Snap an image from camera, and pass the bitmap to uploadBitmap function
     private fun takePicture(){
 
         if(isChecked) {
@@ -191,6 +197,7 @@ class CameraActivity : AppCompatActivity() {
 
     }
 
+    // Change from front to back camera, and vice versa
     private fun changeCamera(){
         activeCamera = when (activeCamera) {
             Camera.Front -> Camera.Back
@@ -207,6 +214,7 @@ class CameraActivity : AppCompatActivity() {
         Log.i(LOGGING_TAG, "New camera position: ${if (activeCamera is Camera.Back) "back" else "front"}")
     }
 
+    // Toggle the camera flash
     private fun toggleFlash(turnon:Boolean){
         fotoapparat.updateConfiguration(
                 UpdateConfiguration(
@@ -222,6 +230,7 @@ class CameraActivity : AppCompatActivity() {
         //Log.i(LOGGING_TAG, "Flash is now ${if (isChecked) "on" else "off"}")
     }
 
+    //Show the flash button if there is flash available for the camera
     private fun adjustViewsVisibility() {
         fotoapparat.getCapabilities()
                 .whenAvailable { capabilities ->
@@ -286,11 +295,13 @@ class CameraActivity : AppCompatActivity() {
         mHideHandler.postDelayed(mHideRunnable, delayMillis.toLong())
     }
 
+    //Re-enable the interface buttons
     override fun onResume() {
         super.onResume()
         enableAllButtons(true)
     }
 
+    //Start camera and show view
     override fun onStart() {
         super.onStart()
         if (permissionsGranted) {
@@ -299,6 +310,7 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    //Turn off camera and cancel AsyncTask, if it is running
     override fun onStop() {
         super.onStop()
         if (permissionsGranted) {
@@ -310,6 +322,8 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    //If permissions for camera are not granted, function that starts camera once
+    //permission is granted.
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
@@ -319,7 +333,7 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-
+    //Override onActivityResult to get bitmap image from gallery
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SELECT_IMAGE) {
@@ -343,6 +357,10 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    //Function which takes the bitmap from either the camera or the gallery,
+    // and calls AsyncTask ImageUploadTask to get the image prediction results
+    // from server. Upon getting the result from server, the results and passed to
+    // PredictionActivity to display to the user.
     private fun uploadBitmap(bitmap: Bitmap, isCamera: Boolean){
 
         val postTaskListener = PostTaskListener<Bundle> { result ->
@@ -388,6 +406,7 @@ class CameraActivity : AppCompatActivity() {
         imguploadtask.execute()
     }
 
+    //Function which allows all buttons on the screen to be enabled/ disabled.
     fun enableAllButtons(enable :Boolean){
         btn_back.isEnabled = enable
         btn_gallery.isEnabled = enable
@@ -396,6 +415,9 @@ class CameraActivity : AppCompatActivity() {
         btn_switchcam.isEnabled = enable
     }
 
+    //Function which caches the image from the camera, and passes the File object,
+    //along with the prediction results from the ImageUploadTask,
+    //and passes it to the next activity (PredictionActivity)
     fun goToPredictionActivity(result: Bundle, bitmap: Bitmap){
         try {
             val myfile = File.createTempFile("tempfoodimg", "jpg", this.getCacheDir())
@@ -403,6 +425,13 @@ class CameraActivity : AppCompatActivity() {
             val outStream = FileOutputStream(myfile)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
             outStream.close()
+            try {
+                val exifi = ExifInterface(myfile.getAbsolutePath())
+                exifi.setAttribute(ExifInterface.TAG_ORIENTATION, getScreenOrientation())
+                exifi.saveAttributes()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
             result.putSerializable("FoodImg", myfile)
         } catch (e: IOException) {
             Log.e("Meal Caching", "Cannot create Cached Image: " + e.message)
@@ -421,6 +450,22 @@ class CameraActivity : AppCompatActivity() {
             myintent.putExtras(result)
             startActivity(myintent)
         }
+    }
+
+    //Function to get the screen orientation, and return as a string
+    fun getScreenOrientation(): String {
+        val getOrient = windowManager.defaultDisplay
+        var orientation :String
+        if (getOrient.width == getOrient.height) {
+            orientation = ExifInterface.ORIENTATION_NORMAL.toString()
+        } else {
+            if (getOrient.width < getOrient.height) {
+                orientation = ExifInterface.ORIENTATION_ROTATE_270.toString()
+            } else {
+                orientation = ExifInterface.ORIENTATION_NORMAL.toString()
+            }
+        }
+        return orientation
     }
 
     companion object {

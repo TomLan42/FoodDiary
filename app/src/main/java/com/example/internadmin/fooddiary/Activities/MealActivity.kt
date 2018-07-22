@@ -35,7 +35,14 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * MealActivity allows information of the meal to be
+ * tweaked before adding it to the database.
+ *
+ * The date and time, and the serving size can be changed.
+ * The nutritional information and of the chosen food type
+ * are also displayed.
+ */
 
 
 class MealActivity : AppCompatActivity() {
@@ -47,6 +54,8 @@ class MealActivity : AppCompatActivity() {
     private var clearCache = false
     private lateinit var prefs: SharedPreferences
 
+    //Generate a meal object, based on data from the previous activity
+    // Upon generating, the meal object is used to populate the MealActivity UI.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meal)
@@ -55,6 +64,8 @@ class MealActivity : AppCompatActivity() {
         //val mypizzaslicer = findViewById<miniPizzaView>(R.id.pizzaslicer)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
+        //Check if passed data is a new meal (in which only the dishID info is passed,
+        //or is an existing meal object in the database.
         if(intent.hasExtra("Meal")){
             val mymealID = intent.getLongExtra("Meal", -1)
             mymeal = Meal()
@@ -92,6 +103,7 @@ class MealActivity : AppCompatActivity() {
             mydishid.execute()
 
         }else{
+            //If neither meal nor DishID info is passed, the activity redirects to MainActivity
             RedirectToMainOnError("Could not receive Meal or Dish Information.", this)
         }
 
@@ -527,7 +539,7 @@ class MealActivity : AppCompatActivity() {
                 Log.i("Cache", "Cache Deleted")
             }
         } catch (e: Exception) {
-            // TODO: handle exception
+            e.printStackTrace()
         }
 
     }
