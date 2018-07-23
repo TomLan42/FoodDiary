@@ -193,7 +193,7 @@ class PredictionActivity : AppCompatActivity() {
     }
 
 
-
+    //Function which sets the image and the predictions in the activity UI
     private fun updateView(){
         val intent = getIntent()
         if(intent.hasExtra(ImageUploadTask.noofpredictions)){
@@ -225,6 +225,8 @@ class PredictionActivity : AppCompatActivity() {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
     }
+
+    //Convert foodName to internal FoodName
     private fun foodName(foodname: String) : String{
         val strArray = foodname.split(" ".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
         val builder = StringBuilder()

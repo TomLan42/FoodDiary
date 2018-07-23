@@ -37,6 +37,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * RecyclerView for Report Fragment.
+ *
+ * Renders the report, based on the data bundle arraylist received
+ * from Report Fragment.
+ *
+ * Each Bundle corresponds to 1 ViewHolder, and which ViewHolder
+ * depends on the ViewType integer in the bundle.
+ * If no ViewType value is given, the default view is shown.
+ *
+ * There are currently 6 different view types:
+ *  - HeaderCard
+ *  - CongratCard
+ *  - TryHarderCard
+ *  - AdviceCard
+ *  - BarchartCard
+ *  - DefaultCard
+ *  **As of 23 July 2018
+ *
+ */
+
 public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
 
         private ArrayList<Bundle> mDataset;
@@ -192,6 +213,7 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
             }
         }
 
+        //Gets the viewholder and adds the content to the view
         @Override
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
             Bundle b = mDataset.get(position);
@@ -344,6 +366,7 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
             return mDataset.size();
         }
 
+        //Convert columns into bardata object
         private BarData getBarData(ArrayList<Column> columns, String Label){
 
             ArrayList<BarEntry> valueSet = new ArrayList<>();
@@ -367,6 +390,8 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
             return new BarData(barDataSet);
         }
 
+        //Take the names from the columns arraylist and convert them into
+        //a string arraylist for labelling the chart
         private ArrayList<String> getXLabels(ArrayList<Column> columns){
 
             ArrayList<String> XLabels = new ArrayList<>();
