@@ -3,8 +3,10 @@ package com.example.internadmin.fooddiary.Activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -30,6 +32,11 @@ import com.example.internadmin.fooddiary.Views.Summary;
 import com.example.internadmin.fooddiary.Views.UpdateHistory;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.Pointer;
+import tourguide.tourguide.ToolTip;
+import tourguide.tourguide.TourGuide;
+
 public class MainActivity extends AppCompatActivity{
     // Global variables in use
     int prevpos = 0;
@@ -39,6 +46,7 @@ public class MainActivity extends AppCompatActivity{
     LinearLayout ll;
     AHBottomNavigation bottomNavigation;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -52,7 +60,6 @@ public class MainActivity extends AppCompatActivity{
         display.getSize(size);
         // MAIN LAYOUT OF THE ACTIVITY, FRAMELAYOUT
         FrameLayout main = new FrameLayout(this);
-
         // GETTING THE ACTION BAR HEIGHT
         int actionBarHeight = 0;
         TypedValue tv = new TypedValue();
@@ -179,7 +186,19 @@ public class MainActivity extends AppCompatActivity{
         });
 
         main.addView(fab);
+        Overlay overlay = new Overlay();
+        overlay.setBackgroundColor(getColor(R.color.overlay));
+        Pointer pointer = new Pointer();
+        pointer.setGravity(Gravity.TOP);
+        TourGuide tourGuide = new TourGuide(this);
+        tourGuide.setOverlay(overlay);
+        tourGuide
+                .setPointer(pointer)
+                .setToolTip(new ToolTip().setTitle("this is tour")
+                .setDescription("this is the description for tooltip").setGravity(Gravity.TOP).setBackgroundColor(getColor(R.color.progresscolorfillerdanger)))
+                .playOn(fab);
         setContentView(main);
+
     }
 
     @Override

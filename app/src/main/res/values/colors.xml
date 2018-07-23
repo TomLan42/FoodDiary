@@ -25,4 +25,5 @@
     <color name="datebackgrounddanger">#F0BDAB</color>
     <color name="cardcolor">#F8F8F8</color>
     <color name="mainbackground">#E4E1E1</color>
+    <color name="overlay">#669C9898</color>
 </resources>
