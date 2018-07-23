@@ -3,6 +3,11 @@ package com.example.internadmin.fooddiary.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Class to pass the column name and column value from activity
+ * to recyclerview for rendering on the chart.
+ */
+
 public class Column implements Parcelable {
 
     private String colname;

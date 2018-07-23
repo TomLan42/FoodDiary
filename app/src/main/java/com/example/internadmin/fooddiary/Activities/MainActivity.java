@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity{
         tourGuide
                 .setPointer(pointer)
                 .setToolTip(new ToolTip().setTitle("this is tour")
-                .setDescription("this is the description for tooltip").setGravity(Gravity.TOP).setBackgroundColor(getColor(R.color.progresscolorfillerdanger)))
+                        .setDescription("this is the description for tooltip").setGravity(Gravity.TOP).setBackgroundColor(getColor(R.color.progresscolorfillerdanger)))
                 .playOn(fab);
         setContentView(main);
 

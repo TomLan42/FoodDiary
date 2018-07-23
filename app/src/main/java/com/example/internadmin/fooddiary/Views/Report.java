@@ -31,6 +31,22 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * Fragment which is used to display an easy-to-view summary
+ * of the daily/ weekly/ monthly food consumption.
+ *
+ * 2 listeners are first created, and added into the headercard
+ * in the recyclerview. These listeners change the view.
+ *
+ * The OnTabSelectedListener changes the view between daily, weekly
+ * and monthly. The OnItemSelectedListener changes the view for different
+ * time periods (2 days ago, 1 week ago, 3 months ago etc.)
+ *
+ * Once the selection is made, the correct report is generated, first
+ * calling getReport function, then either dailyReport, weeklyReport,
+ * and monthlyReport, depending on the selection.
+ */
+
 public class Report extends Fragment {
 
     private ReportRecyclerView mRecyclerView;
@@ -131,6 +147,7 @@ public class Report extends Fragment {
 
     }
 
+    //Get the correct function to display the selected report
     private ArrayList<Bundle> getReport(int reportType, int timeAgo, Boolean updateSpinner){
         switch (reportType){
             case 0:
@@ -144,6 +161,8 @@ public class Report extends Fragment {
         }
     }
 
+    //Generate the daily data bundles which will be passed to the recyclerview for
+    //rendering
     private ArrayList<Bundle> dailyReport(int timeAgo, Boolean updateSpinner){
         ArrayList<Bundle> report = new ArrayList<>();
 
@@ -248,6 +267,8 @@ public class Report extends Fragment {
 
     }
 
+    //Generate the weekly data bundles which will be passed to the recyclerview for
+    //rendering
     private ArrayList<Bundle> weeklyReport(int timeAgo, Boolean updateSpinner){
         ArrayList<Bundle> report = new ArrayList<>();
 
@@ -323,6 +344,8 @@ public class Report extends Fragment {
 
     }
 
+    //Generate the monthly data bundles which will be passed to the recyclerview for
+    //rendering
     private ArrayList<Bundle> monthlyReport(int timeAgo, Boolean updateSpinner){
         ArrayList<Bundle> report = new ArrayList<>();
 
@@ -401,7 +424,9 @@ public class Report extends Fragment {
     }
 
 
-
+    //Function used by dailyReport to output the total amount of a particular nutrition
+    //in the day, as well as the Food Name that makes the greatest contribution to the nutrition
+    //amount.
     public Pair<String, Float> getdaynutrition(HashMap<String, Float> servings, String nutritionName){
 
         Iterator it = servings.entrySet().iterator();
@@ -427,6 +452,11 @@ public class Report extends Fragment {
         return new Pair<>(foodNameMax, tot);
     }
 
+    //Sums the nutrition on each day and puts the day display name (Mon, Wed Fri)
+    //along with the sum into a Column, and adds it into a Column ArrayList, which
+    //is returned by the function.
+    //Note that the last part is for getting the main contributing Food for the
+    //particular nutrition.
     public ArrayList<Column> populateBarchart(Calendar startdate, Calendar enddate,
                                               String nutritionName){
         ArrayList<Column> columns = new ArrayList<>();
@@ -497,6 +527,7 @@ public class Report extends Fragment {
         return columns;
     }
 
+    //Replaces underscores with spaces when displaying the FoodName from database.
     private String DisplayFoodName(String FoodName){
         String[] strArray = FoodName.split("_");
         StringBuilder builder = new StringBuilder();
