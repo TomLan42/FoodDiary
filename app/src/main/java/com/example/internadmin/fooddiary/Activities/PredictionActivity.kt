@@ -32,6 +32,13 @@ import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.prediction_footer_layout.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * PredictionActivity takes the predictions and images
+ * produced by CameraActivity and displays them.
+ *
+ * Once the user chooses the prediction, it passes the image
+ * and the prediction to the MealActivity.
+ */
 
 class PredictionActivity : AppCompatActivity() {
 
@@ -121,6 +128,7 @@ class PredictionActivity : AppCompatActivity() {
         //// -----------------------------------------------------------
         updateView()
 
+        //populate listview with prediction items
         predictionlistview = findViewById(R.id.predictionlistview)
         predictionlistview.setChoiceMode(ListView.CHOICE_MODE_SINGLE)
 
@@ -132,6 +140,7 @@ class PredictionActivity : AppCompatActivity() {
 
         predictionlistview.adapter = predictAdapter
         val noofitems = predictionlistview.adapter.count
+        //When prediction item is clicked, it is saved into int mypos
         predictionlistview.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
 
             mypos = position
@@ -150,6 +159,8 @@ class PredictionActivity : AppCompatActivity() {
 
         }
 
+        //When btn_mealActivity is clicked, mypos is used to find the correct prediction
+        //item. Next, the Food Image and DishID is passed to MealActivity.java.
         btn_mealActivity.setOnClickListener{
             val mypredict = predictionlistview.getItemAtPosition(mypos) as Prediction
             val mydishid = DishID(mypredict.internalFoodName, mypredict.ver, this)
