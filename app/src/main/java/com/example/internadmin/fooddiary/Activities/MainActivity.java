@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
+        SharedPreferences.Editor edit = prefs.edit();
         // CODE TO GET THE SCREEN DISPLAY SIZE
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -184,21 +184,25 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
-
-        main.addView(fab);
-        Overlay overlay = new Overlay();
-        overlay.setBackgroundColor(getColor(R.color.overlay));
-        Pointer pointer = new Pointer();
-        pointer.setGravity(Gravity.TOP);
-        TourGuide tourGuide = new TourGuide(this);
-        tourGuide.setOverlay(overlay);
-        tourGuide
-                .setPointer(pointer)
-                .setToolTip(new ToolTip().setTitle("this is tour")
-                .setDescription("this is the description for tooltip").setGravity(Gravity.TOP).setBackgroundColor(getColor(R.color.progresscolorfillerdanger)))
-                .playOn(fab);
-        setContentView(main);
-
+        if(!prefs.contains(getString(R.string.firsttime))){
+            edit.putInt(getString(R.string.firsttime), 0);
+        }
+        int first = prefs.getInt(getString(R.string.firsttime), 0);
+        if(first==0){
+            main.addView(fab);
+            Overlay overlay = new Overlay();
+            overlay.setBackgroundColor(getColor(R.color.overlay));
+            Pointer pointer = new Pointer();
+            pointer.setGravity(Gravity.TOP);
+            TourGuide tourGuide = new TourGuide(this);
+            tourGuide.setOverlay(overlay);
+            tourGuide
+                    .setPointer(pointer)
+                    .setToolTip(new ToolTip().setTitle("this is tour")
+                            .setDescription("this is the description for tooltip").setGravity(Gravity.TOP).setBackgroundColor(getColor(R.color.progresscolorfillerdanger)))
+                    .playOn(fab);
+            setContentView(main);
+        }
     }
 
     @Override
