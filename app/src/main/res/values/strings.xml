@@ -123,4 +123,9 @@
     <string name="formtitle">Correction From</string>
     <string name="formhint">Correct Us</string>
     <string name="firsttime">firsttime</string>
+
+    <string name="defaultservingtitle">Default Serving Size</string>
+    <string name="getdefaultservingdescription">Please enter your usual food portion. (For e.g., for a lunch meal, if you finish 1 plate, put 1)</string>
+    <string name="defaultservingsize">defaultservingsize</string>
+    <string name="mealactivitydefaultservingsize">(Default Serving: %.2f)</string>
 </resources>

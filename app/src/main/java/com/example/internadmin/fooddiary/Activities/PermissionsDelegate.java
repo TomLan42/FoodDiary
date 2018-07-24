@@ -9,6 +9,11 @@ import android.view.View;
 
 import com.example.internadmin.fooddiary.R;
 
+/**
+ * Class object which is used by an activity to make
+ * permission request to allow the use of the device camera.
+ */
+
 class PermissionsDelegate {
 
     private static final int REQUEST_CODE = 10;

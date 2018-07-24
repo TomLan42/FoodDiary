@@ -1,6 +1,5 @@
 package com.example.internadmin.fooddiary.Activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -8,24 +7,22 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.internadmin.fooddiary.R;
-import com.example.internadmin.fooddiary.Views.GetMealTimeFragment;
-import com.example.internadmin.fooddiary.Views.GetNutritionPrefFragment;
+import com.example.internadmin.fooddiary.Views.GetDefaultServingFragment;
 import com.example.internadmin.fooddiary.Views.GetNutritionTrackFragment;
 import com.example.internadmin.fooddiary.Views.GetUserProfileFragment;
 import com.example.internadmin.fooddiary.Views.MoreInfoFragment;
-import com.example.internadmin.fooddiary.Views.Summary;
 import com.example.internadmin.fooddiary.Views.SummaryFragment;
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntro2Fragment;
 
-import java.text.DateFormat;
-import java.util.Calendar;
+/**
+ * Activity which is used to set the initial preference of the user.
+ *
+ * Uses AppIntro2 to display the Intro Fragments.
+ */
 
 public class IntroActivity extends AppIntro2 {
 
@@ -50,7 +47,7 @@ public class IntroActivity extends AppIntro2 {
         // Just set a title, description, background and image. AppIntro will do the rest.
         String title = "Welcome!";
         String description = "Please provide us some information we need to make your experience better";
-        int color = Color.parseColor("#3F51B5");
+        int color = Color.parseColor("#D36209");
         addSlide(AppIntro2Fragment.newInstance(title, description, R.drawable.ic_launcher_foreground, color));
 
         GetUserProfileFragment trackuserprofile = GetUserProfileFragment.newInstance(color);
@@ -62,57 +59,11 @@ public class IntroActivity extends AppIntro2 {
         MoreInfoFragment getmoreinfo = MoreInfoFragment.newInstance(color);
         addSlide(getmoreinfo);
 
+        GetDefaultServingFragment getdefaultservings = GetDefaultServingFragment.newInstance(color);
+        addSlide(getdefaultservings);
+
         SummaryFragment summary = SummaryFragment.newInstance(color);
         addSlide(summary);
-
-        /*
-        color = Color.parseColor("#EB984E");
-        int[] breakfasttime = {prefs.getInt(getString(R.string.breakfast_start_hour), 0),
-                prefs.getInt(getString(R.string.breakfast_start_min), 0),
-                prefs.getInt(getString(R.string.breakfast_end_hour), 11),
-                prefs.getInt(getString(R.string.breakfast_end_min), 0),};
-        String[] pref_breakfasttime = {getString(R.string.breakfast_start_hour),
-                getString(R.string.breakfast_start_min),
-                getString(R.string.breakfast_end_hour),
-                getString(R.string.breakfast_end_min)};
-        GetMealTimeFragment breakfast = GetMealTimeFragment.newInstance(R.drawable.sun, color,
-                "Breakfast", breakfasttime, pref_breakfasttime);
-
-        addSlide(breakfast);
-
-        color = Color.parseColor("#3498DB");
-        int[] lunchtime = {prefs.getInt(getString(R.string.lunch_start_hour), 11),
-                prefs.getInt(getString(R.string.lunch_start_min), 0),
-                prefs.getInt(getString(R.string.lunch_end_hour), 17),
-                prefs.getInt(getString(R.string.lunch_end_min), 0),};
-        String[] pref_lunchtime = {getString(R.string.lunch_start_hour),
-                getString(R.string.lunch_start_min),
-                getString(R.string.lunch_end_hour),
-                getString(R.string.lunch_end_min)};
-        GetMealTimeFragment lunch = GetMealTimeFragment.newInstance(R.drawable.fullsun, color,
-                "Lunch", lunchtime, pref_lunchtime);
-
-        addSlide(lunch);
-
-        color = Color.parseColor("#8E44AD");
-        int[] dinnertime = {prefs.getInt(getString(R.string.dinner_start_hour), 18),
-                prefs.getInt(getString(R.string.dinner_start_min), 0),
-                prefs.getInt(getString(R.string.dinner_end_hour), 23),
-                prefs.getInt(getString(R.string.dinner_end_min), 59)};
-        String[] pref_dinnertime = {getString(R.string.dinner_start_hour),
-                getString(R.string.dinner_start_min),
-                getString(R.string.dinner_end_hour),
-                getString(R.string.dinner_end_min)};
-        GetMealTimeFragment dinner = GetMealTimeFragment.newInstance(R.drawable.moon, color,
-                "Dinner", dinnertime, pref_dinnertime);
-
-        addSlide(dinner);
-
-        color = Color.parseColor("#16A085");
-        GetNutritionPrefFragment prefFragment = GetNutritionPrefFragment
-                .newInstance(R.drawable.cutpizza_small, color);
-
-        addSlide(prefFragment);*/
 
 
         // OPTIONAL METHODS
@@ -248,7 +199,7 @@ public class IntroActivity extends AppIntro2 {
 
 
         // Do something when the slide changes.
-        if(newFragment instanceof GetMealTimeFragment){
+        if(newFragment instanceof GetNutritionTrackFragment){
             //Toast.makeText(this, "Slide changed", Toast.LENGTH_SHORT).show();
         }
     }

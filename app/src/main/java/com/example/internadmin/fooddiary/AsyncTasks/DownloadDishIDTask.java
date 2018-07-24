@@ -28,6 +28,16 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
+/**
+ * An AsyncTask which downloads the DishID information from the server.
+ *
+ * It is used by DishID model, under method populateFromOnline.
+ * It makes a POST HTTP request to the server, using the address in
+ * Config.getinfoAddress.
+ *
+ * It returns a bundle onPostExecute, which is used by DishID model
+ * to populate the required variables.
+ */
 
 public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
 
@@ -40,7 +50,8 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
     private WeakReference<ProgressDialog> progDialogref;
     private PostTaskListener<Bundle> ptl;
 
-
+    //Requires a PostTaskListener(implemented by DishID), context, and FoodName to request from
+    //server.
     public DownloadDishIDTask(PostTaskListener<Bundle> ptl, Context context, String FoodName) {
         this.dstURL = Config.getinfoAddress;
         weakContext = new WeakReference<>(context);
@@ -160,6 +171,8 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
         }
     }
 
+    //Once Task is completed, the progress dialog is dismissed, and the result returned to the
+    //PostTaskListener.
     @Override
     protected void onPostExecute(Bundle result) {
         super.onPostExecute(result);
@@ -171,6 +184,8 @@ public class DownloadDishIDTask extends AsyncTask<Void, Void, Bundle> {
         }
     }
 
+    //Method which gets URL from the JSON returned from server
+    //Opens image as bitmap and saves it into private directory.
     private File GetImageFromURL(String FoodName, String src) {
 
         FileOutputStream fos = null;

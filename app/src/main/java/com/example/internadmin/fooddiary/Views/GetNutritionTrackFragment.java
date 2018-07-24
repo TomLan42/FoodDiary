@@ -31,6 +31,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Fragment in IntroActivity which asks the user what does he wish to use the app for.
+ *
+ * Allows the user to choose between weight loss, diabetes or high blood pressure(HBP may be removed).
+ */
+
 public class GetNutritionTrackFragment extends Fragment implements ISlideSelectionListener,
         ISlideBackgroundColorHolder{
 
@@ -133,6 +139,8 @@ public class GetNutritionTrackFragment extends Fragment implements ISlideSelecti
         return false;
     }
 
+    //Method which forces the user to choose at least one checkbox among the options.
+    //Updates the checkbox and the preferences when the option is selected/deselected.
     private void setCheckboxesListener(final HashMap<String, CheckBox> Checkboxes,
                                        final SharedPreferences.Editor edit){
 

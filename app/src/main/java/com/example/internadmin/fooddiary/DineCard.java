@@ -2,7 +2,6 @@ package com.example.internadmin.fooddiary;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -79,7 +78,7 @@ public class DineCard extends CardView{
             Long id = mealdata.get(i);
             Meal meal = new Meal();
             meal.populateFromDatabase(id, getContext());
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
+            foodlist.add(new FoodItem(meal.getDishID().getDisplayFoodName(), "yummy", id));
         }
         // using nonscrolllistview instead of normal listview because normal listview creates problems when used inside scrollview
         NonScrollListView dinelist = new SwipeMenuListView(getContext());

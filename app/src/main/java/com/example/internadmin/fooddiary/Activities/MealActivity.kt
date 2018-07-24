@@ -1,5 +1,6 @@
 package com.example.internadmin.fooddiary.Activities
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -7,33 +8,32 @@ import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.SeekBar
-import android.widget.TextView
-import android.widget.Toast
-import com.example.internadmin.fooddiary.Interfaces.ServingSliceListener
+import android.view.WindowManager
+import android.widget.*
 import com.example.internadmin.fooddiary.Models.DishID
 import com.example.internadmin.fooddiary.Models.Meal
 import com.example.internadmin.fooddiary.Models.TimePeriod
 import com.example.internadmin.fooddiary.R
-import com.example.internadmin.fooddiary.Views.PieSliderDialog
-import com.example.internadmin.fooddiary.Views.miniPizzaView
 import kotlinx.android.synthetic.main.activity_meal.*
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.nutritionfactlabel.*
+import tourguide.tourguide.Overlay
+import tourguide.tourguide.TourGuide
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * MealActivity allows information of the meal to be
@@ -53,6 +53,7 @@ class MealActivity : AppCompatActivity() {
     private lateinit var mymeal: Meal
     private var clearCache = false
     private lateinit var prefs: SharedPreferences
+    private lateinit var tourGuide: TourGuide
 
     //Generate a meal object, based on data from the previous activity
     // Upon generating, the meal object is used to populate the MealActivity UI.
@@ -63,6 +64,7 @@ class MealActivity : AppCompatActivity() {
         var totalserving: Float
         //val mypizzaslicer = findViewById<miniPizzaView>(R.id.pizzaslicer)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         //Check if passed data is a new meal (in which only the dishID info is passed,
         //or is an existing meal object in the database.
@@ -116,7 +118,12 @@ class MealActivity : AppCompatActivity() {
     private fun executeOnMealInitialized(toUpdate: Boolean){
 
         if(::mymeal.isInitialized){
+
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+            val firsttime = prefs.getInt(getString(R.string.firsttime), -1)
+
             img_mealpic.setImageBitmap(mymeal.foodImg)
+            dishname.text = mymeal.dishID.displayFoodName
 
             btn_saveentry.setOnClickListener {
 
@@ -134,8 +141,15 @@ class MealActivity : AppCompatActivity() {
                     Toasty.success(this, "Saved Entry!", Toast.LENGTH_LONG).show()
                 }
 
+                if(::tourGuide.isInitialized){
+                    val edit = prefs.edit()
+                    edit.putInt(getString(R.string.firsttime), 1)
+                    edit.apply()
+                }
+
                 val myintent = Intent(this, MainActivity::class.java)
                 startActivity(myintent)
+                finish()
             }
 
             btn_deleteMeal.setOnClickListener{
@@ -161,7 +175,7 @@ class MealActivity : AppCompatActivity() {
                 //dishimg.setImageBitmap(mymeal.dishID.getFoodImg())
                 nutritionfactsviewgroup(mymeal.dishID.nutrition, view)
                 alertadd.setView(view)
-                alertadd.setTitle(mymeal.dishID.getFoodName())
+                alertadd.setTitle(mymeal.dishID.getDisplayFoodName())
                 alertadd.setNegativeButton("Ok") { dlg, _ -> dlg.dismiss() }
                 alertadd.show()
 
@@ -179,6 +193,32 @@ class MealActivity : AppCompatActivity() {
                 serving += " g Serving"
             }
             txt_servingsizelarge.text = serving
+
+
+            if(firsttime == 0){
+                tourGuide = TourGuide.create(this) {
+                    toolTip {
+                        title { "Save Entry" }
+                        description { "Once complete, click here to save meal. Click anywhere to dismiss this message." }
+                        gravity { Gravity.TOP }
+                    }
+                    pointer { gravity { Gravity.TOP } }
+                }
+
+                val myoverlay = Overlay()
+                myoverlay.backgroundColor { ContextCompat.getColor(this@MealActivity, R.color.overlay) }
+                myoverlay.mDisableClick = false
+                myoverlay.setOnClickListener(View.OnClickListener{_ ->
+                    tourGuide.cleanUp()
+                    val edit = prefs.edit()
+                    edit.putInt(getString(R.string.firsttime), 1)
+                    edit.apply()
+                }
+                )
+                tourGuide.overlay = myoverlay
+                tourGuide.playOn(btn_saveentry)
+            }
+
         }else{
             RedirectToMainOnError("Meal was not properly initialized.", this)
         }
@@ -186,7 +226,7 @@ class MealActivity : AppCompatActivity() {
     }
 
     private fun getPrevServingAmt(mydishid: DishID):Float{
-        val servingamt = prefs.getFloat(mydishid.internalFoodName, -1f)
+        val servingamt = prefs.getFloat(mydishid.foodName, -1f)
 
         if(servingamt < 0){
             return getdefaultservings(mydishid.nutrition)
@@ -197,13 +237,13 @@ class MealActivity : AppCompatActivity() {
     private fun getdefaultservings(nutrition: JsonObject): Float{
         val myobj: JsonElement? = nutrition.get("Default Serving")
         if(myobj == null)
-            return 1.5f
+            return prefs.getFloat(getString(R.string.defaultservingsize), 1.0f)
         else
             return myobj.asFloat
     }
 
     private fun setDefaultServingAmt(mymeal: Meal){
-        val FoodName = mymeal.dishID.internalFoodName
+        val FoodName = mymeal.dishID.foodName
         val defaultserving = mymeal.servingAmt
 
         val edit = prefs.edit()
@@ -256,6 +296,10 @@ class MealActivity : AppCompatActivity() {
     }*/
 
     private fun servingsviewgroup(servingAmt: Float) {
+
+        txt_defaultservingsize.text =
+                String.format(getString(R.string.mealactivitydefaultservingsize),
+                        getdefaultservings(mymeal.dishID.nutrition))
 
         seekbar_servingsize.setMax(30)
         if(servingAmt > 3)
@@ -333,22 +377,49 @@ class MealActivity : AppCompatActivity() {
 
         val dateFormat = SimpleDateFormat("E, d MMM y")
 
-        setmealofday.text = getMealType(defaultdate)
+        setmealofday.text = "Time"
         setdatetime.text = dateFormat.format(mymeal.timeConsumed)
 
         btn_datetimepicker.setOnClickListener {
+
             SingleDateAndTimePickerDialog.Builder(this)
                     .mainColor(resources.getColor(R.color.colorPrimary))
                     .title("Set Meal Time")
                     .defaultDate(defaultdate)
+                    .displayHours(false)
+                    .displayMinutes(false)
                     .listener { date ->
                         mymeal.timeConsumed = date
                         setdatetime.text = dateFormat.format(mymeal.timeConsumed)
-                        setmealofday.text = getMealType(mymeal.timeConsumed)
                     }.display()
         }
-    }
 
+        val mytimeperiod = ArrayList<TimePeriod>()
+        mytimeperiod.add(TimePeriod.MORNING)
+        mytimeperiod.add(TimePeriod.AFTERNOON)
+        mytimeperiod.add(TimePeriod.EVENING)
+        mytimeperiod.add(TimePeriod.NIGHT)
+
+        val adapter = ArrayAdapter<TimePeriod>(this, android.R.layout.simple_spinner_dropdown_item, mytimeperiod)
+
+        spinner_period.adapter = adapter
+        spinner_period.setSelection(mymeal.timePeriod.ordinal, false)
+
+        spinner_period.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                mymeal.timePeriod = spinner_period.getItemAtPosition(position) as TimePeriod
+                //setmealofday.text = (spinner_period.getItemAtPosition(position) as TimePeriod).name
+            }
+
+        }
+
+
+    }
+/*
     private fun getMealType(mydate: Date): String{
         val calendar = GregorianCalendar.getInstance()
         calendar.time = mydate
@@ -400,7 +471,7 @@ class MealActivity : AppCompatActivity() {
         }
         return false
 
-    }
+    }*/
 
     private fun nutritionfactsviewgroup(nutrition: JsonObject, view: View){
         /*

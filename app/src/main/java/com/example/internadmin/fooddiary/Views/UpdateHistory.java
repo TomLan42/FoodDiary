@@ -237,7 +237,7 @@ public class UpdateHistory extends Fragment {
             Long id = mealdata.get(i);
             Meal meal = new Meal();
             meal.populateFromDatabase(id, getContext());
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
+            foodlist.add(new FoodItem(meal.getDishID().getDisplayFoodName(), "yummy", id));
         }
         breakfastlist = new SwipeMenuListView(getContext());
         final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
@@ -396,7 +396,7 @@ public class UpdateHistory extends Fragment {
             Long id = mealdata.get(i);
             Meal meal = new Meal();
             meal.populateFromDatabase(id, getContext());
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
+            foodlist.add(new FoodItem(meal.getDishID().getDisplayFoodName(), "yummy", id));
         }
         //foodlist.add(new FoodItem("thosai", "yummy"));
         //foodlist.add(new FoodItem("thosai", "yummy"));
@@ -547,7 +547,7 @@ public class UpdateHistory extends Fragment {
             Long id = mealdata.get(i);
             Meal meal = new Meal();
             meal.populateFromDatabase(id, getContext());
-            foodlist.add(new FoodItem(meal.getDishID().getFoodName(), "yummy", id));
+            foodlist.add(new FoodItem(meal.getDishID().getDisplayFoodName(), "yummy", id));
         }
         final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
         dinnerlist.setAdapter(adapter);

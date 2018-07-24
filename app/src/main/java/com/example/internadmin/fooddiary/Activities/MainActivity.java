@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor edit = prefs.edit();
+        final SharedPreferences.Editor edit = prefs.edit();
         // CODE TO GET THE SCREEN DISPLAY SIZE
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity{
         fab.setId(899);
         fab.setLayoutParams(fabparams);
         main.setId(894);
+        main.addView(fab);
 
         // LINEAR LAYOUT AS A LAYOUT PLACEHOLDER FOR FRAGMENTS TO COME
         ll = new LinearLayout(MainActivity.this);
@@ -184,12 +185,13 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
+
         if(!prefs.contains(getString(R.string.firsttime))){
             edit.putInt(getString(R.string.firsttime), 0);
+            edit.apply();
         }
         int first = prefs.getInt(getString(R.string.firsttime), 0);
         if(first==0){
-            main.addView(fab);
             Overlay overlay = new Overlay();
             overlay.setBackgroundColor(getColor(R.color.overlay));
             Pointer pointer = new Pointer();
@@ -198,11 +200,36 @@ public class MainActivity extends AppCompatActivity{
             tourGuide.setOverlay(overlay);
             tourGuide
                     .setPointer(pointer)
-                    .setToolTip(new ToolTip().setTitle("this is tour")
-                            .setDescription("this is the description for tooltip").setGravity(Gravity.TOP).setBackgroundColor(getColor(R.color.progresscolorfillerdanger)))
+                    .setToolTip(new ToolTip().setTitle("Let's Get Started")
+                            .setDescription("Click here to start the camera.")
+                            .setGravity(Gravity.TOP)
+                            .setBackgroundColor(getColor(R.color.progresscolorfillerdanger)))
                     .playOn(fab);
-            setContentView(main);
+
+            //edit.putInt(getString(R.string.firsttime), 1);
+            //edit.apply();
+        }else if (first == 1){
+            final TourGuide tourGuide = new TourGuide(this);
+
+            Overlay overlay = new Overlay();
+            overlay.setBackgroundColor(getColor(R.color.overlay));
+            overlay.setHoleRadius(400);
+            overlay.setHoleOffsets(0, -500);
+            overlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tourGuide.cleanUp();
+                    edit.putInt(getString(R.string.firsttime), -1);
+                    edit.apply();
+                }
+            });
+            tourGuide.setOverlay(overlay);
+            tourGuide.setToolTip(new ToolTip().setTitle("Summary")
+                                .setDescription("Your daily summary appears here. Click this to complete tutorial.")
+                                .setGravity(Gravity.BOTTOM))
+                    .playOn(ll);
         }
+        setContentView(main);
     }
 
     @Override

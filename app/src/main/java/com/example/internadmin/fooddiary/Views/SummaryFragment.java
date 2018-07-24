@@ -35,6 +35,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Fragment which shows all the settings made in the AppIntro. If settings were
+ * not made, this fragment adds the appropriate settings for the app to work.
+ */
+
 public class SummaryFragment extends Fragment implements ISlideSelectionListener,
         ISlideBackgroundColorHolder{
 
@@ -64,6 +69,8 @@ public class SummaryFragment extends Fragment implements ISlideSelectionListener
 
     private TextView textView_sugar;
     private TextView hbp_customwarning;
+
+    private TextView textView_defaultServingSize;
 
     public SummaryFragment(){ }
 
@@ -133,6 +140,7 @@ public class SummaryFragment extends Fragment implements ISlideSelectionListener
         textView_hbp = view.findViewById(R.id.textView_hbp);
         hbp_customwarning = view.findViewById(R.id.hbp_customwarning);
 
+        textView_defaultServingSize = view.findViewById(R.id.textView_setdefaultservingsize);
 
         mainLayout.setBackgroundColor(bgColor);
 
@@ -145,6 +153,8 @@ public class SummaryFragment extends Fragment implements ISlideSelectionListener
         db = prefs.getBoolean("diabetes", false);
         hbp = prefs.getBoolean("hbpressure", false);
 
+        //If weightloss is selected, performs the calculation for
+        //target calories the user needs to meet per day.
         if(wl){
             wtlossLayout.setVisibility(View.VISIBLE);
             wtloss_lackinfowarning.setVisibility(View.GONE);
@@ -200,6 +210,7 @@ public class SummaryFragment extends Fragment implements ISlideSelectionListener
             wtlossLayout.setVisibility(View.GONE);
         }
 
+        //If diabetes is chosen, the chosen option is shown.
         if(db){
             DiabetesLayout.setVisibility(View.VISIBLE);
             diabetes_customwarning.setVisibility(View.GONE);
@@ -254,6 +265,9 @@ public class SummaryFragment extends Fragment implements ISlideSelectionListener
         } else{
             HBPLayout.setVisibility(View.GONE);
         }
+
+        float servingsize = prefs.getFloat(getString(R.string.defaultservingsize), 1.0f);
+        textView_defaultServingSize.setText("Serving Size: " + String.valueOf(servingsize));
 
     }
 

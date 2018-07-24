@@ -2,7 +2,6 @@ package com.example.internadmin.fooddiary.Views;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -10,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.internadmin.fooddiary.Interfaces.DishIDPopulatedListener;
@@ -72,7 +69,7 @@ public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
             //On click function
             public void onClick(View view) {
                 int position = (Integer) view.getTag();
-                final DishID mydishid = new DishID(getItem(position).getInternalFoodName(), getItem(position).getVer(), getContext());
+                final DishID mydishid = new DishID(getItem(position).getFoodName(), getItem(position).getVer(), getContext());
                 mydishid.setDishIDPopulatedListener( new DishIDPopulatedListener() {
                     @Override
                     public void onPopulated(boolean dataAdded) {
@@ -84,7 +81,7 @@ public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
                             ImageView dishimg = view.findViewById(R.id.dialog_imageview);
                             dishimg.setImageBitmap(mydishid.getFoodImg());
                             alertadd.setView(view);
-                            alertadd.setTitle(mydishid.getFoodName());
+                            alertadd.setTitle(mydishid.getDisplayFoodName());
                             alertadd.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dlg, int sumthin) {
                                     dlg.dismiss();
@@ -109,12 +106,12 @@ public class PredictListViewAdapter extends ArrayAdapter<Prediction> {
                 });
                 mydishid.execute();
 
-                //Toast.makeText(getContext(), getItem(position).getFoodName(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), getItem(position).getDisplayFoodName(), Toast.LENGTH_LONG).show();
 
             }
         });
 
-        viewHolder.predictedFoodName.setText(mypredict.getFoodName());
+        viewHolder.predictedFoodName.setText(mypredict.getDisplayFoodName());
 
         if(position == 0){
             viewHolder.row_layout_prediction.setBackgroundColor(Color.parseColor("#a4c639"));

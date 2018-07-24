@@ -38,6 +38,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Fragment which is used by IntroActivity.
+ *
+ * Requests for more information regarding the preferences that the user has made,
+ * based on GetNutritionTrackFragment.
+ */
+
 public class MoreInfoFragment extends Fragment implements ISlideSelectionListener,
         ISlideBackgroundColorHolder{
 

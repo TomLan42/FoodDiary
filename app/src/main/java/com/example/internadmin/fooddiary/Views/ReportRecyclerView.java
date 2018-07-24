@@ -6,6 +6,13 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * Animated RecyclerView for Report Fragment.
+ *
+ * Shows the views in the RecyclerView appearing onc-by-one.
+ * While animating, the RecyclerView is not scrollable.
+ */
+
 public class ReportRecyclerView extends RecyclerView {
     private boolean mScrollable;
 

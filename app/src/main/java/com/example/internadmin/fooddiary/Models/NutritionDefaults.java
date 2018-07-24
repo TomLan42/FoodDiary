@@ -1,5 +1,10 @@
 package com.example.internadmin.fooddiary.Models;
 
+/**
+ * Class used by Config to store the default values of nutrition
+ * names, values, and the name of the nutrition used in the app.
+ */
+
 public class NutritionDefaults {
     private String nutrition;
     private float defaultvalue;

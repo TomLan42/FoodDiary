@@ -1,4 +1,4 @@
-package com.example.internadmin.fooddiary.Views;
+package com.example.internadmin.fooddiary.Unused;
 
 import android.content.Context;
 import android.content.res.Resources;

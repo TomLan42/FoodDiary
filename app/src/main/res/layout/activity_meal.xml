@@ -10,13 +10,13 @@
         android:id="@+id/btn_moreinfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="180dp"
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_info_outline_white_24dp" />
 
     <android.support.design.widget.FloatingActionButton
@@ -81,6 +81,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/dishname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:text="Nasi Briyani"/>
+
+            </LinearLayout>
+
+
+            <View
+                android:id="@+id/dividerline2"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
             <TextView
                 android:id="@+id/txt_servingsizelarge"
                 android:layout_width="wrap_content"
@@ -90,6 +115,17 @@
                 android:text="Serving Size:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txt_defaultservingsize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="(Default Serving: 1.0)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="15sp" />
+
 
             <!--
             <LinearLayout
@@ -130,7 +166,7 @@
 
                 </FrameLayout>
 
-                <com.example.internadmin.fooddiary.Views.miniPizzaView
+                <com.example.internadmin.fooddiary.Unused.miniPizzaView
                     android:id="@+id/pizzaslicer"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -199,7 +235,7 @@
 
 
         <View
-                android:id="@+id/dividerline2"
+                android:id="@+id/dividerline3"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray" />
@@ -209,34 +245,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:padding="3dp">
 
-                <LinearLayout
+
+                <TextView
+                    android:id="@+id/setdatetime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:padding="2dp"
+                    android:text="Mon, 1 Jan 2018"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/setmealofday"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="2dp"
-                        android:text="Lunch"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textSize="20sp" />
-
-
-
-                    <TextView
-                        android:id="@+id/setdatetime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="2dp"
-                        android:text="1 Jan 2018, 12:00pm"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
-
-
-                </LinearLayout>
 
                 <View
                     android:layout_width="0dp"
@@ -252,7 +273,45 @@
                     app:srcCompat="@drawable/ic_alarm_black_24dp" />
 
 
+
             </LinearLayout>
+
+        <View
+            android:id="@+id/dividerline4"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="3dp">
+
+            <TextView
+                android:id="@+id/setmealofday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Morning"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/spinner_period"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginTop="6dp"/>
+
+
+        </LinearLayout>
 <!--
             <View
                 android:id="@+id/dividerline3"

@@ -2,25 +2,23 @@ package com.example.internadmin.fooddiary.Activities
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.example.internadmin.fooddiary.R.color.grey
 import kotlinx.android.synthetic.main.activity_prediction.*
 import java.io.File
 import android.content.DialogInterface
-import android.os.Handler
+import android.preference.PreferenceManager
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
-import android.text.InputType
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.widget.*
-import com.afollestad.materialdialogs.MaterialDialog
 import com.example.internadmin.fooddiary.AsyncTasks.FormSubmitTask
 import com.example.internadmin.fooddiary.AsyncTasks.ImageUploadTask
 import com.example.internadmin.fooddiary.Models.DishID
@@ -28,9 +26,11 @@ import com.example.internadmin.fooddiary.Models.Prediction
 import com.example.internadmin.fooddiary.R
 import com.example.internadmin.fooddiary.Views.PredictListViewAdapter
 import com.miguelcatalan.materialsearchview.MaterialSearchView
-import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.activity_camera.*
 import kotlinx.android.synthetic.main.prediction_footer_layout.*
-import java.util.concurrent.TimeUnit
+import tourguide.tourguide.Overlay
+import tourguide.tourguide.Pointer
+import tourguide.tourguide.TourGuide
 
 /**
  * PredictionActivity takes the predictions and images
@@ -53,6 +53,7 @@ class PredictionActivity : AppCompatActivity() {
     lateinit var filename: String
     lateinit var constraint: ConstraintLayout
     private lateinit var foodImgFile: File
+    private lateinit var tourGuide:TourGuide
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,6 +152,20 @@ class PredictionActivity : AppCompatActivity() {
 
                 checkbox.isChecked = (i == position)
             }
+
+            if(::tourGuide.isInitialized){
+                tourGuide.apply {
+                    cleanUp()
+                    toolTip{
+                        title { "Next Page" }
+                        description { "Click on Button to Proceed." }
+                        gravity { Gravity.TOP }
+                    }
+                    overlay {
+                        style { Overlay.Style.CIRCLE }
+                    }
+                }.playOn(btn_mealActivity)
+            }
         }
 
         footer_layout.setOnClickListener {
@@ -163,13 +178,13 @@ class PredictionActivity : AppCompatActivity() {
         //item. Next, the Food Image and DishID is passed to MealActivity.java.
         btn_mealActivity.setOnClickListener{
             val mypredict = predictionlistview.getItemAtPosition(mypos) as Prediction
-            val mydishid = DishID(mypredict.internalFoodName, mypredict.ver, this)
-            Log.d("FOODNAME", mydishid.internalFoodName)
+            val mydishid = DishID(mypredict.foodName, mypredict.ver, this)
+            Log.d("FOODNAME", mydishid.foodName)
             mydishid.setDishIDPopulatedListener { dataAdded ->
                 if(dataAdded){
                     val b = Bundle()
                     b.putSerializable("FoodImg", foodImgFile)
-                    b.putString("DishID", mydishid.internalFoodName)
+                    b.putString("DishID", mydishid.foodName)
                     b.putInt("Version", mydishid.ver)
                     if(intent.hasExtra("mealtime")){
                         val mealintent = Intent(this, MealActivity::class.java)
@@ -188,6 +203,26 @@ class PredictionActivity : AppCompatActivity() {
                 }
             }
             mydishid.execute()
+        }
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val firsttime = prefs.getInt(getString(R.string.firsttime), -1)
+
+
+        if(firsttime == 0){
+            tourGuide = TourGuide.create(this) {
+                toolTip {
+                    title { "Select Prediction" }
+                    description { "Select the correct Dish." }
+                    gravity { Gravity.TOP }
+                }
+                overlay {
+                    backgroundColor { ContextCompat.getColor(this@PredictionActivity, R.color.overlay) }
+                    style { Overlay.Style.ROUNDED_RECTANGLE }
+                }
+            }
+            tourGuide.playOn(predictionlistview)
+
         }
 
     }

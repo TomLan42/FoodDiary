@@ -5,14 +5,12 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 
 import com.example.internadmin.fooddiary.DBHandler;
 import com.example.internadmin.fooddiary.R;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -94,7 +92,7 @@ public class Meal{
 
         DBHandler mydbhandler = new DBHandler(ctx);
 
-        return mydbhandler.insertMealEntry(MyDishID.getInternalFoodName(), TimeConsumed, timePeriod, ServingAmt, FoodImg);
+        return mydbhandler.insertMealEntry(MyDishID.getFoodName(), TimeConsumed, timePeriod, ServingAmt, FoodImg);
     }
 
     public void populateFromDatabase(long MealID, Context ctx){
@@ -118,7 +116,7 @@ public class Meal{
 
         DBHandler mydbhandler = new DBHandler(ctx);
 
-        return mydbhandler.updateHistoryEntry(MyDishID.getInternalFoodName(), TimeConsumed, timePeriod, ServingAmt, RowID);
+        return mydbhandler.updateHistoryEntry(MyDishID.getFoodName(), TimeConsumed, timePeriod, ServingAmt, RowID);
     }
 
     public void setTimeConsumed(Date date){

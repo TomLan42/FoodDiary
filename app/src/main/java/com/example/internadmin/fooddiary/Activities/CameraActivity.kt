@@ -25,7 +25,13 @@ import com.example.internadmin.fooddiary.AsyncTasks.ImageUploadTask
 import com.example.internadmin.fooddiary.Interfaces.PostTaskListener
 import com.example.internadmin.fooddiary.R
 import android.media.ExifInterface
+import android.preference.PreferenceManager
+import android.support.v4.content.ContextCompat
+import android.view.Gravity
 import es.dmoral.toasty.Toasty
+import tourguide.tourguide.Overlay
+import tourguide.tourguide.Pointer
+import tourguide.tourguide.TourGuide
 
 
 /**
@@ -56,6 +62,7 @@ class CameraActivity : AppCompatActivity() {
         // Delayed display of UI elements
         supportActionBar?.show()
         //fullscreen_content_controls.visibility = View.VISIBLE
+
     }
     private var mVisible: Boolean = false
     private val mHideRunnable = Runnable { hide() }
@@ -76,6 +83,7 @@ class CameraActivity : AppCompatActivity() {
     private var permissionsGranted: Boolean = false
     private lateinit var fotoapparat: Fotoapparat
     private var isChecked: Boolean = false
+    private lateinit var tourGuide:TourGuide
 
     private val SELECT_IMAGE = 100
 
@@ -145,6 +153,26 @@ class CameraActivity : AppCompatActivity() {
             permissionsDelegate.requestCameraPermission()
         }
 
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val firsttime = prefs.getInt(getString(R.string.firsttime), -1)
+
+
+        if(firsttime == 0){
+            val ptr = Pointer()
+            ptr.gravity = Gravity.TOP
+            val overlay = Overlay()
+            overlay.backgroundColor = ContextCompat.getColor(this, R.color.overlay)
+            tourGuide = TourGuide.create(this) {
+                pointer { ptr }
+                toolTip {
+                    title { "Take Picture" }
+                    description { "Snap a Food Image" }
+                    gravity { Gravity.TOP }
+                }
+                overlay { overlay }
+            }
+            tourGuide.playOn(fabPCCapture)
+        }
 
     }
 
@@ -160,6 +188,7 @@ class CameraActivity : AppCompatActivity() {
 
         fotoapparat.start()
         adjustViewsVisibility()
+
     }
 
     private val LOGGING_TAG = "Fotoapparat"
@@ -253,6 +282,7 @@ class CameraActivity : AppCompatActivity() {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100)
+
     }
 
     private fun toggle() {
@@ -272,6 +302,7 @@ class CameraActivity : AppCompatActivity() {
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable)
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY.toLong())
+
     }
 
     private fun show() {
@@ -284,6 +315,7 @@ class CameraActivity : AppCompatActivity() {
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable)
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY.toLong())
+
     }
 
     /**
@@ -293,12 +325,14 @@ class CameraActivity : AppCompatActivity() {
     private fun delayedHide(delayMillis: Int) {
         mHideHandler.removeCallbacks(mHideRunnable)
         mHideHandler.postDelayed(mHideRunnable, delayMillis.toLong())
+
     }
 
     //Re-enable the interface buttons
     override fun onResume() {
         super.onResume()
         enableAllButtons(true)
+
     }
 
     //Start camera and show view

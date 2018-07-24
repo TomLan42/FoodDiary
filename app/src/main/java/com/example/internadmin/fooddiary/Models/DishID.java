@@ -25,6 +25,19 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class which stores the DishID information from server.
+ * When the data is required, it first checks the database
+ * if the dishID exists, and if the database DishID version
+ * is as new or newer than the given version.
+ *
+ * If the DishID does not exist in database/ database DishID is older,
+ * the DishID is requested from online.
+ *
+ * If a listener is added, the listener is informed once
+ * the DishID has been successfully/unsuccessfully populated.
+ */
+
 public class DishID implements PostTaskListener<Bundle> {
 
     private String FoodName;
@@ -53,7 +66,7 @@ public class DishID implements PostTaskListener<Bundle> {
         }
     }
 
-    public String getFoodName(){
+    public String getDisplayFoodName(){
         String[] strArray = FoodName.split("_");
         StringBuilder builder = new StringBuilder();
         for (String s : strArray) {
@@ -64,7 +77,7 @@ public class DishID implements PostTaskListener<Bundle> {
         return builder.toString();
     }
 
-    public String getInternalFoodName(){
+    public String getFoodName(){
         return FoodName;
     }
 

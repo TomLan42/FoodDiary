@@ -22,6 +22,14 @@ import com.example.internadmin.fooddiary.R;
 import com.github.paolorotolo.appintro.ISlideBackgroundColorHolder;
 import com.github.paolorotolo.appintro.ISlideSelectionListener;
 
+/**
+ * Fragment used by IntroActivity for the user to key in his/ her personal particulars.
+ *
+ * Requests for the users age, height, weight, and gender.
+ *
+ * Mainly used for calculating the user's calorie requirements.
+ */
+
 public class GetUserProfileFragment extends Fragment implements ISlideSelectionListener,
         ISlideBackgroundColorHolder{
 

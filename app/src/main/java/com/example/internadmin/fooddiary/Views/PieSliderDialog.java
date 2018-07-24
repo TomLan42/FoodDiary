@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import com.example.internadmin.fooddiary.Interfaces.ServingSliceListener;
 import com.example.internadmin.fooddiary.R;
-import com.example.internadmin.fooddiary.Views.PizzaView;
+import com.example.internadmin.fooddiary.Unused.PizzaView;
 
 public class PieSliderDialog extends Dialog implements
         android.view.View.OnClickListener {
