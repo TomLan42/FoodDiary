@@ -20,8 +20,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.support.v7.widget.Toolbar;
-
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.internadmin.fooddiary.R;
@@ -30,8 +28,6 @@ import com.example.internadmin.fooddiary.Views.Report;
 import com.example.internadmin.fooddiary.Views.Settings;
 import com.example.internadmin.fooddiary.Views.Summary;
 import com.example.internadmin.fooddiary.Views.UpdateHistory;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
-
 import tourguide.tourguide.Overlay;
 import tourguide.tourguide.Pointer;
 import tourguide.tourguide.ToolTip;

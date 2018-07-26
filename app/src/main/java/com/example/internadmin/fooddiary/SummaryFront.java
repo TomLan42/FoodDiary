@@ -75,14 +75,11 @@ public class SummaryFront extends Fragment {
 
         arcProgressStackView = view.findViewById(R.id.apsv);
         updateLabel(myCalendar);
-
-
-
     }
 
     public void updateLabel(Calendar myCalendar){
         float consumed = getdaycalories(myCalendar);
-        left.setText(String.valueOf(Math.round(limit-consumed)) +"/" +String.valueOf(limit) +"\n"+tracking + " Left");
+        left.setText(String.valueOf(Math.round(limit-consumed)) +"/" +String.valueOf(limit) +"\n"+"Calories" + " Left");
 
         models = new ArrayList<>();
         if(getdaycalories(myCalendar) < calslimit/2){

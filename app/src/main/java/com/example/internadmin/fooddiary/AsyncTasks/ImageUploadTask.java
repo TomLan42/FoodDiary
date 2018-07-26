@@ -104,8 +104,8 @@ public class ImageUploadTask extends AsyncTask<Void, Void, Bundle> {
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
-            urlConnection.setConnectTimeout(7000);
-            urlConnection.setReadTimeout(7000);
+            urlConnection.setConnectTimeout(20000);
+            urlConnection.setReadTimeout(20000);
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
             urlConnection.setUseCaches(false);
