@@ -66,7 +66,7 @@ public class SummarySugar extends Fragment {
         // tracking Carbohydrates
         tracking = "Carbohydrate";
         calslimit = 2200;
-        int diabetesRegime = prefs.getInt("DiabetesRegime", 0);
+        int diabetesRegime = prefs.getInt(getString(R.string.diabetesregime), 0);
 
         if(diabetesRegime == 0)
             limit = 45;
