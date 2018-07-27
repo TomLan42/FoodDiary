@@ -57,12 +57,12 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
 
     private boolean wl = false;
     private boolean db = false;
-    private boolean hbp = false;
+    //private boolean hbp = false;
 
 
     private LinearLayout mainLayout;
     private LinearLayout wtlossLayout;
-    private LinearLayout HBPLayout;
+    //private LinearLayout HBPLayout;
     private LinearLayout DiabetesLayout;
 
     private TextView nouserprofilewarning;
@@ -70,8 +70,8 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
     private EditText moreinfoweight;
     private EditText moreinfowtweeks;
 
-    private RadioGroup moreinfoHBP;
-    private EditText editText_CustomDASH;
+    //private RadioGroup moreinfoHBP;
+    //private EditText editText_CustomDASH;
 
     private RadioGroup moreinfoDiabetes;
     private EditText editText_CustomCarbs;
@@ -131,7 +131,7 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
 
         mainLayout = view.findViewById(R.id.fragment_moreinfoll);
         wtlossLayout = view.findViewById(R.id.moreinfo_wtloss);
-        HBPLayout = view.findViewById(R.id.moreinfo_hbp);
+        //HBPLayout = view.findViewById(R.id.moreinfo_hbp);
         DiabetesLayout = view.findViewById(R.id.moreinfo_sugar);
 
         nouserprofilewarning = view.findViewById(R.id.nouserprofilewarning);
@@ -139,8 +139,8 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
         moreinfoweight = view.findViewById(R.id.edittxt_moreinfoweight);
         moreinfowtweeks = view.findViewById(R.id.edittxt_moreinfoweightwks);
 
-        moreinfoHBP = view.findViewById(R.id.radioHBPRegime);
-        editText_CustomDASH = view.findViewById(R.id.edittxt_CustomSalt);
+        //moreinfoHBP = view.findViewById(R.id.radioHBPRegime);
+        //editText_CustomDASH = view.findViewById(R.id.edittxt_CustomSalt);
 
         moreinfoDiabetes = view.findViewById(R.id.radioDiabetesRegime);
         editText_CustomCarbs = view.findViewById(R.id.edittxt_CustomCarbs);
@@ -154,7 +154,7 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
     public void onSlideSelected() {
         wl = prefs.getBoolean("weightloss", false);
         db = prefs.getBoolean("diabetes", false);
-        hbp = prefs.getBoolean("hbpressure", false);
+        //hbp = prefs.getBoolean("hbpressure", false);
 
         if(wl){
             wtlossLayout.setVisibility(View.VISIBLE);
@@ -168,8 +168,8 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
         }
         else {
             wtlossLayout.setVisibility(View.GONE);
-            //edit.remove("DesiredWeight");
-            //edit.remove("DesiredWeightWks");
+            //edit.remove(getString(R.string.DesiredWeight));
+            //edit.remove(getString(R.string.DesiredWeightWks));
             //edit.apply();
         }
 
@@ -178,12 +178,12 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
             setDiabetesListener();
         } else{
             DiabetesLayout.setVisibility(View.GONE);
-            //edit.remove("DiabetesRegime");
-            //edit.remove("CustomDiabetesRegime");
+            //edit.remove(getString(R.string.diabetesregime));
+            //edit.remove(getString(R.string.customdiabetesregime));
             //edit.apply();
         }
 
-
+        /*
         if(hbp){
             HBPLayout.setVisibility(View.VISIBLE);
             setHBPListeners();
@@ -193,6 +193,7 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
             //edit.remove("CustomHBPRegime");
             //edit.apply();
         }
+        */
 
 
     }
@@ -240,7 +241,7 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
 
                 if(desiredwt > 30){
 
-                    edit.putInt("DesiredWeight", desiredwt);
+                    edit.putInt(getString(R.string.DesiredWeight), desiredwt);
                     edit.apply();
 
                     if(prefs.contains("Weight")){
@@ -252,8 +253,8 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
                         moreinfowtweeks.setText(String.valueOf(noofweeks));
                     }
                 }else{
-                    if(prefs.contains("DesiredWeight"))
-                        edit.remove("DesiredWeight").apply();
+                    if(prefs.contains(getString(R.string.DesiredWeight)))
+                        edit.remove(getString(R.string.DesiredWeight)).apply();
                 }
             }
         });
@@ -276,11 +277,11 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
 
                 if(!TextUtils.isEmpty(mydesiredwtwks)){
                     desiredwtwks = Integer.valueOf(mydesiredwtwks);
-                    edit.putInt("DesiredWeightWks", desiredwtwks);
+                    edit.putInt(getString(R.string.DesiredWeightWks), desiredwtwks);
                     edit.apply();
                 }else{
-                    if(prefs.contains("DesiredWeightWks"))
-                        edit.remove("DesiredWeightWks").apply();
+                    if(prefs.contains(getString(R.string.DesiredWeightWks)))
+                        edit.remove(getString(R.string.DesiredWeightWks)).apply();
                 }
 
             }
@@ -289,6 +290,7 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
 
     }
 
+    /*
     private void setHBPListeners(){
 
         moreinfoHBP.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -342,7 +344,7 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
 
             }
         });
-    }
+    }*/
 
     private void setDiabetesListener(){
 
@@ -352,11 +354,11 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
                 switch(checkedId) {
                     case R.id.radioRecCarbs:
                         editText_CustomCarbs.setEnabled(false);
-                        edit.putInt("DiabetesRegime", 0);
+                        edit.putInt(getString(R.string.diabetesregime), 0);
                         break;
                     case R.id.radioCustomCarbs:
                         editText_CustomCarbs.setEnabled(true);
-                        edit.putInt("DiabetesRegime", 1);
+                        edit.putInt(getString(R.string.diabetesregime), 1);
                         editText_CustomCarbs.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -377,10 +379,10 @@ public class MoreInfoFragment extends Fragment implements ISlideSelectionListene
 
                                 if (!TextUtils.isEmpty(customCarbs)) {
                                     mycustomCarbs = Integer.valueOf(customCarbs);
-                                    edit.putInt("CustomDiabetesRegime", mycustomCarbs);
+                                    edit.putInt(getString(R.string.customdiabetesregime), mycustomCarbs);
                                     edit.apply();
                                 }else{
-                                    edit.remove("CustomDiabetesRegime").apply();
+                                    edit.remove(getString(R.string.customdiabetesregime)).apply();
                                 }
 
                             }

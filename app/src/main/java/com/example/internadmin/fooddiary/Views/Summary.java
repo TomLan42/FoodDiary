@@ -7,7 +7,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
-import com.example.internadmin.fooddiary.Barchart;
+
 import com.example.internadmin.fooddiary.DBHandler;
 
 import android.preference.PreferenceManager;
@@ -23,7 +23,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,6 @@ import com.example.internadmin.fooddiary.Models.TimePeriod;
 import com.example.internadmin.fooddiary.R;
 import com.example.internadmin.fooddiary.SummaryFront;
 import com.example.internadmin.fooddiary.SummarySugar;
-import com.github.mikephil.charting.charts.BarChart;
 import com.google.gson.JsonObject;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -97,9 +95,9 @@ public class Summary extends Fragment {
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
         // get whether calories are to be tracked or not
         // trackcalories is 0 if not to be tracked and 1 if calories are to be tracked
-        cals = prefs.getBoolean(getString(R.string.trackcalories), false)? 1:0;
+        cals = prefs.getBoolean(getString(R.string.nut_track_weightloss), false)? 1:0;
         // trackcarbs is 0 if not to be tracked and 1 if calories are to be tracked
-        carbs = prefs.getBoolean(getString(R.string.trackcarbs), false)? 1:0;
+        carbs = prefs.getBoolean(getString(R.string.nut_track_diabetes), false)? 1:0;
         // NUM_PAGES is required for the viewpager inside the summary fragment
         NUM_PAGES = cals + carbs;
         // creating global variables for calorie and carbohydrates fragments

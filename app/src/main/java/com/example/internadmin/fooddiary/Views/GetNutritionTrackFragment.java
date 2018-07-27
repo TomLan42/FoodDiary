@@ -51,7 +51,7 @@ public class GetNutritionTrackFragment extends Fragment implements ISlideSelecti
 
     CheckBox weightloss;
     CheckBox diabetes;
-    CheckBox hbpressure;
+    //CheckBox hbpressure;
 
     public GetNutritionTrackFragment(){ }
 
@@ -109,22 +109,30 @@ public class GetNutritionTrackFragment extends Fragment implements ISlideSelecti
         mainLayout = view.findViewById(R.id.fragment_nutritiontrackll);
         weightloss = view.findViewById(R.id.checkBox_weightloss);
         diabetes = view.findViewById(R.id.checkBox_diabetes);
-        hbpressure = view.findViewById(R.id.checkBox_hbpressure);
+        //hbpressure = view.findViewById(R.id.checkBox_hbpressure);
 
         HashMap<String, CheckBox> selections = new HashMap<>();
-        selections.put("weightloss", weightloss);
-        selections.put("diabetes", diabetes);
-        selections.put("hbpressure", hbpressure);
+        selections.put(getString(R.string.nut_track_weightloss), weightloss);
+        selections.put(getString(R.string.nut_track_diabetes), diabetes);
+        //selections.put("hbpressure", hbpressure);
 
 
         SharedPreferences.Editor edit = prefs.edit();
 
-        if(!prefs.contains("weightloss"))
-            edit.putBoolean("weightloss", true).apply();
+        if(!prefs.contains(getString(R.string.nut_track_weightloss)))
+            edit.putBoolean(getString(R.string.nut_track_weightloss), true).apply();
 
         setCheckboxesListener(selections, edit);
 
         mainLayout.setBackgroundColor(bgColor);
+
+        Boolean wl = prefs.getBoolean(getString(R.string.nut_track_weightloss), true);
+        Boolean db = prefs.getBoolean(getString(R.string.nut_track_diabetes), false);
+        //Boolean hbp = prefs.getBoolean("hbpressure", false);
+
+        weightloss.setChecked(wl);
+        diabetes.setChecked(db);
+        //hbpressure.setChecked(hbp);
 
 
     }
@@ -171,21 +179,21 @@ public class GetNutritionTrackFragment extends Fragment implements ISlideSelecti
     @Override
     public void onSlideSelected() {
 
-        Boolean wl = prefs.getBoolean("weightloss", true);
-        Boolean db = prefs.getBoolean("diabetes", false);
-        Boolean hbp = prefs.getBoolean("hbpressure", false);
+        Boolean wl = prefs.getBoolean(getString(R.string.nut_track_weightloss), true);
+        Boolean db = prefs.getBoolean(getString(R.string.nut_track_diabetes), false);
+        //Boolean hbp = prefs.getBoolean("hbpressure", false);
 
         weightloss.setChecked(wl);
         diabetes.setChecked(db);
-        hbpressure.setChecked(hbp);
+        //hbpressure.setChecked(hbp);
 
     }
 
     @Override
     public void onSlideDeselected() {
         /*
-        Boolean wl = prefs.getBoolean("weightloss", false);
-        Boolean db = prefs.getBoolean("diabetes", false);
+        Boolean wl = prefs.getBoolean(getString(R.string.nut_track_weightloss), false);
+        Boolean db = prefs.getBoolean(getString(R.string.nut_track_diabetes), false);
         Boolean hbp = prefs.getBoolean("hbpressure", false);
 
         Toast.makeText(getContext(), "Weight Loss: " + bool2txt(wl)+

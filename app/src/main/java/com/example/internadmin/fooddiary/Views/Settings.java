@@ -1,8 +1,6 @@
 package com.example.internadmin.fooddiary.Views;
 
 
-import android.app.DialogFragment;
-import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -12,17 +10,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.example.internadmin.fooddiary.R;
-
-import org.w3c.dom.Text;
-
-import java.sql.Time;
-import java.util.Calendar;
 
 
 public class Settings extends Fragment{
@@ -50,8 +40,8 @@ public class Settings extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         final Switch calswitch = getView().findViewById(R.id.caloriesSwitch);
         final Switch carbswitch = getView().findViewById(R.id.carbsSwitch);
-        Boolean calswitchstate = prefs.getBoolean(getString(R.string.trackcalories), false);
-        Boolean carbswitchstate = prefs.getBoolean(getString(R.string.trackcarbs), false);
+        Boolean calswitchstate = prefs.getBoolean(getString(R.string.nut_track_weightloss), false);
+        Boolean carbswitchstate = prefs.getBoolean(getString(R.string.nut_track_diabetes), false);
         if (calswitchstate==true){
             calswitch.setChecked(true);
         }
@@ -68,10 +58,10 @@ public class Settings extends Fragment{
             @Override
             public void onClick(View v) {
                 if(calswitch.isChecked()){
-                    edit.putBoolean(getString(R.string.trackcalories), true);
+                    edit.putBoolean(getString(R.string.nut_track_weightloss), true);
                     edit.commit();
                 }else{
-                    edit.putBoolean(getString(R.string.trackcalories), false);
+                    edit.putBoolean(getString(R.string.nut_track_weightloss), false);
                     edit.commit();
                 }
             }
@@ -80,10 +70,10 @@ public class Settings extends Fragment{
             @Override
             public void onClick(View v) {
                 if(carbswitch.isChecked()){
-                    edit.putBoolean(getString(R.string.trackcarbs), true);
+                    edit.putBoolean(getString(R.string.nut_track_diabetes), true);
                     edit.commit();
                 }else{
-                    edit.putBoolean(getString(R.string.trackcarbs), false);
+                    edit.putBoolean(getString(R.string.nut_track_diabetes), false);
                     edit.commit();
                 }
             }

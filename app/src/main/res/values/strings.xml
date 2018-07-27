@@ -2,8 +2,8 @@
     <string name="app_name">FoodDiary</string>
 
     <string name="title_activity_camera">CameraActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!-- Display strings used by Nutrition Facts Label -->
     <string name="nutrition_facts">Nutrition Facts</string>
     <string name="serving_size">Serving Size</string>
     <string name="calories">Calories</string>
@@ -19,25 +19,16 @@
     <string name="fibre">Dietary Fibre</string>
     <string name="sugars">Sugars</string>
     <string name="protein">Protein</string>
-    <string name="pref_previously_started">prevstart</string>
     <string name="notedv">*Percent Daily Values are based on a 2,000 calorie diet. Your Daily Values may be higher or lower depending on your calorie needs.</string>
-    <string name="settime">Set Time</string>
-    <string name="ingredients">Ingredients</string>
-    <string name="starttime">Start Time: </string>
-    <string name="endtime">End Time: </string>
-    <string name="getmealfragmentdescription">Please provide us with the time range which you will have this meal.</string>
-    <string name="getnutritionpreffragmentdescription">Please provide us with the nutrition which you would like to track.</string>
+
+    <!--Preference string used by SplashActivity (Check if start IntroActivity) -->
+    <string name="pref_previously_started">prevstart</string>
+
+    <!-- Display strings used by SplashActivity and IntroActivity -->
     <string name="settingcomplete">Initial Settings complete! You may change the settings again under the settings tab.</string>
     <string name="poweredby">Powered by:</string>
-    <string name="nutritionpreftitle">Set Nutrition Type</string>
 
-    <string name="nutritiontracktitle">Set Health Monitors</string>
-    <string name="getnutritiontrackdescription">What goals would you like to achieve? (Please check at least 1 option.)</string>
-    <string name="weightloss">Weight Loss</string>
-    <string name="healthconditiondesc">I have some health conditions I would like to track:</string>
-    <string name="diabetes">Diabetes</string>
-    <string name="hbpressure">High Blood Pressure</string>
-
+    <!-- Display strings used by GetUserProfileFragment -->
     <string name="userprofiletitle">Set User Profile</string>
     <string name="gender">Gender:</string>
     <string name="radio_male">Male</string>
@@ -47,6 +38,25 @@
     <string name="height">Height: </string>
     <string name="weight">Weight: </string>
 
+    <!-- Preference strings used by GetUserProfileFragment -->
+    <string name="user_prof_sex">Sex</string>
+    <string name="user_prof_age">Age</string>
+    <string name="user_prof_height">Height</string>
+    <string name="user_prof_weight">Weight</string>
+
+    <!-- Display strings used by GetNutritionTrackFragment -->
+    <string name="nutritiontracktitle">Set Health Monitors</string>
+    <string name="getnutritiontrackdescription">What goals would you like to achieve? (Please check at least 1 option.)</string>
+    <string name="weightloss">Weight Loss</string>
+    <string name="healthconditiondesc">I have some health conditions I would like to track:</string>
+    <string name="diabetes">Diabetes</string>
+    <string name="hbpressure">High Blood Pressure</string>
+
+    <!-- Preference strings used by GetNutritionTrackFragment -->
+    <string name="nut_track_weightloss">weightloss</string>
+    <string name="nut_track_diabetes">diabetes</string>
+
+    <!-- Display strings used by MoreInfoFragment -->
     <string name="moreinfotitle">More Information</string>
     <string name="wtlosstarget">Please input your desired weight.</string>
     <string name="carbotarget">Please select the Low-Sugar diet you would like to embark on.</string>
@@ -59,12 +69,28 @@
     <string name="customcarbsregime">Custom Carbs Limit: </string>
     <string name="nouserprofilewarning">*Warning: No user profile has been keyed in. We are unable to calculate your weight loss regime accurately without this information.</string>
 
+    <!-- Display strings used by SummaryFragment -->
     <string name="summarytitle">Summary</string>
     <string name="summarydesc">Your initial settings are as shown below:</string>
     <string name="wtloss_lackinfowarning">*Warning: Previous information was not keyed in properly. Defaults were used in computing the shown values, and may not be customised to your profile.</string>
     <string name="hbp_customwarning">*Warning: Custom option was chosen, but a value was not keyed in. Default values will be used.</string>
     <string name="diabetes_customwarning">Warning: Custom option was chosen, but a value was not keyed in. Default values will be used.</string>
 
+    <!-- Preference strings used by MoreInfoFragment/ SummaryFragment/
+     GetDefaultServingFragment-->
+    <string name="calorielimit">calorielimit</string>
+    <string name="DesiredWeight">DesiredWeight</string>
+    <string name="DesiredWeightWks">DesiredWeightWks</string>
+    <string name="diabetesregime">DiabetesRegime</string>
+    <string name="customdiabetesregime">CustomDiabetesRegime</string>
+    <string name="defaultservingsize">defaultservingsize</string>
+
+    <!-- Display strings used by GetDefaultServingFragment -->
+    <string name="defaultservingtitle">Default Serving Size</string>
+    <string name="getdefaultservingdescription">Please enter your usual food portion. (For e.g., for a lunch meal, if you finish 1 plate, put 1)</string>
+
+    <!-- Preference strings for setting TimePeriod (OLD) -->
+    <!--
     <string name="breakfast_start_hour">breakfast_start_hour</string>
     <string name="breakfast_start_min">breakfast_start_min</string>
     <string name="breakfast_end_hour">breakfast_end_hour</string>
@@ -77,7 +103,10 @@
     <string name="dinner_start_min">dinner_start_min</string>
     <string name="dinner_end_hour">dinner_end_hour</string>
     <string name="dinner_end_min">dinner_end_min</string>
+    -->
 
+    <!-- Preference strings for setting TimePeriod -->
+    <!-- Note: They are currently used (in Meal model) but not set. -->
     <string name="morning_start_hour">morning_start_hour</string>
     <string name="morning_start_min">morning_start_min</string>
     <string name="morning_end_hour">morning_end_hour</string>
@@ -95,6 +124,7 @@
     <string name="night_end_hour">night_end_hour</string>
     <string name="night_end_min">night_end_min</string>
 
+    <!-- Display strings used by Report fragment -->
     <string name="congratulations">Congratulations!</string>
     <string name="cal">calories</string>
     <string name="congratContentnow">You are currently meeting your %s target for today!</string>
@@ -104,14 +134,6 @@
     <string name="tryharderContent">You exceeded your %s target.</string>
     <string name="tryharderSubcontent">You exceeded by %d %s. Don\'t lose hope!</string>
 
-    <string name="nutrition_to_track">nut2track</string>
-    <string name="tracking_nutrition_limit">tracknutlim</string>
-    <string name="trackcalories">weightloss</string>
-    <string name="calorielimit">calorielimit</string>
-    <string name="trackcarbs">diabetes</string>
-    <string name="customdiabetesregime">CustomDiabetesRegime</string>
-    <string name="track"></string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="query_suggestions">
         <item>Teh Tarik</item>
         <item>North Indian Thali</item>
@@ -124,8 +146,5 @@
     <string name="formhint">Correct Us</string>
     <string name="firsttime">firsttime</string>
 
-    <string name="defaultservingtitle">Default Serving Size</string>
-    <string name="getdefaultservingdescription">Please enter your usual food portion. (For e.g., for a lunch meal, if you finish 1 plate, put 1)</string>
-    <string name="defaultservingsize">defaultservingsize</string>
     <string name="mealactivitydefaultservingsize">(Default Serving: %.2f)</string>
 </resources>

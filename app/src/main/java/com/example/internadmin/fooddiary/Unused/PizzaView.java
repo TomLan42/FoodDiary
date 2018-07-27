@@ -18,6 +18,11 @@ import android.view.View;
 
 import com.example.internadmin.fooddiary.R;
 
+/**
+ * A View which allows the user to select the portion of the pizza to indicate serving size.
+ * Unused view as possibly cumbersome
+ */
+
 public class PizzaView extends View {
 
     private Bitmap mBitmap;

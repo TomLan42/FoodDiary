@@ -111,8 +111,8 @@ public class GetUserProfileFragment extends Fragment implements ISlideSelectionL
         male = view.findViewById(R.id.radioMale);
         female = view.findViewById(R.id.radioFemale);
 
-        if(!prefs.contains("Sex"))
-            edit.putInt("Sex", 0);
+        if(!prefs.contains(getString(R.string.user_prof_sex)))
+            edit.putInt(getString(R.string.user_prof_sex), 0);
 
         radioSexGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -127,7 +127,7 @@ public class GetUserProfileFragment extends Fragment implements ISlideSelectionL
                 else
                     gender = 2;
                 
-                edit.putInt("Sex", gender);
+                edit.putInt(getString(R.string.user_prof_sex), gender);
                 edit.apply();
                 
             }
@@ -147,10 +147,10 @@ public class GetUserProfileFragment extends Fragment implements ISlideSelectionL
                 String mystr = editTextAge.getText().toString();
                 if(!mystr.isEmpty()){
                     int myage = Integer.valueOf(mystr);
-                    edit.putInt("Age", myage);
+                    edit.putInt(getString(R.string.user_prof_age), myage);
                     edit.apply();
                 }else{
-                    edit.remove("Age").apply();
+                    edit.remove(getString(R.string.user_prof_age)).apply();
                 }
             }
         });
@@ -169,10 +169,10 @@ public class GetUserProfileFragment extends Fragment implements ISlideSelectionL
                 String mystr = editTextHeight.getText().toString();
                 if(!mystr.isEmpty()) {
                     int height = Integer.valueOf(mystr);
-                    edit.putInt("Height", height);
+                    edit.putInt(getString(R.string.user_prof_height), height);
                     edit.apply();
                 }else{
-                    edit.remove("Height").apply();
+                    edit.remove(getString(R.string.user_prof_height)).apply();
                 }
             }
         });
@@ -191,10 +191,10 @@ public class GetUserProfileFragment extends Fragment implements ISlideSelectionL
                 String mystr = editTextWeight.getText().toString();
                 if(!mystr.isEmpty()) {
                     int weight = Integer.valueOf(mystr);
-                    edit.putInt("Weight", weight);
+                    edit.putInt(getString(R.string.user_prof_weight), weight);
                     edit.apply();
                 }else{
-                    edit.remove("Weight").apply();
+                    edit.remove(getString(R.string.user_prof_weight)).apply();
                 }
             }
         });
@@ -209,7 +209,7 @@ public class GetUserProfileFragment extends Fragment implements ISlideSelectionL
     @Override
     public void onSlideSelected() {
 
-        switch (prefs.getInt("Sex",0)){
+        switch (prefs.getInt(getString(R.string.user_prof_sex),0)){
             case 0:
                 male.setChecked(true);
                 break;
@@ -217,16 +217,16 @@ public class GetUserProfileFragment extends Fragment implements ISlideSelectionL
                 female.setChecked(true);
         }
 
-        if(prefs.contains("Age")){
-            editTextAge.setText(String.valueOf(prefs.getInt("Age", 30)));
+        if(prefs.contains(getString(R.string.user_prof_age))){
+            editTextAge.setText(String.valueOf(prefs.getInt(getString(R.string.user_prof_age), 30)));
         }
 
-        if(prefs.contains("Height")){
-            editTextHeight.setText(String.valueOf(prefs.getInt("Height", 160)));
+        if(prefs.contains(getString(R.string.user_prof_height))){
+            editTextHeight.setText(String.valueOf(prefs.getInt(getString(R.string.user_prof_height), 160)));
         }
 
-        if(prefs.contains("Weight")){
-            editTextWeight.setText(String.valueOf(prefs.getInt("Weight", 50)));
+        if(prefs.contains(getString(R.string.user_prof_weight))){
+            editTextWeight.setText(String.valueOf(prefs.getInt(getString(R.string.user_prof_weight), 50)));
         }
 
     }

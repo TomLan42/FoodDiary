@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.internadmin.fooddiary.Barchart;
 import com.example.internadmin.fooddiary.Models.Column;
 import com.example.internadmin.fooddiary.R;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
