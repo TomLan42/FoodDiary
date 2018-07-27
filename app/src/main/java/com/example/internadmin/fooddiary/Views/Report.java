@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.example.internadmin.fooddiary.Barchart;
 import com.example.internadmin.fooddiary.DBHandler;
 import com.example.internadmin.fooddiary.Models.Column;
 import com.example.internadmin.fooddiary.Models.DishID;

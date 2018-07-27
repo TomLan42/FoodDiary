@@ -1,4 +1,4 @@
-package com.example.internadmin.fooddiary;
+package com.example.internadmin.fooddiary.Unused;
 
 
 import android.graphics.Point;
@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.internadmin.fooddiary.DBHandler;
 import com.example.internadmin.fooddiary.Models.DishID;
+import com.example.internadmin.fooddiary.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
