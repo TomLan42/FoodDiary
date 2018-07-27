@@ -67,6 +67,7 @@
             android:buttonTint="@color/white"
             android:text="@string/diabetes" />
 
+        <!--
         <CheckBox
             android:id="@+id/checkBox_hbpressure"
             android:layout_width="match_parent"
@@ -76,6 +77,7 @@
             android:textColor="@color/white"
             android:buttonTint="@color/white"
             android:text="@string/hbpressure" />
+            -->
 
 
     </LinearLayout>
