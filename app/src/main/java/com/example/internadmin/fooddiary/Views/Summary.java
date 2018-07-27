@@ -155,24 +155,24 @@ public class Summary extends Fragment {
         // otherwise it will show the new date cards and also the previous date cards
         meal_ll.removeAllViews();
         // getting list of the food items consumed that day
-        List<Long> breakfastlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.MORNING);
-        List<Long> lunchlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.AFTERNOON);
-        List<Long> dinnerlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.EVENING);
-        //dinnerlist.addAll(handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.NIGHT));
+        List<Long> morninglist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.MORNING);
+        List<Long> afternoonlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.AFTERNOON);
+        List<Long> eveninglist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.EVENING);
+        List<Long> nightlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.NIGHT);
 
         // IF THE LIST CONTAINS NON ZERO NUMBER OF ITEMS THEN CARD FOR THAT MEAL IS CREATED (this was the idea earlier, but then removed)
-        //if(breakfastlist.size() > 0){
-        CardView morningcard = new DineCard(getContext(), size, "Morning", R.drawable.sun, breakfastlist, calen, TimePeriod.MORNING, 1000);
+        //if(morninglist.size() > 0){
+        CardView morningcard = new DineCard(getContext(), size, "Morning", R.drawable.sun, morninglist, calen, TimePeriod.MORNING, 1000);
         meal_ll.addView(morningcard);
         //}
-        //if(lunchlist.size() > 0){
-        CardView afternooncard = new DineCard(getContext(), size, "Afternoon", R.drawable.fullsun, lunchlist, calen, TimePeriod.AFTERNOON, 1005);
+        //if(afternoonlist.size() > 0){
+        CardView afternooncard = new DineCard(getContext(), size, "Afternoon", R.drawable.fullsun, afternoonlist, calen, TimePeriod.AFTERNOON, 1005);
         meal_ll.addView(afternooncard);
         //}
-        CardView eveningcard = new DineCard(getContext(), size, "Evening", R.drawable.moon, lunchlist, calen, TimePeriod.EVENING, 1009);
+        CardView eveningcard = new DineCard(getContext(), size, "Evening", R.drawable.moon, eveninglist, calen, TimePeriod.EVENING, 1009);
         meal_ll.addView(eveningcard);
-        //if(dinnerlist.size() > 0){
-        CardView nightcard = new DineCard(getContext(), size, "Night", R.drawable.moon, dinnerlist, calen, TimePeriod.NIGHT, 1014);
+        //if(eveninglist.size() > 0){
+        CardView nightcard = new DineCard(getContext(), size, "Night", R.drawable.moon, nightlist, calen, TimePeriod.NIGHT, 1014);
         meal_ll.addView(nightcard);
         //}
     }

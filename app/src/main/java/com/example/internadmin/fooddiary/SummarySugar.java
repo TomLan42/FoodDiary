@@ -78,8 +78,6 @@ public class SummarySugar extends Fragment {
         arcProgressStackView = view.findViewById(R.id.apsv2);
         updateLabel(myCalendar);
 
-
-
     }
 
     public void updateLabel(Calendar myCalendar){

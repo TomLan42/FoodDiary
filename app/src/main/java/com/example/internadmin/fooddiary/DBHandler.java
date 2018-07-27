@@ -430,9 +430,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 Log.e("getMeal", "Parse Error: " + e.getMessage());
             }
 
-            File file = new File(cursor.getString(3));
-            if(file.exists()){
-                b.putSerializable("FoodImg", file);
+            if(cursor.getString(3) != null) {
+                File file = new File(cursor.getString(3));
+                if(file.exists()){
+                    b.putSerializable("FoodImg", file);
+                }
             }
 
         }
