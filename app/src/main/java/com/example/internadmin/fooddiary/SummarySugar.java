@@ -37,6 +37,7 @@ public class SummarySugar extends Fragment {
     String tracking;
     int limit;
     TextView left;
+    int calslimit;
     Calendar myCalendar;
     SharedPreferences prefs;
     ArcProgressStackView arcProgressStackView;
@@ -64,6 +65,7 @@ public class SummarySugar extends Fragment {
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
         // tracking Carbohydrates
         tracking = "Carbohydrate";
+        calslimit = 2200;
         int diabetesRegime = prefs.getInt("DiabetesRegime", 0);
 
         if(diabetesRegime == 0)
@@ -83,18 +85,30 @@ public class SummarySugar extends Fragment {
     public void updateLabel(Calendar myCalendar){
         // to update the label in the center of the circular progess bar
         // and to update the value in circular progress bar
-        float consumed = getdaycalories(myCalendar);
-        left.setText(String.valueOf(Math.round(limit-consumed)) +"/" +String.valueOf(limit) +"\n"+tracking + " Left");
-
+        float consumed = getdaycalories(myCalendar, tracking);
+        if(consumed < limit ) {
+            left.setText(String.valueOf(Math.round(limit - consumed)) + "/" + String.valueOf(limit) + "\n" + tracking + " Left");
+        }
+        else{
+            left.setText(String.valueOf(Math.round(consumed - limit)) + " " + tracking + " Exceeded");
+        }
         models = new ArrayList<>();
-        models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
-                , Color.parseColor("#90ee90"), Color.parseColor("#228B22")));
+        if(getdaycalories(myCalendar, "Energy") < calslimit/2 ){
+            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+                    , getResources().getColor(R.color.progresscolorprimary), getResources().getColor(R.color.progresscolorfillerprimary)));
+        }else if(getdaycalories(myCalendar, "Energy") < 3*calslimit/4){
 
+            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+                    , getResources().getColor(R.color.progresscolorsecondary), getResources().getColor(R.color.progresscolorfillersecondary)));
+        }else{
+            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+                    , getResources().getColor(R.color.progresscolordanger), getResources().getColor(R.color.progresscolorfillerdanger)));
+        }
         arcProgressStackView.setModels(models);
         arcProgressStackView.animateProgress();
 
     }
-    public float getdaycalories(Calendar cal){
+    public float getdaycalories(Calendar cal, String getter){
         // function that gets the total amount of "tracking" nutrition consumed in that day
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
@@ -113,7 +127,7 @@ public class SummarySugar extends Fragment {
             id.execute();
             JsonObject nutrition = id.getNutrition();
             Log.d("jsoncheck", nutrition.toString());
-            float calorie = nutrition.get(tracking).getAsFloat();
+            float calorie = nutrition.get(getter).getAsFloat();
             tot += calorie*(float)pair.getValue();
         }
         return tot;

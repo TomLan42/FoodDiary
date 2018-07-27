@@ -79,10 +79,16 @@ public class SummaryFront extends Fragment {
 
     public void updateLabel(Calendar myCalendar){
         float consumed = getdaycalories(myCalendar);
-        left.setText(String.valueOf(Math.round(limit-consumed)) +"/" +String.valueOf(limit) +"\n"+"Calories" + " Left");
+        if(consumed < limit) {
+            left.setText(String.valueOf(Math.round(limit - consumed)) + "/" + String.valueOf(limit) + "\n" + "Calories" + " Left");
+        }
+        else{
+            left.setText(String.valueOf(Math.round(consumed - limit)) + " " + tracking + " Exceeded");
+        }
 
         models = new ArrayList<>();
-        if(getdaycalories(myCalendar) < calslimit/2){
+        Log.d("IN SUMMARY FRONT", String.valueOf(getdaycalories(myCalendar)));
+        if(getdaycalories(myCalendar) < calslimit/2 ){
             models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
                     , getResources().getColor(R.color.progresscolorprimary), getResources().getColor(R.color.progresscolorfillerprimary)));
         }else if(getdaycalories(myCalendar) < 3*calslimit/4){
@@ -95,7 +101,6 @@ public class SummaryFront extends Fragment {
         }
         arcProgressStackView.setModels(models);
         arcProgressStackView.animateProgress();
-
     }
     public float getdaycalories(Calendar cal){
         cal.set(Calendar.HOUR_OF_DAY, 0);

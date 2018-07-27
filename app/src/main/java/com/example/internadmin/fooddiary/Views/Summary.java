@@ -164,16 +164,18 @@ public class Summary extends Fragment {
 
         // IF THE LIST CONTAINS NON ZERO NUMBER OF ITEMS THEN CARD FOR THAT MEAL IS CREATED (this was the idea earlier, but then removed)
         //if(breakfastlist.size() > 0){
-        CardView breakfastcard = new DineCard(getContext(), size, "Morning", R.drawable.sun, breakfastlist, calen, TimePeriod.MORNING, 1000);
-        meal_ll.addView(breakfastcard);
+        CardView morningcard = new DineCard(getContext(), size, "Morning", R.drawable.sun, breakfastlist, calen, TimePeriod.MORNING, 1000);
+        meal_ll.addView(morningcard);
         //}
         //if(lunchlist.size() > 0){
-        CardView lunchcard = new DineCard(getContext(), size, "Afternoon", R.drawable.fullsun, lunchlist, calen, TimePeriod.AFTERNOON, 1005);
-        meal_ll.addView(lunchcard);
+        CardView afternooncard = new DineCard(getContext(), size, "Afternoon", R.drawable.fullsun, lunchlist, calen, TimePeriod.AFTERNOON, 1005);
+        meal_ll.addView(afternooncard);
         //}
+        CardView eveningcard = new DineCard(getContext(), size, "Evening", R.drawable.moon, lunchlist, calen, TimePeriod.EVENING, 1009);
+        meal_ll.addView(eveningcard);
         //if(dinnerlist.size() > 0){
-        CardView dinnercard = new DineCard(getContext(), size, "Night", R.drawable.moon, dinnerlist, calen, TimePeriod.EVENING, 1009);
-        meal_ll.addView(dinnercard);
+        CardView nightcard = new DineCard(getContext(), size, "Night", R.drawable.moon, dinnerlist, calen, TimePeriod.NIGHT, 1014);
+        meal_ll.addView(nightcard);
         //}
     }
 
@@ -202,8 +204,15 @@ public class Summary extends Fragment {
 
 
     public CardView dateCard(){
+        /*----------------------------------------------------------------------
+        This is the function to create the card for dateview that appears just
+        below the card containing circular progress bars.
+
+        Nothing much to explain here.
+        ----------------------------------------------------------------------*/
         datecard = new CardView(getContext());
         RelativeLayout ll2 = new RelativeLayout(getContext());
+        // layout parameters for date and left and right button
         RelativeLayout.LayoutParams dateparams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         RelativeLayout.LayoutParams leftparams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         RelativeLayout.LayoutParams rightparams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -217,6 +226,7 @@ public class Summary extends Fragment {
         dateselect.setLayoutParams(dateparams);
         dateselect.setTextSize(dp2px((float) (5)));
         ll2.addView(left);
+        // adding rule to keep date in center of the card
         dateparams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         //dateparams.setMargins(dp2px(135), 0, dp2px(135), 0);
         ll2.addView(dateselect);
@@ -231,6 +241,8 @@ public class Summary extends Fragment {
         params.setMargins((int)(size.x*0.027)+dp2px(4), 0, (int)(size.x*0.027)+dp2px(4), (int)(size.x*0.027));
         datecard.setLayoutParams(params);
         datecard.addView(ll2);
+
+        // listeners for the left ad right buttons
         left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -253,6 +265,11 @@ public class Summary extends Fragment {
     }
 
     public void setColors(){
+        /*-----------------------------------------------------------------------------------
+        This function is to maintain the color of all card containing circular progress bars
+        and the datecard.
+         ----------------------------------------------------------------------------------*/
+
         if(getdaycalories(myCalendar, "Energy") < calslimit/2){
             datecard.setBackgroundColor(getResources().getColor(R.color.datebackgroundprimary));
             barcard.setBackgroundColor(getResources().getColor(R.color.summarycardcolorprimary));
@@ -311,6 +328,11 @@ public class Summary extends Fragment {
     }
 
     public CardView createProgress(){
+        /*--------------------------------------------------------
+        This function creates the top card which contains circular
+        progress bars.
+        --------------------------------------------------------*/
+
         // main layout of the complete card
         LinearLayout ll = new LinearLayout(getContext());
         ll.setOrientation(LinearLayout.VERTICAL);
@@ -386,6 +408,8 @@ public class Summary extends Fragment {
         RelativeLayout myRL = new RelativeLayout(getContext());
         myRL.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT));
+        // if the viewpager only has to show 1 view then their is no point in showing the
+        // navigation dots so hide them
         if(NUM_PAGES==1){
             mytabdots.setVisibility(View.INVISIBLE);
         }

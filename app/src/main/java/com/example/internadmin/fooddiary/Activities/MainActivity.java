@@ -27,7 +27,6 @@ import com.example.internadmin.fooddiary.Views.MovableFloatingActionButton;
 import com.example.internadmin.fooddiary.Views.Report;
 import com.example.internadmin.fooddiary.Views.Settings;
 import com.example.internadmin.fooddiary.Views.Summary;
-import com.example.internadmin.fooddiary.Views.UpdateHistory;
 import tourguide.tourguide.Overlay;
 import tourguide.tourguide.Pointer;
 import tourguide.tourguide.ToolTip;
@@ -124,13 +123,11 @@ public class MainActivity extends AppCompatActivity{
 
         // SETTING ITEMS FOR THE BOTTOM NAVIFATION BAR
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Summary", R.drawable.summary, R.color.colorAccent);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Camera", R.drawable.ic_arrow_back_white, R.color.colorPrimary);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Settings", R.drawable.settings, R.color.colorPrimary);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Report", R.drawable.analytics, R.color.colorPrimary);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Settings", R.drawable.settings, R.color.colorPrimary);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Report", R.drawable.analytics, R.color.colorPrimary);
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
-        bottomNavigation.addItem(item4);
 
 
         // DESIGN PARAMETERS FOR THE BOTTOM NAVIGATION BAR
@@ -163,16 +160,11 @@ public class MainActivity extends AppCompatActivity{
                         transaction.commit();
                     }
                     if(position == 1){
-                        UpdateHistory test = new UpdateHistory();
-                        transaction.replace(ll.getId(), test);
-                        transaction.commit();
-                    }
-                    if(position == 2){
                         Settings settings = new Settings();
                         transaction.replace(ll.getId(), settings);
                         transaction.commit();
                     }
-                    if (position == 3){
+                    if (position == 2){
                         Report report = new Report();
                         transaction.replace(ll.getId(), report);
                         transaction.commit();
