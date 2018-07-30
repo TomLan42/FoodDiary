@@ -180,6 +180,9 @@ class PredictionActivity : AppCompatActivity() {
             val mypredict = predictionlistview.getItemAtPosition(mypos) as Prediction
             val mydishid = DishID(mypredict.foodName, mypredict.ver, this)
             Log.d("FOODNAME", mydishid.foodName)
+            if (mypos > 0){
+                FormSubmitTask(filename, mypredict.foodName, this@PredictionActivity).execute()
+            }
             mydishid.setDishIDPopulatedListener { dataAdded ->
                 if(dataAdded){
                     val b = Bundle()

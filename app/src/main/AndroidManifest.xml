@@ -31,7 +31,6 @@
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".Activities.PredictionActivity" />
         <activity android:name=".Activities.MealActivity" />
-        <activity android:name=".Predict" />
         <activity
             android:name=".Testact"
             android:label="@string/title_activity_testact"

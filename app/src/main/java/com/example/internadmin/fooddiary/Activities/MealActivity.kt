@@ -148,6 +148,7 @@ class MealActivity : AppCompatActivity() {
                 }
 
                 val myintent = Intent(this, MainActivity::class.java)
+                myintent.putExtra("mealdate", mymeal.timeConsumed.time)
                 startActivity(myintent)
                 finish()
             }
@@ -160,6 +161,7 @@ class MealActivity : AppCompatActivity() {
                 }
 
                 val myintent = Intent(this, MainActivity::class.java)
+                myintent.putExtra("mealdate", mymeal.timeConsumed.time)
                 startActivity(myintent)
                 finish()
 
