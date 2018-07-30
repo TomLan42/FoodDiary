@@ -7,9 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class Config {
-    public static final String getinfoAddress = "http://155.69.53.72:8000/foodpal/getinfo/";
-    public static final String getpredictionAddress = "http://155.69.53.72:8000/foodpal/appsubmit/";
-    public static final String submitformAddress = "http://155.69.53.72:8000/foodpal/helpformapp/";
+    public static final String getinfoAddress = "http://demo2.rose.ntu.edu.sg/foodpal/getinfo/";
+    public static final String getpredictionAddress = "http://demo2.rose.ntu.edu.sg/foodpal/appsubmit/";
+    public static final String submitformAddress = "http://demo2.rose.ntu.edu.sg/foodpal/helpformapp/";
 
     public static List<NutritionDefaults> NUTRITION_DEFAULTS_ARRAY_LIST;
 

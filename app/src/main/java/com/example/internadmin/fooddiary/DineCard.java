@@ -20,7 +20,6 @@ import com.example.internadmin.fooddiary.Activities.MealActivity;
 import com.example.internadmin.fooddiary.Models.FoodItem;
 import com.example.internadmin.fooddiary.Models.Meal;
 import com.example.internadmin.fooddiary.Models.TimePeriod;
-import com.example.internadmin.fooddiary.SwipeList.SwipeMenuListView;
 import com.example.internadmin.fooddiary.Views.FoodItemAdapter;
 import com.example.internadmin.fooddiary.Views.NonScrollListView;
 
@@ -81,7 +80,7 @@ public class DineCard extends CardView{
             foodlist.add(new FoodItem(meal.getDishID().getDisplayFoodName(), "yummy", id));
         }
         // using nonscrolllistview instead of normal listview because normal listview creates problems when used inside scrollview
-        NonScrollListView dinelist = new SwipeMenuListView(getContext());
+        NonScrollListView dinelist = new NonScrollListView(getContext());
         final FoodItemAdapter adapter = new FoodItemAdapter(getContext(), R.layout.food_item, foodlist);
         dinelist.setAdapter(adapter);
         final Context finalContext = context;

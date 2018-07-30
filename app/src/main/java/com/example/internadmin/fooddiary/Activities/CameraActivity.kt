@@ -428,7 +428,7 @@ class CameraActivity : AppCompatActivity() {
                 else
                     fabPCGallery.hide()
 
-                Toasty.info(this, result.getString(DownloadDishIDTask.Result),
+                Toasty.error(this, result.getString(DownloadDishIDTask.Result),
                         Toast.LENGTH_LONG).show()
 
                 val myintent = Intent(this, MainActivity::class.java)

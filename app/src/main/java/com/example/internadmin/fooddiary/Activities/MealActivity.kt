@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -122,7 +125,14 @@ class MealActivity : AppCompatActivity() {
             val prefs = PreferenceManager.getDefaultSharedPreferences(this)
             val firsttime = prefs.getInt(getString(R.string.firsttime), -1)
 
-            img_mealpic.setImageBitmap(mymeal.foodImg)
+            val myimg = mymeal.foodImg
+
+            val matrix = Matrix()
+            matrix.postRotate(90f)
+
+            img_mealpic.setImageBitmap(Bitmap.createBitmap(myimg, 0, 0,
+                    myimg.width, myimg.height, matrix, true))
+
             dishname.text = mymeal.dishID.displayFoodName
 
             btn_saveentry.setOnClickListener {

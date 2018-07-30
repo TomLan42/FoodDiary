@@ -8,6 +8,8 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_prediction.*
 import java.io.File
 import android.content.DialogInterface
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.preference.PreferenceManager
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
@@ -244,7 +246,13 @@ class PredictionActivity : AppCompatActivity() {
             val imgview = findViewById<ImageView>(R.id.img_takenpic)
             foodImgFile = intent.getSerializableExtra("FoodImg") as File
             val imgpath = foodImgFile.absolutePath
-            imgview.setImageBitmap(BitmapFactory.decodeFile(imgpath))
+
+            val myimg = BitmapFactory.decodeFile(imgpath)
+
+            val matrix = Matrix()
+            matrix.postRotate(90f)
+            imgview.setImageBitmap(Bitmap.createBitmap(myimg, 0, 0,
+                    myimg.width, myimg.height, matrix, true))
 
         }else{
             RedirectToMainOnError("Could not Retrieve Predictions", this)
