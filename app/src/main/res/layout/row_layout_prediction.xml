@@ -23,6 +23,7 @@
             android:paddingStart="20dp"
             android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/DarkGray"
             android:textSize="17sp" />
 
         <TextView
