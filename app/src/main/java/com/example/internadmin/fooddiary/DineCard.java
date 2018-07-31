@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -96,6 +97,14 @@ public class DineCard extends CardView{
             }
         });
         dinelayout.addView(dinelist);
+
+        //Adds a divider line between the food items and the add item
+        if(!foodlist.isEmpty()){
+            View divider = new View(getContext());
+            divider.setBackgroundColor(getResources().getColor(R.color.cardcolor));
+            divider.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 3));
+            dinelayout.addView(divider);
+        }
 
         // layout to contain additem option
         LinearLayout addlayout = new LinearLayout(getContext());
