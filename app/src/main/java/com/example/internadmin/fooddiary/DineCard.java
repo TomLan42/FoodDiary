@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -95,12 +96,14 @@ public class DineCard extends CardView{
             }
         });
         dinelayout.addView(dinelist);
+
         // layout to contain additem option
         LinearLayout addlayout = new LinearLayout(getContext());
         addlayout.setOrientation(LinearLayout.HORIZONTAL);
+        addlayout.setGravity(Gravity.CENTER_VERTICAL);
         ImageView plus = new ImageView(getContext());
         plus.setId(idstart+3);
-        //plus.setImageResource(R.drawable.add);
+        plus.setImageResource(R.drawable.add);
         plus.setPadding((int)(size.x*0.05), (int)(size.x*0.02), 0, (int)(size.x*0.02));
         addlayout.addView(plus);
         // setting layout parameters for add item option
@@ -112,7 +115,7 @@ public class DineCard extends CardView{
         addlayout.setBackgroundColor(getResources().getColor(R.color.whitecolor));
         final Calendar tempcal = myCalendar;
         // additem adds entry for that particular date (the date chosen in the dateselect (default to current date if no date is chosen))
-        additem.setOnClickListener(new View.OnClickListener() {
+        addlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CameraActivity.class);

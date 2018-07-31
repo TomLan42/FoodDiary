@@ -38,7 +38,6 @@ public class SummaryFront extends Fragment {
     int limit;
     TextView left;
     Calendar myCalendar;
-    public int totalheight;
     int calslimit;
     SharedPreferences prefs;
     ArcProgressStackView arcProgressStackView;
@@ -83,20 +82,20 @@ public class SummaryFront extends Fragment {
             left.setText(String.valueOf(Math.round(limit - consumed)) + "/" + String.valueOf(limit) + "\n" + "Calories" + " Left");
         }
         else{
-            left.setText(String.valueOf(Math.round(consumed - limit)) + " " + tracking + " Exceeded");
+            left.setText(String.valueOf(Math.round(consumed - limit)) + " " + "Calories" + " Exceeded");
         }
 
         models = new ArrayList<>();
         Log.d("IN SUMMARY FRONT", String.valueOf(getdaycalories(myCalendar)));
         if(getdaycalories(myCalendar) < calslimit/2 ){
-            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+            models.add(new ArcProgressStackView.Model("Calories", Math.round(consumed/limit*100)
                     , getResources().getColor(R.color.progresscolorprimary), getResources().getColor(R.color.progresscolorfillerprimary)));
         }else if(getdaycalories(myCalendar) < 3*calslimit/4){
 
-            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+            models.add(new ArcProgressStackView.Model("Calories", Math.round(consumed/limit*100)
                     , getResources().getColor(R.color.progresscolorsecondary), getResources().getColor(R.color.progresscolorfillersecondary)));
         }else{
-            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+            models.add(new ArcProgressStackView.Model("Calories", Math.round(consumed/limit*100)
                     , getResources().getColor(R.color.progresscolordanger), getResources().getColor(R.color.progresscolorfillerdanger)));
         }
         arcProgressStackView.setModels(models);

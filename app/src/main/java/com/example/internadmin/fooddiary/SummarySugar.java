@@ -92,14 +92,14 @@ public class SummarySugar extends Fragment {
         }
         models = new ArrayList<>();
         if(getdaycalories(myCalendar, "Energy") < calslimit/2 ){
-            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/limit*100)
                     , getResources().getColor(R.color.progresscolorprimary), getResources().getColor(R.color.progresscolorfillerprimary)));
         }else if(getdaycalories(myCalendar, "Energy") < 3*calslimit/4){
 
-            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/limit*100)
                     , getResources().getColor(R.color.progresscolorsecondary), getResources().getColor(R.color.progresscolorfillersecondary)));
         }else{
-            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/22)
+            models.add(new ArcProgressStackView.Model(tracking, Math.round(consumed/limit*100)
                     , getResources().getColor(R.color.progresscolordanger), getResources().getColor(R.color.progresscolorfillerdanger)));
         }
         arcProgressStackView.setModels(models);

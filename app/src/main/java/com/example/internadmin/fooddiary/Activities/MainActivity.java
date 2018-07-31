@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -27,6 +28,13 @@ import com.example.internadmin.fooddiary.Views.MovableFloatingActionButton;
 import com.example.internadmin.fooddiary.Views.Report;
 import com.example.internadmin.fooddiary.Views.Settings;
 import com.example.internadmin.fooddiary.Views.Summary;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import tourguide.tourguide.Overlay;
 import tourguide.tourguide.Pointer;
 import tourguide.tourguide.ToolTip;
@@ -40,6 +48,7 @@ public class MainActivity extends AppCompatActivity{
     Boolean allowRefresh = false;
     LinearLayout ll;
     AHBottomNavigation bottomNavigation;
+    //Intent intent;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -117,9 +126,13 @@ public class MainActivity extends AppCompatActivity{
 
         // FRAGMENT MANAGER
         manager = getSupportFragmentManager();
-
+        // ignore below 3 lines unless you want to uncomment the buggy code in onStart
+        // this is added because, if user uses additem from another date, i.e history, then after completion of adding the item,
+        // the user should come back to the history date and not today's date
+        //intent = getIntent();
         // SETTING SUMMARY AS THE INITIAL FRAGMENT
         manager.beginTransaction().replace(ll.getId(), summary).commit();
+
 
         // SETTING ITEMS FOR THE BOTTOM NAVIFATION BAR
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Summary", R.drawable.summary, R.color.colorAccent);
@@ -135,7 +148,6 @@ public class MainActivity extends AppCompatActivity{
         bottomNavigation.setAccentColor(fetchColor(R.color.colorPrimary));
         bottomNavigation.setInactiveColor(fetchColor(R.color.grey));
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-
 
         // CREATING ON CLICK LISTENER FOR BOTTOM NAVIGATION BAR
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
@@ -217,6 +229,7 @@ public class MainActivity extends AppCompatActivity{
                                 .setGravity(Gravity.BOTTOM))
                     .playOn(ll);
         }
+
         setContentView(main);
     }
 
@@ -237,7 +250,22 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-
+    /*
+    //WARNING: BUGGY CODE! UNCOMMENT AT YOUR OWN RISK.
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(intent.hasExtra("mealdate")){
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            GregorianCalendar cal = new GregorianCalendar();
+            Date date = new Date(getIntent().getLongExtra("mealdate", 0));
+            Log.d("gotedateextra", df.format(date));
+            cal.setTime(date);
+            summary.addAllCards(cal);
+            summary.updateLabel(1);
+            summary.setColors();
+        }
+    }*/
 
     // this function is to return color for a color code
     private int fetchColor(@ColorRes int color) {

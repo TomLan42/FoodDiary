@@ -154,6 +154,7 @@ public class Summary extends Fragment {
         // we need to first remove all cards if they are present (this is useful when date is changed)
         // otherwise it will show the new date cards and also the previous date cards
         meal_ll.removeAllViews();
+        myCalendar = calen;
         // getting list of the food items consumed that day
         List<Long> morninglist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.MORNING);
         List<Long> afternoonlist = handler.getHistoryEntriesOnDay(calen.getTime(), TimePeriod.AFTERNOON);
@@ -181,10 +182,7 @@ public class Summary extends Fragment {
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
-        Calendar tom = (GregorianCalendar) cal.clone();
-        tom.set(Calendar.HOUR_OF_DAY, 23);
-        tom.set(Calendar.MINUTE, 59);
-        tom.set(Calendar.SECOND, 59);
+
         HashMap<String, Float> servings = handler.getAllServingsOnDay(cal.getTime(), null);
         Iterator it = servings.entrySet().iterator();
         float tot = 0;
@@ -314,7 +312,7 @@ public class Summary extends Fragment {
             }
         });
     }
-    private void updateLabel(int i){
+    public void updateLabel(int i){
         // update the label on the circular progress bars and the dateselect textview
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         dateselect.setText(sdf.format(myCalendar.getTime()));
