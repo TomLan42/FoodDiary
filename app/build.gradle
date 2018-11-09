@@ -50,8 +50,8 @@ dependencies {
     implementation('org.apache.httpcomponents:httpmime:4.3') {
         exclude module: "httpclient"
     }
-    implementation ('com.github.worker8:tourguide:2.0.0-SNAPSHOT@aar') {
-        transitive=true
+    implementation('com.github.worker8:tourguide:2.0.0-SNAPSHOT@aar') {
+        transitive = true
     }
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.github.florent37:singledateandtimepicker:2.0.4'

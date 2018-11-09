@@ -22,8 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.MainActivity" />
-        <activity android:name=".Activities.IntroActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".Activities.IntroActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.CameraActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -34,7 +35,8 @@
         <activity
             android:name=".Testact"
             android:label="@string/title_activity_testact"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".Activities.ShareActivity"></activity>
     </application>
 
 </manifest>

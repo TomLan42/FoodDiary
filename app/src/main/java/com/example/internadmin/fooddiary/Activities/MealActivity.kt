@@ -26,6 +26,7 @@ import com.example.internadmin.fooddiary.Models.DishID
 import com.example.internadmin.fooddiary.Models.Meal
 import com.example.internadmin.fooddiary.Models.TimePeriod
 import com.example.internadmin.fooddiary.R
+import com.example.internadmin.fooddiary.R.id.edittxt_servingsize
 import kotlinx.android.synthetic.main.activity_meal.*
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import com.google.gson.JsonElement
@@ -58,6 +59,11 @@ class MealActivity : AppCompatActivity() {
     private lateinit var prefs: SharedPreferences
     private lateinit var tourGuide: TourGuide
 
+    //Global var for passing to ShareActivity
+    private var globalMealID : Long = 0
+    private var checkNew: Int = 1
+
+
     //Generate a meal object, based on data from the previous activity
     // Upon generating, the meal object is used to populate the MealActivity UI.
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +79,9 @@ class MealActivity : AppCompatActivity() {
         //or is an existing meal object in the database.
         if(intent.hasExtra("Meal")){
             val mymealID = intent.getLongExtra("Meal", -1)
+
+            globalMealID = mymealID
+
             mymeal = Meal()
             mymeal.populateFromDatabase(mymealID, this)
             totalserving = mymeal.servingAmt
@@ -106,6 +115,7 @@ class MealActivity : AppCompatActivity() {
                 executeOnMealInitialized(false)
             }
             mydishid.execute()
+            checkNew = -checkNew
 
         }else{
             //If neither meal nor DishID info is passed, the activity redirects to MainActivity
@@ -190,6 +200,21 @@ class MealActivity : AppCompatActivity() {
                 alertadd.setTitle(mymeal.dishID.getDisplayFoodName())
                 alertadd.setNegativeButton("Ok") { dlg, _ -> dlg.dismiss() }
                 alertadd.show()
+
+            }
+            btn_share.setOnClickListener{
+
+                if (checkNew == 1){
+                val intent = Intent(this, ShareActivity::class.java)
+                val caloriesMeal = nutritionOfSingleMeal(mymeal.dishID.nutrition)
+
+                intent.putExtra("Meal", globalMealID)
+                intent.putExtra("Calories",caloriesMeal)
+                startActivity(intent)}
+                else{
+                    Toasty.error(this, "Please save entry first", Toast.LENGTH_LONG).show()
+                }
+
 
             }
 
@@ -513,9 +538,9 @@ class MealActivity : AppCompatActivity() {
         val text_fibredv = view.findViewById<TextView>(R.id.text_fibredv)
         var serving = getnutritionstr(nutrition, "Serving Size", "1 plate")
         if(serving == "1 plate"){
-            serving = serving + " Standarg Serving"
+            serving = serving + " Standard Serving"
         }else{
-            serving = serving + " g Standarg Serving"
+            serving = serving + " g Standard Serving"
         }
         text_servingsize.setText(serving)
         text_calories.setText(getnutritionfloat(nutrition, "Energy", ""))
@@ -535,6 +560,20 @@ class MealActivity : AppCompatActivity() {
         text_sodiumdv.setText( getdailyval(nutrition, "Sodium", 2300f))
         text_totalcarbohydratedv.setText( getdailyval(nutrition, "Carbohydrate", 275f))
         text_fibredv.setText( getdailyval(nutrition, "Fibre", 28f))
+
+    }
+
+    private fun nutritionOfSingleMeal(nutrition: JsonObject): Float{
+
+        val unitCaloriesString = getnutritionfloat(nutrition, "Energy", "")
+        val servingString = edittxt_servingsize.text.toString()
+        val unitCalories = unitCaloriesString.toFloat()
+        val serving = servingString.toFloat()
+        val caloriesMeal = unitCalories * serving
+
+        return caloriesMeal
+
+
 
     }
 

@@ -199,6 +199,7 @@ public class Summary extends Fragment {
     }
 
 
+
     public CardView dateCard(){
         /*----------------------------------------------------------------------
         This is the function to create the card for dateview that appears just

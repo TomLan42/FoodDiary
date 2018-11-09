@@ -131,7 +131,8 @@ public class IntroActivity extends AppIntro2 {
 
             AlertDialog alert11 = builder1.create();
             alert11.show();
-        }else if(prefs.getFloat(getString(R.string.tracking_nutrition_limit), -1f) < 0f ){
+        }else if(prefs.getFloat(getString(R.string.tracking_nutrition_
+        limit), -1f) < 0f ){
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
             builder1.setMessage("Nutrition Value cannot be empty!");
             builder1.setCancelable(true);
